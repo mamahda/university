@@ -1,0 +1,454 @@
+25/03/28 07:14:01 AUTOMATION: INFO no user active
+25/03/28 07:12:01 AUTOMATION: INFO no user active
+25/03/28 07:10:01 AUTOMATION: INFO no user active
+25/03/28 07:08:01 AUTOMATION: INFO no user active
+25/03/28 07:06:01 AUTOMATION: INFO no user active
+25/03/28 07:04:01 AUTOMATION: INFO no user active
+25/03/28 07:02:01 AUTOMATION: INFO no user active
+25/03/28 07:00:01 AUTOMATION: INFO no user active
+25/03/28 06:58:01 AUTOMATION: INFO no user active
+25/03/28 06:56:01 AUTOMATION: INFO no user active
+25/03/28 06:54:55 AUTOMATION: INFO no user active
+25/03/28 02:54:01 AUTOMATION: INFO no user active
+25/03/28 02:52:01 AUTOMATION: INFO no user active
+25/03/28 02:50:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 02:50:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:50:01 AUTOMATION: INFO c07 is active
+25/03/28 02:50:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 02:48:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:48:01 AUTOMATION: INFO c07 is active
+25/03/28 02:46:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:46:01 AUTOMATION: INFO c07 is active
+25/03/28 02:44:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:44:01 AUTOMATION: INFO c07 is active
+25/03/28 02:42:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:42:01 AUTOMATION: INFO c07 is active
+25/03/28 02:40:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 02:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:40:01 AUTOMATION: INFO c07 is active
+25/03/28 02:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 02:38:02 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:38:02 AUTOMATION: INFO c07 is active
+25/03/28 02:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:36:01 AUTOMATION: INFO c07 is active
+25/03/28 02:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:34:01 AUTOMATION: INFO c07 is active
+25/03/28 02:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:32:01 AUTOMATION: INFO c07 is active
+25/03/28 02:30:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 02:30:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:30:01 AUTOMATION: INFO c07 is active
+25/03/28 02:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 02:28:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:28:01 AUTOMATION: INFO c07 is active
+25/03/28 02:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:26:01 AUTOMATION: INFO c07 is active
+25/03/28 02:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:24:01 AUTOMATION: INFO c07 is active
+25/03/28 02:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:22:01 AUTOMATION: INFO c07 is active
+25/03/28 02:20:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 02:20:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:20:01 AUTOMATION: INFO c07 is active
+25/03/28 02:20:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 02:18:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:18:01 AUTOMATION: INFO c07 is active
+25/03/28 02:16:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:16:01 AUTOMATION: INFO c07 is active
+25/03/28 02:14:02 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:14:01 AUTOMATION: INFO c07 is active
+25/03/28 02:12:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:12:01 AUTOMATION: INFO c07 is active
+25/03/28 02:10:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 02:10:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:10:01 AUTOMATION: INFO c07 is active
+25/03/28 02:10:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 02:08:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:08:01 AUTOMATION: INFO c07 is active
+25/03/28 02:06:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:06:01 AUTOMATION: INFO c07 is active
+25/03/28 02:04:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:04:01 AUTOMATION: INFO c07 is active
+25/03/28 02:02:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 02:02:01 AUTOMATION: INFO c07 is active
+25/03/28 02:00:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 02:00:01 ARCHIVE: INFO files for ignatius archived successfully
+25/03/28 02:00:01 ARCHIVE: INFO files for c07 archived successfully
+25/03/28 02:00:01 AUTOMATION: INFO c07 is active
+25/03/28 02:00:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 01:58:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:58:01 AUTOMATION: INFO c07 is active
+25/03/28 01:56:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:56:01 AUTOMATION: INFO c07 is active
+25/03/28 01:54:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:54:01 AUTOMATION: INFO c07 is active
+25/03/28 01:52:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:52:01 AUTOMATION: INFO c07 is active
+25/03/28 01:50:02 DOWNLOAD: INFO image downloaded successfully
+25/03/28 01:50:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:50:01 AUTOMATION: INFO c07 is active
+25/03/28 01:50:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 01:48:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:48:01 AUTOMATION: INFO c07 is active
+25/03/28 01:46:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:46:01 AUTOMATION: INFO c07 is active
+25/03/28 01:44:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:44:01 AUTOMATION: INFO c07 is active
+25/03/28 01:42:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:42:01 AUTOMATION: INFO c07 is active
+25/03/28 01:40:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 01:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:40:01 AUTOMATION: INFO c07 is active
+25/03/28 01:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 01:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:38:01 AUTOMATION: INFO c07 is active
+25/03/28 01:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:36:01 AUTOMATION: INFO c07 is active
+25/03/28 01:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:34:01 AUTOMATION: INFO c07 is active
+25/03/28 01:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:32:01 AUTOMATION: INFO c07 is active
+25/03/28 01:30:02 DOWNLOAD: INFO image downloaded successfully
+25/03/28 01:30:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:30:01 AUTOMATION: INFO c07 is active
+25/03/28 01:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 01:28:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:28:01 AUTOMATION: INFO c07 is active
+25/03/28 01:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:26:01 AUTOMATION: INFO c07 is active
+25/03/28 01:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:24:01 AUTOMATION: INFO c07 is active
+25/03/28 01:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:22:01 AUTOMATION: INFO c07 is active
+25/03/28 01:20:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 01:20:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:20:01 AUTOMATION: INFO c07 is active
+25/03/28 01:20:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 01:18:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:18:01 AUTOMATION: INFO c07 is active
+25/03/28 01:16:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:16:01 AUTOMATION: INFO c07 is active
+25/03/28 01:14:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:14:01 AUTOMATION: INFO c07 is active
+25/03/28 01:12:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:12:01 AUTOMATION: INFO c07 is active
+25/03/28 01:10:02 DOWNLOAD: INFO image downloaded successfully
+25/03/28 01:10:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:10:01 AUTOMATION: INFO c07 is active
+25/03/28 01:10:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 01:08:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:08:01 AUTOMATION: INFO c07 is active
+25/03/28 01:06:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:06:01 AUTOMATION: INFO c07 is active
+25/03/28 01:04:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:04:01 AUTOMATION: INFO c07 is active
+25/03/28 01:02:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:02:01 AUTOMATION: INFO c07 is active
+25/03/28 01:00:12 DOWNLOAD: INFO image downloaded successfully
+25/03/28 01:00:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 01:00:01 AUTOMATION: INFO c07 is active
+25/03/28 01:00:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 00:58:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:58:01 AUTOMATION: INFO c07 is active
+25/03/28 00:56:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:56:01 AUTOMATION: INFO c07 is active
+25/03/28 00:54:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:54:01 AUTOMATION: INFO c07 is active
+25/03/28 00:52:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:52:01 AUTOMATION: INFO c07 is active
+25/03/28 00:50:01 DOWNLOAD: INFO image downloaded successfully
+25/03/28 00:50:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:50:01 AUTOMATION: INFO c07 is active
+25/03/28 00:50:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 00:48:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:48:01 AUTOMATION: INFO c07 is active
+25/03/28 00:46:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:46:01 AUTOMATION: INFO c07 is active
+25/03/28 00:44:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:44:01 AUTOMATION: INFO c07 is active
+25/03/28 00:42:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:42:01 AUTOMATION: INFO c07 is active
+25/03/28 00:40:02 DOWNLOAD: INFO image downloaded successfully
+25/03/28 00:40:02 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:40:01 AUTOMATION: INFO c07 is active
+25/03/28 00:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 00:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:38:01 AUTOMATION: INFO c07 is active
+25/03/28 00:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:36:01 AUTOMATION: INFO c07 is active
+25/03/28 00:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:34:01 AUTOMATION: INFO c07 is active
+25/03/28 00:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:32:01 AUTOMATION: INFO c07 is active
+25/03/28 00:30:02 DOWNLOAD: INFO image downloaded successfully
+25/03/28 00:30:02 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:30:01 AUTOMATION: INFO c07 is active
+25/03/28 00:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/28 00:28:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:28:01 AUTOMATION: INFO c07 is active
+25/03/28 00:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:26:01 AUTOMATION: INFO c07 is active
+25/03/28 00:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/28 00:24:01 AUTOMATION: INFO c07 is active
+25/03/28 00:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:40:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 23:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:40:01 AUTOMATION: INFO c07 is active
+25/03/27 23:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 23:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:38:01 AUTOMATION: INFO c07 is active
+25/03/27 23:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:36:01 AUTOMATION: INFO c07 is active
+25/03/27 23:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:34:01 AUTOMATION: INFO c07 is active
+25/03/27 23:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:32:01 AUTOMATION: INFO c07 is active
+25/03/27 23:30:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 23:30:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:30:01 AUTOMATION: INFO c07 is active
+25/03/27 23:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 23:28:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:28:01 AUTOMATION: INFO c07 is active
+25/03/27 23:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:26:01 AUTOMATION: INFO c07 is active
+25/03/27 23:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:24:01 AUTOMATION: INFO c07 is active
+25/03/27 23:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:22:01 AUTOMATION: INFO c07 is active
+25/03/27 23:20:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 23:20:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:20:01 AUTOMATION: INFO c07 is active
+25/03/27 23:20:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 23:18:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:18:01 AUTOMATION: INFO c07 is active
+25/03/27 23:16:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:16:01 AUTOMATION: INFO c07 is active
+25/03/27 23:14:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:14:01 AUTOMATION: INFO c07 is active
+25/03/27 23:12:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:12:01 AUTOMATION: INFO c07 is active
+25/03/27 23:10:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 23:10:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:10:01 AUTOMATION: INFO c07 is active
+25/03/27 23:10:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 23:08:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:08:01 AUTOMATION: INFO c07 is active
+25/03/27 23:06:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:06:01 AUTOMATION: INFO c07 is active
+25/03/27 23:04:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:04:01 AUTOMATION: INFO c07 is active
+25/03/27 23:02:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:02:01 AUTOMATION: INFO c07 is active
+25/03/27 23:00:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 23:00:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 23:00:01 AUTOMATION: INFO c07 is active
+25/03/27 23:00:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 22:58:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:58:01 AUTOMATION: INFO c07 is active
+25/03/27 22:56:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:56:01 AUTOMATION: INFO c07 is active
+25/03/27 22:54:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:54:01 AUTOMATION: INFO c07 is active
+25/03/27 22:52:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:52:01 AUTOMATION: INFO c07 is active
+25/03/27 22:50:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 22:50:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:50:01 AUTOMATION: INFO c07 is active
+25/03/27 22:50:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 22:48:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:48:01 AUTOMATION: INFO c07 is active
+25/03/27 22:46:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:46:01 AUTOMATION: INFO c07 is active
+25/03/27 22:44:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:44:01 AUTOMATION: INFO c07 is active
+25/03/27 22:42:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:42:01 AUTOMATION: INFO c07 is active
+25/03/27 22:40:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 22:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:40:01 AUTOMATION: INFO c07 is active
+25/03/27 22:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 22:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:38:01 AUTOMATION: INFO c07 is active
+25/03/27 22:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:36:01 AUTOMATION: INFO c07 is active
+25/03/27 22:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:34:01 AUTOMATION: INFO c07 is active
+25/03/27 22:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:32:01 AUTOMATION: INFO c07 is active
+25/03/27 22:30:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 22:30:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:30:01 AUTOMATION: INFO c07 is active
+25/03/27 22:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 22:28:02 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:28:02 AUTOMATION: INFO c07 is active
+25/03/27 22:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:26:01 AUTOMATION: INFO c07 is active
+25/03/27 22:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:24:01 AUTOMATION: INFO c07 is active
+25/03/27 22:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:22:01 AUTOMATION: INFO c07 is active
+25/03/27 22:20:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 22:20:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:20:01 AUTOMATION: INFO c07 is active
+25/03/27 22:20:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 22:18:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:18:01 AUTOMATION: INFO c07 is active
+25/03/27 22:16:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:16:01 AUTOMATION: INFO c07 is active
+25/03/27 22:14:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:14:01 AUTOMATION: INFO c07 is active
+25/03/27 22:12:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:12:01 AUTOMATION: INFO c07 is active
+25/03/27 22:10:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 22:10:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:10:01 AUTOMATION: INFO c07 is active
+25/03/27 22:10:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 22:08:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:08:01 AUTOMATION: INFO c07 is active
+25/03/27 22:06:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:06:01 AUTOMATION: INFO c07 is active
+25/03/27 22:04:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:04:01 AUTOMATION: INFO c07 is active
+25/03/27 22:02:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:02:01 AUTOMATION: INFO c07 is active
+25/03/27 22:00:12 DOWNLOAD: INFO image downloaded successfully
+25/03/27 22:00:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 22:00:01 AUTOMATION: INFO c07 is active
+25/03/27 22:00:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 21:58:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:58:01 AUTOMATION: INFO c07 is active
+25/03/27 21:56:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:56:01 AUTOMATION: INFO c07 is active
+25/03/27 21:54:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:54:01 AUTOMATION: INFO c07 is active
+25/03/27 21:52:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:52:01 AUTOMATION: INFO c07 is active
+25/03/27 21:50:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 21:50:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:50:01 AUTOMATION: INFO c07 is active
+25/03/27 21:50:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 21:48:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:48:01 AUTOMATION: INFO c07 is active
+25/03/27 21:46:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:46:01 AUTOMATION: INFO c07 is active
+25/03/27 21:44:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:44:01 AUTOMATION: INFO c07 is active
+25/03/27 21:42:02 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:42:02 AUTOMATION: INFO c07 is active
+25/03/27 21:40:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 21:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:40:01 AUTOMATION: INFO c07 is active
+25/03/27 21:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 21:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:38:01 AUTOMATION: INFO c07 is active
+25/03/27 21:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:36:01 AUTOMATION: INFO c07 is active
+25/03/27 21:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:34:01 AUTOMATION: INFO c07 is active
+25/03/27 21:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:32:01 AUTOMATION: INFO c07 is active
+25/03/27 21:30:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 21:30:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:30:01 AUTOMATION: INFO c07 is active
+25/03/27 21:28:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:28:01 AUTOMATION: INFO c07 is active
+25/03/27 21:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:26:01 AUTOMATION: INFO c07 is active
+25/03/27 21:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:24:01 AUTOMATION: INFO c07 is active
+25/03/27 21:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:22:01 AUTOMATION: INFO c07 is active
+25/03/27 21:20:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 21:20:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:20:01 AUTOMATION: INFO c07 is active
+25/03/27 21:20:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 21:18:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:18:01 AUTOMATION: INFO c07 is active
+25/03/27 21:16:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:16:01 AUTOMATION: INFO c07 is active
+25/03/27 21:14:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:14:01 AUTOMATION: INFO c07 is active
+25/03/27 21:12:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 21:12:01 AUTOMATION: INFO c07 is active
+25/03/27 21:10:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 18:40:16 DOWNLOAD: INFO image downloaded successfully
+25/03/27 18:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 18:40:01 AUTOMATION: INFO ignatius is active
+25/03/27 18:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 18:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 18:38:01 AUTOMATION: INFO ignatius is active
+25/03/27 16:04:01 AUTOMATION: INFO ignatius is active
+25/03/27 16:02:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 16:02:01 AUTOMATION: INFO ignatius is active
+25/03/27 16:00:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 16:00:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 16:00:01 ARCHIVE: INFO files for ignatius archived successfully
+25/03/27 16:00:01 AUTOMATION: INFO ignatius is active
+25/03/27 16:00:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 15:58:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:58:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:56:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:56:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:54:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:54:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:52:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:52:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:50:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 15:50:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:50:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:50:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 15:48:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:48:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:46:02 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:46:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:44:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:44:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:42:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:42:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:40:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 15:40:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:40:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:40:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 15:38:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:38:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:36:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:36:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:34:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:34:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:32:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:32:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:30:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 15:30:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:30:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 15:28:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:28:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:26:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:24:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:24:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:22:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:22:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:20:02 DOWNLOAD: INFO image downloaded successfully
+25/03/27 15:20:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:20:01 AUTOMATION: INFO ignatius is active
+25/03/27 15:20:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 15:18:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 15:18:01 AUTOMATION: INFO ignatius is active
+25/03/27 07:42:01 25/03/27 07:42:01 AUTOMATION: INFO i25/03/27 07:40:01 25/03/27 07:40:01 DOWNLOAD: INFO image downlo25/03/27 07:40:01 25/03/27 07:40:01 AUTOMATION: INFO executing crontab dow25/03/27 07:40:01 25/03/27 07:40:01 AUTOMATION: INFO i25/03/27 07:40:01 25/03/27 07:40:01 DOWNLOAD: INFO user active found, be25/03/27 07:38:01 25/03/27 07:38:01 AUTOMATION: INFO executing crontab dow25/03/27 07:38:01 25/03/27 07:38:01 AUTOMATION: INFO i25/03/27 07:36:01 25/03/27 07:36:01 AUTOMATION: INFO executing crontab dow25/03/27 07:36:01 25/03/27 07:36:01 AUTOMATION: INFO i25/03/27 07:34:01 25/03/27 07:34:01 AUTOMATION: INFO executing crontab dow25/03/27 07:34:01 25/03/27 07:34:01 AUTOMATION: INFO i25/03/27 07:32:01 25/03/27 07:32:01 AUTOMATION: INFO executing crontab dow25/03/27 07:32:01 25/03/27 07:32:01 AUTOMATION: INFO i25/03/27 07:30:01 25/03/27 07:30:01 DOWNLOAD: INFO image downlo25/03/27 07:30:01 25/03/27 07:30:01 AUTOMATION: INFO executing crontab dow25/03/27 07:30:01 25/03/27 07:30:01 AUTOMATION: INFO i25/03/27 07:30:01 25/03/27 07:30:01 DOWNLOAD: INFO user active found, begin downloading..
+25/03/27 07:28:02 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:28:02 AUTOMATION: INFO ignatius is active
+25/03/27 07:26:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:26:01 AUTOMATION: INFO i25/03/27 07:24:01 25/03/27 07:24:01 AUTOMATION: INFO executing crontab dow25/03/27 07:24:01 25/03/27 07:24:01 AUTOMATION: INFO i25/03/27 07:22:01 25/03/27 07:22:01 AUTOMATION: INFO executing crontab dow25/03/27 07:22:01 25/03/27 07:22:01 AUTOMATION: INFO i25/03/27 07:20:01 25/03/27 07:20:01 DOWNLOAD: INFO image downlo25/03/27 07:20:01 25/03/27 07:20:01 AUTOMATION: INFO executing crontab dow25/03/27 07:20:01 25/03/27 07:20:01 AUTOMATION: INFO i25/03/27 07:20:01 25/03/27 07:20:01 DOWNLOAD: INFO user active found, be25/03/27 07:18:01 25/03/27 07:18:01 AUTOMATION: INFO executing crontab dow25/03/27 07:18:01 25/03/27 07:18:01 AUTOMATION: INFO i25/03/27 07:16:01 25/03/27 07:16:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:16:01 AUTOMATION: INFO ignatius is active
+25/03/27 07:14:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:14:01 AUTOMATION: INFO ignatius is active
+25/03/27 07:12:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:12:01 AUTOMATION: INFO ignatius is active
+25/03/27 07:10:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 07:10:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:10:01 AUTOMATION: INFO i25/03/27 07:10:01 25/03/27 07:10:01 DOWNLOAD: INFO user active found, be25/03/27 07:08:01 25/03/27 07:08:01 AUTOMATION: INFO executing crontab download and archive
+25/03/25/03/27 07:08:01 AUTOMATION: INFO ignatius is a25/03/25/03/27 07:06:01 AUTOMATION: INFO executing crontab download and ar25/03/25/03/27 07:06:01 AUTOMATION: INFO ignatius is a25/03/25/03/27 07:04:01 AUTOMATION: INFO executing crontab download and ar25/03/25/03/27 07:04:01 AUTOMATION: INFO ignatius is a25/03/25/03/27 07:02:02 AUTOMATION: INFO executing crontab download and ar25/03/25/03/27 07:02:01 AUTOMATION: INFO ignatius is active
+25/03/27 07:00:01 DOWNLOAD: INFO image downloaded successfully
+25/03/27 07:00:01 AUTOMATION: INFO executing crontab download and archive
+25/03/27 07:00:01 AUTOMATION: INFO ignatius is a25/03/25/03/27 07:00:01 DOWNLOAD: INFO user active found, begin downloading..

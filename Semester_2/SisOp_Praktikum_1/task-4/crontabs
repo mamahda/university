@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+*/5 * * * * /bin/bash /home/rizky/SisOp_Praktikum_1/task-4/minute5_log.sh >> /home/rizky/metrics/minute5_log.txt 2>&1
+0 * * * * /bin/bash /home/rizky/SisOp_Praktikum_1/task-4/agg_5min_to_hour.sh >> /home/rizky/metrics/agg_log.txt 2>&1 
+0 * * * * /bin/bash /home/rizky/SisOp_Praktikum_1/task-4/uptime_monitor.sh >> /home/rizky/metrics/uptime_log.txt 2>&1
+0 0 * * * /bin/bash /home/rizky/SisOp_Praktikum_1/task-4/cleanup_log.sh >> /home/rizky/metrics/cleanup_log.txt 2>&1

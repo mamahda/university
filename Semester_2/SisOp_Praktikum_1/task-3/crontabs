@@ -1,0 +1,6 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+*/2 * * * * /bin/bash /home/blackcurrent/Kuliah_Semester_2/SisOp_Praktikum_1/task-3/automation.sh
+*/10 * * * * /bin/bash /home/blackcurrent/Kuliah_Semester_2/SisOp_Praktikum_1/task-3/download.sh
+0 */2 * * * /bin/bash /home/blackcurrent/Kuliah_Semester_2/SisOp_Praktikum_1/task-3/archive.sh

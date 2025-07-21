@@ -1,0 +1,9 @@
+mnt_point/
+lawak/
+mnt_point/*
+lawak/*
+FUSElawak
+lawakfs.log
+run.sh
+challenge/*
+challenge/

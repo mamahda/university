@@ -1,0 +1,10 @@
+cara run:
+1)  Buat "source directory" di sistem (/home/shared_files).
+2)  buat 3 subdirektori: public, private_yuadi, private_irwandi.
+3)  Buat 2 Linux users: yuadi dan irwandi.
+4)  chown dan chmod private_yuadi dan private_irwandi.
+5)  make
+6)  make mount
+7)  coba explore FUSE-nya.
+8)  make unmount
+9)  make clean

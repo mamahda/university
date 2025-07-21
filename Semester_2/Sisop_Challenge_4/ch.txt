@@ -1,0 +1,6 @@
+Untuk soal challenge nya seperti ini yaa:
+
+1. Buat program FUSE sederhana yang menghasilkan file "hello.txt" dengan isi "Hello, World!"
+2. Modifikasi pada program FUSE sederhana yang telah dibuat sebelumnya sehingga file "hello.txt" dapat ditulis dan diubah isinya oleh pengguna.
+3. Modifikasi program pada playground modul (https://github.com/arsitektur-jaringan-komputer/Modul-Sisop/blob/master/Modul4/README-ID.md#pembuatan-sistem-operasi-sederhana) agar menampilkan pesan "FP telah menunggumu" di layar saat sistem operasi dijalankan.
+4. Jalankan sistem operasi sederhana hasil modifikasi dan lakukan otomasi agar dapat di-boot dari floppy disk.

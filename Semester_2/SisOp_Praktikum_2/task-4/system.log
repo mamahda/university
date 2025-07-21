@@ -1,0 +1,27 @@
+Worker 1: 2 messages
+Worker 2: 2 messages
+Worker 3: 2 messages
+Worker 4: 2 messages
+Worker 5: 2 messages
+Worker5: message received
+Worker4: message received
+Worker3: message received
+Worker2: message received
+Worker1: message received
+Worker5: message received
+Worker4: message received
+Worker3: message received
+Worker2: message received
+Worker1: message received
+Received at lb: Halo A (#message 10)
+Received at lb: Halo A (#message 9)
+Received at lb: Halo A (#message 8)
+Received at lb: Halo A (#message 7)
+Received at lb: Halo A (#message 6)
+Received at lb: Halo A (#message 5)
+Received at lb: Halo A (#message 4)
+Received at lb: Halo A (#message 3)
+Received at lb: Halo A (#message 2)
+Received at lb: Halo A (#message 1)
+Message from client: Halo A
+Message count: 10
