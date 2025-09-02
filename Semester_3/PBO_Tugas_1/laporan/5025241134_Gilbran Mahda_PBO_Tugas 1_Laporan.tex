@@ -1,0 +1,77 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[left=2.54cm, right=2.54cm, bottom=2.54cm, top=2.54cm]{geometry}
+\linespread{1}
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage{blindtext}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{2pt}
+\usepackage{graphicx}
+\usepackage{multicol}
+\graphicspath{ {./img/} }
+
+\title{Laporan PBO Tugas 1}
+\author{5025241134 Gilbran Mahavikia Raja}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Soal Friendly Number}
+\includegraphics[scale=0.3]{soal.png}
+
+Di soal ini kita diminta mencari pasangan bilangan bersahabat dalam sebuah rentang tertentu. Bilangan bersahabat itu artinya dua bilangan berbeda yang saling "bertukar jumlah faktor pembagi". Maksudnya, kalau kita ambil sebuah bilangan, terus hitung semua pembagi positifnya kecuali dirinya sendiri, hasil penjumlahan itu harus sama dengan bilangan pasangannya. Sebaliknya, kalau kita lakukan hal yang sama untuk bilangan pasangannya, hasilnya harus balik lagi ke bilangan pertama.
+
+Nah, dari rentang $[m,n]$ yang dikasih di input, kita harus cari semua pasangan bilangan yang memenuhi definisi itu. Hasil outputnya ditulis per baris, dengan aturan bilangan yang lebih kecil ditulis dulu, dan urut berdasarkan bilangan pertama. Kalau ternyata nggak ada pasangan bilangan bersahabat dalam rentang itu, cukup tulis "Absent"
+
+\section{Identifikasi Masalah}
+\begin{enumerate}
+  \item[2.1] Range
+  \item[] Kita diberi dua bilangan bulat $m$ dan $n$ sebagai batas bawah dan batas atas. Semua perhitungan hanya berlaku untuk bilangan dalam interval $[m, n]$
+  \item[2.2] Faktor yang Dihitung
+  \item[] Untuk setiap bilangan dalam interval, kita perlu menghitung jumlah faktor sebenarnya, yaitu semua faktor positif bilangan tersebut kecuali dirinya sendiri.
+  \item[2.3] Pasangan Bilangan yang Dicari
+  \item[] Dari jumlah faktor itu, kita ingin mencari pasangan bilangan $(a, b)$ dengan syarat:
+  \begin{itemize}
+    \item $a$ dan $b$ ada dalam interval $[m, n]$.
+    \item $a \neq b$
+    \item $b$ adalah jumlah faktor dari $a$.
+    \item $a$ adalah jumlah faktor dari $b$.
+  \end{itemize}
+  \item[2.4] Contoh
+  \begin{itemize}
+    \item Faktor $220$ (kecuali dirinya): $1+2+4+5+10+11+20+22+44+55+110=284$
+    \item Faktor $284$ (kecuali dirinya): $1+2+4+71+142=220$
+  \end{itemize}
+\end{enumerate}
+
+\pagebreak
+
+\section{Solusi}
+\includegraphics[scale=0.3]{code.png}
+
+Program diawali dengan menyiapkan sebuah array $jumlah\_faktor$ berukuran $n+1$. Array ini berfungsi menyimpan hasil penjumlahan faktor untuk setiap bilangan hingga batas n. Dengan begitu, setiap kali program perlu mengetahui jumlah faktor suatu bilangan, hasilnya sudah tersedia tanpa harus dihitung ulang.
+
+Nilai-nilai dalam array diisi menggunakan \textbf{teknik sieve}. Pada tahap ini, setiap bilangan i ditambahkan ke seluruh kelipatan $j$ dari $2i$ hingga $n$. Proses ini memastikan setiap bilangan $j$ akan secara otomatis menerima semua faktor pembaginya. Dengan cara ini, program tidak perlu melakukan perhitungan pembagi secara langsung per bilangan, melainkan mengisi sekaligus untuk semua bilangan dalam satu loop. Inilah yang membuat program jauh lebih efisien, karena kompleksitas waktunya mendekati $O(nlogn)$.
+
+Setelah array terisi, program melakukan iterasi terhadap setiap bilangan $a$ dalam interval $[m,n]$. Untuk setiap $a$, program menentukan pasangannya $b=jumlah\_faktor[a]$. Pasangan ini hanya valid jika memenuhi tiga syarat: $b$ lebih besar dari $a$ (supaya tidak ada duplikasi), $b$ masih berada dalam interval, dan hasil jumlah faktor dari $b$ kembali sama dengan $a$. Jika semua syarat terpenuhi, pasangan $(a,b)$ dicetak.
+
+Sebagai tambahan, program menjaga agar tidak terjadi pencetakan ganda dengan aturan $b>a$. Jika setelah semua pemeriksaan tidak ditemukan pasangan yang sesuai, program akan mencetak "Absent". Dengan logika seperti ini, program dapat menangani pencarian bilangan bersahabat dalam interval yang besar secara efisien.
+
+\pagebreak
+
+\section{Bukti}
+Berikut adalah bukti bahwa solusi saya mendapatkan verdict \textbf{Accepted}.\\
+\includegraphics[scale=0.19]{submissionn.png}
+\end{document}
