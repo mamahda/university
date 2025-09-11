@@ -123,7 +123,7 @@
 
 - Explanation
 
-  Gunakan display filter `tcp.len == 0 && tcp.flags.ack == 1` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3210 (33.5%)`. Namun, waktu saya submit `3210` keluar response `incorrect answer` lalu saya coba submit dengan angka `-1` dari package yang terdisplay yaitu `3209` ternyata benar.
+  Gunakan display filter `tcp.len == 0 && tcp.flags.ack == 1` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3210 (33.5%)`. Namun, waktu saya submit `3210` keluar response `incorrect answer` lalu saya coba submit dengan angka `-1` dari package yang terdisplay yaitu `3209` ternyata jawabannya benar.
 
 - Output result
 
@@ -136,19 +136,21 @@
 
 > _b. How many packets succeed that are pure TCP based and have only [ACK] flag?_
 
-**Answer:** `put your answer here`
+**Answer:** `3172`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  tcp.len == 0 && tcp.flags == 0x10
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `tcp.len == 0 && tcp.flags == 0x10` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan hanya memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3174 (33.1%)`. Di soal ini saya juga menemukan masalah yang sama seperti di soal sebelumnya, ketika submit `3174` malah keluar response `incorrect answer`, akhirnya saya coba submit dengan rentang `3174-5 < x < 3174+5` ternyata benar di angka `3172`.
 
 - Output result
 
-  `put your output result here`
+  ![no 2](./img/no2.png)
 
   <br>
   <br>
@@ -157,19 +159,21 @@
 
 > _c. How many packets succeed that are pure TCP based and contain flags other than just [ACK] flag?_
 
-**Answer:** `put your answer here`
+**Answer:** `49`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  tcp.len == 0 && tcp.flags != 0x10
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `tcp.len == 0 && tcp.flags != 0x10` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag selain hanya [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 48 (0.5%)`. Di soal ini saya juga menemukan masalah yang sama juga seperti di soal sebelumnya, ketika submit `48` malah keluar response `incorrect answer`, akhirnya saya coba submit dengan rentang `48-5 < x < 48+5` ternyata benar di angka `49`.
 
 - Output result
 
-  `put your output result here`
+  ![no 2](./img/no2.png)
 
   <br>
   <br>

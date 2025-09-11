@@ -11,3 +11,4 @@ panitia/*
 **/*.synctex.gz
 **/output
 **/*.exe
+**/root/

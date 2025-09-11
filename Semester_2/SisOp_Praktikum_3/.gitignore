@@ -5,3 +5,4 @@ osboot/linux-6.1.1/*
 osboot/bzImage
 osboot/mylinuxiso/boot/bzImage
 osboot/mylinuxiso/boot/bsImage
+**/root/*
