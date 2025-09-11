@@ -1,3 +1,13 @@
 general/*
 materi/*
 panitia/*
+**/*.pptx
+**/*.ppt
+**/.cph/*
+**/*.aux
+**/*.fdb_latexmk
+**/*.fls
+**/*.log
+**/*.synctex.gz
+**/output
+**/*.exe
