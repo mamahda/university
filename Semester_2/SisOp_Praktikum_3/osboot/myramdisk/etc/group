@@ -1,0 +1,7 @@
+root:x:0:
+users:x:100:
+Budiman:x:1001:
+guest:x:1002:
+praktikan1:x:1003:
+praktikan2:x:1004:
+praktikan:x:2000:praktikan1,praktikan2

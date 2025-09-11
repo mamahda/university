@@ -1,0 +1,5 @@
+clear
+
+cat /etc/motd
+
+echo "Helloo $USER!"
