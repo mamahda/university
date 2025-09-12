@@ -562,19 +562,21 @@
 
 > _a. How many FTP packets are recorded in the pcapng file? (with the data)_
 
-**Answer:** `put your answer here`
+**Answer:** `81`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp || ftp-data
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `ftp || ftp-data` untuk menampilkan packet dengan protokol FTP (with the data), lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 81 (0.4%)`.
 
 - Output result
 
-  `put your output result here`
+  ![no8a](./img/no8a.png)
 
   <br>
   <br>
@@ -583,19 +585,21 @@
 
 > _b. What is the client's username and password in FTP connection? (write in following format username:password)_
 
-**Answer:** `put your answer here`
+**Answer:** `rey:password123lingangu`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `ftp` untuk menampilkan packet dengan protokol FTP, lalu buka menu `tcp stream` pada `analyze > follow > tcp stream`, lalu pada bagian text area setelah `USER (user)` terdapat username yang digunakan client ftp untuk berhubungan dengan server yaitu `rey`, dan setelah `PASS` terdapat passwordnya yaitu `password123lingangu`, maka username dan password client di koneksi FTP adalah `rey:password123lingangu`.
 
 - Output result
 
-  `put your output result here`
+  ![no8b](./img/no8b.png)
 
   <br>
   <br>
@@ -604,19 +608,21 @@
 
 > _c. Apa command client untuk melihat direktori server yang dikirimkan dalam request packet?_
 
-**Answer:** `put your answer here`
+**Answer:** `LIST`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp-data
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `ftp-data` untuk menampilkan packet dengan protokol FTP dengan data, lalu pada bagian `line-based text data` cari command `LIST` terdapat isi dari direktori server.
 
 - Output result
 
-  `put your output result here`
+  ![no8c](./img/no8c.png)
 
   <br>
   <br>
@@ -626,24 +632,27 @@
 - Flag
 
   `put your flag here`
+  ![no9](./img/no9.png)
 
 > a. Apa alamat IP dari FTP server?
 
 > _a. What is the FTP server IP Address?_
 
-**Answer:** `put your answer here`
+**Answer:** `172.16.16.101`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `ftp` untuk menampilkan packet dengan protokol FTP, lalu pada bagian `Source` di paket pertama terdapat alamat IP dari FTP server yaitu `172.16.16.101`.
 
 - Output result
 
-  `put your output result here`
+  ![no9a](./img/no9a.png)
 
   <br>
   <br>
@@ -652,19 +661,21 @@
 
 > _b. How many files are there inside the FTP server directory?_
 
-**Answer:** `put your answer here`
+**Answer:** `7`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp-data
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Pada soal 8c kita sudah menemukan command `LIST` yang berisi isi dari direktori server, lalu kita tinggal hitung saja ada berapa file yang ada dalam direktori FTP server, disitu terdapat `7` file(dotfile tidak dihitung).
 
 - Output result
 
-  `put your output result here`
+  ![no9b](./img/no9b.png)
 
   <br>
   <br>
@@ -673,19 +684,21 @@
 
 > _c. What are the filenames used in the page.html? (write the filebames with their extensions and separate them with comma ',')_
 
-**Answer:** `put your answer here`
+**Answer:** `pokijan.jpg,research_center.jpg`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp-data
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Untuk filter expression nya masih sama seperti soal sebelumnya, lalu cari paket dengan info `page.html`, lalu follow paket tersebut, disitu terdapat file `pokijan.jpg` dan `research_center.jpg`.
 
 - Output result
 
-  `put your output result here`
+  ![no9c](./img/no9c.png)
 
   <br>
   <br>
@@ -695,24 +708,27 @@
 - Flag
 
   `put your flag here`
+  ![no10](./img/no10.png)
 
 > a. Apa nama file yang mengandung string terencode?
 
 > _a. What is the filename that contains encoded string?_
 
-**Answer:** `put your answer here`
+**Answer:** `secret.txt`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp-data
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `ftp-data` untuk menampilkan packet dengan protokol FTP dengan data, lalu pada bagian `line-based text data` dari file dengan nama `secret.txt` terdapat string terencode.
 
 - Output result
 
-  `put your output result here`
+  ![no10a](./img/no10a.png)
 
   <br>
   <br>
@@ -721,19 +737,22 @@
 
 > _b. What is the filename of the previous file copy?_
 
-**Answer:** `put your answer here`
+**Answer:** `secret1.txt`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  ftp
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `ftp` untuk menampilkan packet dengan protokol FTP, lalu buka `tcp stream` pada `analyze > follow > tcp stream`, scroll ke bawah, disitu terdapat command `STOR secret1.txt`, dari situ kita tau bahwa file hasil copy tersebut adalah `secret1.txt`.
+  
 
 - Output result
 
-  `put your output result here`
+  ![no10b](./img/no10b.png)
 
   <br>
   <br>
@@ -742,19 +761,21 @@
 
 > _c. Apa decoded string dari file tersebut?_
 
-**Answer:** `put your answer here`
+**Answer:** `Pada suatu hari Rey bertemu dengan Nailong the Milk Dragon. Ketika bertemu, Rey mengajarkan Nailong apa itu Jaringan Komputer. Nailong pun senang karena ternyata Jaringan Komputer itu gampang.`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  tcp-data
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Pada soal 9a kita sudah menemukan nama file yang mengandung string terencode yaitu `secret.txt`, lalu kita tinggal decode string tersebut menggunakan base64 decode yang terdapat di web internet, maka didapatkan hasil decode stringnya yaitu `Pada suatu hari Rey bertemu dengan Nailong the Milk Dragon. Ketika bertemu, Rey mengajarkan Nailong apa itu Jaringan Komputer. Nailong pun senang karena ternyata Jaringan Komputer itu gampang.`
 
 - Output result
 
-  `put your output result here`
+  ![no10c](./img/no10c.png)
 
   <br>
   <br>
