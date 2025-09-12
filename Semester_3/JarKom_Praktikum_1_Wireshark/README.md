@@ -10,7 +10,7 @@
 - Flag
 
   ```
-  JARKOM25{Ja0G_Bbbb4ng3t_S1_1Y928XMCIQ6IXNR8KBME60L66N4HLN@xl0vel16motslwoc4bjc0vfuj2gbb9_97ab51264c2dcb2d12e420885c65d9f0}
+  JARKOM25{Ja0G_Bbbb4ng3t_S1_1Y928XMCIQ6IXNR8KBME60L66N4HLN0xl0vel16motslwoc4bjc0vfuj2gbb9_97ab51264c2dcb2d12e420885c65d9f0}
   ```
   ![no1](./img/no1.png)
 
@@ -187,7 +187,7 @@
 - Flag
 
   ```
-  JARKOM25{W0w_Y0uU_h4V33e_d0n3_444_90od_j@bB_BB7AFg0dl1k39c112cobifvvdncfgoehvv_ab5830b2c3341a3281c555dd3213ee11}
+  JARKOM25{W0w_Y0uU_h4V33e_d0n3_444_90od_j0bB_BB7AFg0dl1k39c112cobifvvdncfgoehvv_ab5830b2c3341a3281c555dd3213ee11}
   ```
   ![no3](./img/no3.png)
 
@@ -288,7 +288,7 @@
 - Flag
 
   ```
-  JARKOM25{G04t__a4n4liz333er_ØNZKEHU20XXPWZ5RUDKVfr0gjnv5blyu6etkb43r3ys6338153594_915d007971878d25d7ab4f774bb81003}
+  JARKOM25{G04t__a4n4liz333er_0NZKEHU20XXPWZ5RUDKVfr0gjnv5blyu6etkb43r3ys6338153594_915d007971878d25d7ab4f774bb81003}
   ```
   ![no4](./img/no4.png)
 
@@ -425,12 +425,12 @@
 - Filter expression
 
   ```
-  http
+  http && http.response.code == 200
   ```
 
 - Explanation
 
-  Sama seperti soal sebelummnya, tapi bedanya karena mencari yang berhasil maka kita `eliminasi` paket yang pada wireshark `berwarna hitam`, setelah saya hitung terdapat `2` paket yang berwarna hitam. jadi total semua paket `298` dikurangi oleh `2` yaitu `296`.
+  Sama seperti soal sebelummnya, tapi bedanya karena mencari yang berhasil maka kita tambahin display filter `http && http.response.code == 200`, karena jika ada response pasti ada request maka total package yang terdisplay yaitu `148` dikali 2. Jadi http package yang berhasil yaitu `296`.
 
 - Output result
 
@@ -467,7 +467,7 @@
 - Flag
 
   ```
-  JARKOM25{br0mb44rdin0u_Cr0ccc0c0c0cdi1l10l_0008166058awaesabywlylw4exsh1n@buUF3ODWP72L7J91C_fc1b58220a36bf3a42537c2c838ce914}
+  JARKOM25{br0mb44rdin0u_Cr0ccc0c0c0cdi1l10l_0008166058awaesabywlylw4exsh1n0buUF3ODWP72L7J91C_fc1b58220a36bf3a42537c2c838ce914}
   ```
   ![no6](./img/no6.png)
 
@@ -553,7 +553,10 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{y0u_4r3_s0_G00d_1n_F0r3nsic_PT7YZM04D372DAYP9VOUR8LVAXZLCJx45y4n67s5oqttbvzsi6h8dr37caa3_1598e38e74849c3453983a0958a93589}
+  ```
+  ![no8](./img/no8.png)
 
 > a. Berapa banyak packet berbasis FTP yang terekam pada file pcapng? (with the data)
 
