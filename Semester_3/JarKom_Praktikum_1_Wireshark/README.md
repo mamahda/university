@@ -3,6 +3,8 @@
 | ---- | --- | ----- |
 | Gilbran Mahdavikia Raja | 5025241134 | B      |
 
+# Laporan Praktikum 1: Wireshark
+
 ## Task 1
 
 - Flag
@@ -185,7 +187,7 @@
 - Flag
 
   ```
-  JARKOM25{W0w_Y0uU_h4V33e_d0n3_444_90od_j@bB_ BB7AFg0dl1k39c112cobifvvdncfgoehvv_ab5830b2c3341a3281c555dd3213ee11}
+  JARKOM25{W0w_Y0uU_h4V33e_d0n3_444_90od_j@bB_BB7AFg0dl1k39c112cobifvvdncfgoehvv_ab5830b2c3341a3281c555dd3213ee11}
   ```
   ![no3](./img/no3.png)
 
@@ -226,7 +228,7 @@
 
 - Explanation
 
-  Gunakan display filter `telnet` untuk menampilkan packet dengan protokol telnet, lalu buka menu tcp stream pada analyze > follow > tcp stream, lalu pada bagian bawah terdapat tulisan `entire conversation`, klik lalu pada `dropdown` terdapat `172.16.16.101:23` (sebagai server) -> `172.16.16.101:54184` (sebagai client) disitu kita bisa lihat ada tulisan `1449 bytes`.
+  Gunakan display filter `telnet` untuk menampilkan packet dengan protokol telnet, lalu buka menu `tcp stream` pada `analyze > follow > tcp stream`, lalu pada bagian bawah terdapat tulisan `entire conversation`, klik lalu pada `dropdown` terdapat `172.16.16.101:23` (sebagai server) -> `172.16.16.101:54184` (sebagai client) disitu kita bisa lihat ada tulisan `1449 bytes`.
 
 - Output result
 
@@ -249,7 +251,7 @@
 
 - Explanation
 
-  Sama sepert soal sebelumnya, kita gunakan display filter 'telnet' untuk menampilkan packet dengan protokol telnet, lalu buka menu tcp stream pada analyze > follow > tcp stream, lalu pada bagian text area setelah `login:` terdapat username yang digunakan client telnet untuk berhubungan dengan server yaitu `jovyan`.
+  Sama sepert soal sebelumnya, kita gunakan display filter 'telnet' untuk menampilkan packet dengan protokol telnet, lalu buka menu `tcp stream` pada `analyze > follow > tcp stream`, lalu pada bagian text area setelah `login:` terdapat username yang digunakan client telnet untuk berhubungan dengan server yaitu `jovyan`.
 
 - Output result
 
@@ -272,7 +274,7 @@
 
 - Explanation
 
-  Sama seperti sebelumnya, kita tinggal liat saja kata setelah `Password:` pada bagian text area di tcp stream, disitu tertulis passwordnya yaitu `123`.
+  Sama seperti sebelumnya, kita tinggal liat saja kata setelah `Password:` pada bagian text area di `tcp stream`, disitu tertulis passwordnya yaitu `123`.
 
 - Output result
 
@@ -285,25 +287,30 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{G04t__a4n4liz333er_ØNZKEHU20XXPWZ5RUDKVfr0gjnv5blyu6etkb43r3ys6338153594_915d007971878d25d7ab4f774bb81003}
+  ```
+  ![no4](./img/no4.png)
 
 > a. Apa perintah pertama yang ditulis client pada koneksi telnet?
 
 > _a. What is the first command that client wrote on telnet connection?_
 
-**Answer:** `put your answer here`
+**Answer:** `echo`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama juga seperti soal 3b, buka menu `tcp stream` lalu scroll ke bawah sampai ketemu perintah pertama yang ditulis client pada koneksi telnet yaitu `echo`.
 
 - Output result
 
-  `put your output result here`
+  ![no4a](./img/no4a.png)
 
   <br>
   <br>
@@ -312,19 +319,21 @@
 
 > _b. What is the name of .txt file on the server (write with the extension)?_
 
-**Answer:** `put your answer here`
+**Answer:** `test.txt`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama seperti soal sebelumnya, scroll sampai ketemu file dengan ekstensi `.txt` yang ada di server, disitu tertulis `test.txt`.
 
 - Output result
 
-  `put your output result here`
+  ![no4b](./img/no4b.png)
 
   <br>
   <br>
@@ -333,19 +342,21 @@
 
 > _c. What is the first word that the client inserted into the previous file?_
 
-**Answer:** `put your answer here`
+**Answer:** `Jarkom`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama seperti soal sebelumnya, scroll sampai ketemu frasa yang dimasukkan client ke dalam file `test.txt`, disitu tertulis `Jarkom gampang`, lalu ambil kata pertama yaitu `Jarkom`.
 
 - Output result
 
-  `put your output result here`
+  ![no4c](./img/no4c.png)
 
   <br>
   <br>
@@ -354,25 +365,30 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{n4il0ng_m1lk_dr4g000n_8EGIF5BORTYAUYJ4NK406W5LACROEBcr0cb02apw83ipymopbqptpcb438_8a4efb8a6b9da1abf763dac558886a18}
+  ```
+  ![no5](./img/no5.png)
 
 > a. Berapa banyak packet berbasis HTTP yang terekam pada file pcapng?
 
 > _a. How many HTTP packets are recorded in the pcapng file?_
 
-**Answer:** `put your answer here`
+**Answer:** `298`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  http
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `http` untuk menampilkan packet dengan protokol HTTP, lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 298 (0.4%)`.
 
 - Output result
 
-  `put your output result here`
+  ![no5a](./img/no5a.png)
 
   <br>
   <br>
@@ -381,19 +397,21 @@
 
 > _b. How many response HTTP packets are recorded in the traffic?_
 
-**Answer:** `put your answer here`
+**Answer:** `149`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  http.response
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `http.response` untuk menampilkan packet dengan protokol HTTP yang berupa response, lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 149 (0.2%)`.
 
 - Output result
 
-  `put your output result here`
+  ![no5b](./img/no5b.png)
 
   <br>
   <br>
@@ -402,19 +420,21 @@
 
 > _c. How many HTTP packets that succeed?_
 
-**Answer:** `put your answer here`
+**Answer:** `296`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  http
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama seperti soal sebelummnya, tapi bedanya karena mencari yang berhasil maka kita `eliminasi` paket yang pada wireshark `berwarna hitam`, setelah saya hitung terdapat `2` paket yang berwarna hitam. jadi total semua paket `298` dikurangi oleh `2` yaitu `296`.
 
 - Output result
 
-  `put your output result here`
+  ![no5c](./img/no5c.png)
 
   <br>
   <br>
@@ -423,19 +443,21 @@
 
 > _d. What is the client HTTP IP Address in connection with other local machine?_
 
-**Answer:** `put your answer here`
+**Answer:** `172.16.16.101` 
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  http
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Pada soal ini kita tinggal liat ip yang ada di wireshark, karena ada 2 ip yang berbeda yaitu `172.16.16.101` dan `172.16.16.1`, lalu kita lihat bahwa mayoritas paket berasal dari `172.16.16.101` maka ip tersebut adalah ip dari client HTTP yang tersambung lokal dengan mesin lain.
 
 - Output result
 
-  `put your output result here`
+  ![no5d](./img/no5d.png)
 
   <br>
   <br>
@@ -444,25 +466,30 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{br0mb44rdin0u_Cr0ccc0c0c0cdi1l10l_0008166058awaesabywlylw4exsh1n@buUF3ODWP72L7J91C_fc1b58220a36bf3a42537c2c838ce914}
+  ```
+  ![no6](./img/no6.png)
 
 > a. Apakah kamu menemukan fake flag? Tuliskan seluruhnya!
 
 > _a. Did you find the fake flag? Write it whole!_
 
-**Answer:** `put your answer here`
+**Answer:** `FakeFlag{JarkomGampang}`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  -
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Langusung `file > export objects > http` lalu `content type` nya diubah menjadi `text/plain`, lalu cari file dengan nama `flag.txt` lalu kita bisa preview file tersebut dengan text editor, lalu disitu terdapat fake flag yaitu `FakeFlag{JarkomGampang}`.
 
 - Output result
 
-  `put your output result here`
+  ![no6a](./img/no6a.png)
 
   <br>
   <br>
@@ -471,19 +498,21 @@
 
 > _b. Write the written username and password! (format username:password)_
 
-**Answer:** `put your answer here`
+**Answer:** `Rey:123`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  -
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama seperti soal sebelumnya, kita tinggal cari file dengan nama `passwd.txt` lalu kita bisa preview file tersebut dengan text editor, lalu disitu terdapat username `Rey` dan password `123`.
 
 - Output result
 
-  `put your output result here`
+  ![no6b](./img/no6b.png)
 
   <br>
   <br>
@@ -492,25 +521,30 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{tr414lel0_tr1lil1_f5o5vge0gok3b0s0sOZA4YCTI5ET5WY2_5c447afcf91ba1468eccb8e6434e607e}
+  ```
+  ![no7](./img/no7.png)
 
 > Apa nama gambar yang direquest oleh client? (tulis dengan ekstensinya)
 
 > _What is the image that is being requested by the client? (write with its extension)_
 
-**Answer:** `put your answer here`
+**Answer:** `donalbebek.jpg`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  -
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama seperti soal sebelumnya, cuman di soal ini `content type` nya diubah menjadi `image/jpeg`, lalu cari file dengan ekstensi `.jpg`. Disitu terdapat nama gambar yang direquest oleh client yaitu `donalbebek.jpg`.
 
 - Output result
 
-  `put your output result here`
+  ![no7](./img/no7a.png)
 
   <br>
   <br>
