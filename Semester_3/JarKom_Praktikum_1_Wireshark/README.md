@@ -10,7 +10,7 @@
   ```
   JARKOM25{Ja0G_Bbbb4ng3t_S1_1Y928XMCIQ6IXNR8KBME60L66N4HLN@xl0vel16motslwoc4bjc0vfuj2gbb9_97ab51264c2dcb2d12e420885c65d9f0}
   ```
-  ![no1](/img/no1.png)
+  ![no1](./img/no1.png)
 
 > a. Berapa banyak packet yang terekam pada file pcapng?
 
@@ -109,7 +109,7 @@
   ```
   JARKOM25{N1c3_0ne_b4nggg_OCSFANIPNKyuMM13ypxmkeyizhikphmsqfvdqc3r4t0ps80024045837050523554_df3110ea6edbe65324f3c6aeebd6ea85}
   ```
-  ![no2](/img/no2.png)
+  ![no2](./img/no2.png)
 
 > a. Berapa banyak packet berhasil yang berbasis murni TCP dan memiliki flag [ACK]?
 
@@ -187,7 +187,7 @@
   ```
   JARKOM25{W0w_Y0uU_h4V33e_d0n3_444_90od_j@bB_ BB7AFg0dl1k39c112cobifvvdncfgoehvv_ab5830b2c3341a3281c555dd3213ee11}
   ```
-  ![no3](/img/no3.png)
+  ![no3](./img/no3.png)
 
 > a. Pada port berapa client telnet terbuka?
 
