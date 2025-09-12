@@ -93,12 +93,12 @@
 - Filter expression
 
   ```
-  tcp.len == 0
+  tcp
   ```
 
 - Explanation
 
-  Gunakan display filter `tcp.len == 0` untuk menampilkan packet dengan protokol TCP murni (tanpa data), lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3222 (33.6%)`. Namun, waktu saya submit `3222` keluar response `incorrect answer` lalu saya coba submit dengan angka `+1` dari package yang terdisplay yaitu `3223` ternyata jawabannya benar.
+  Buka `Protocol Hierarchy` di menu `Statistics`, lalu pada bagian `tcp` terdapat `9596 packets`, karena dicari `tcp` yang murni (tanpa data) maka kita kurangi 9596 dengan semua protocal yang ada dibawah `tcp`. Jadi jawabannya adalah `9596-3417-6-294-2-64-2-2588` yaitu `3223`.
 
 - Output result
 
