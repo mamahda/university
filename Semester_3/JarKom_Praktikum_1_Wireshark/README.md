@@ -10,6 +10,7 @@
   ```
   JARKOM25{Ja0G_Bbbb4ng3t_S1_1Y928XMCIQ6IXNR8KBME60L66N4HLN@xl0vel16motslwoc4bjc0vfuj2gbb9_97ab51264c2dcb2d12e420885c65d9f0}
   ```
+  ![no1](/img/no1.png)
 
 > a. Berapa banyak packet yang terekam pada file pcapng?
 
@@ -29,7 +30,7 @@
 
 - Output result
 
-  ![no1](./img/no1.png)
+  ![no1a](./img/no1a.png)
 
 <br>
 <br>
@@ -52,7 +53,7 @@
 
 - Output result
 
-  ![no1](./img/no1.png)
+  ![no1b](./img/no1b.png)
 
 <br>
 <br>
@@ -76,7 +77,7 @@
 
 - Output result
 
-  ![no1](./img/no1.png)
+  ![no1c](./img/no1c.png)
 
   <br>
   <br>
@@ -95,11 +96,11 @@
 
 - Explanation
 
-  Gunakan display filter `tcp.len == 0` untuk menampilkan packet dengan protokol TCP murni (tanpa data), lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3223 (33.6%)`.
+  Gunakan display filter `tcp.len == 0` untuk menampilkan packet dengan protokol TCP murni (tanpa data), lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3222 (33.6%)`. Namun, waktu saya submit `3222` keluar response `incorrect answer` lalu saya coba submit dengan angka `+1` dari package yang terdisplay yaitu `3223` ternyata jawabannya benar.
 
 - Output result
 
-  ![no1](./img/no1.png)
+  ![no1d](./img/no1d.png)
 
 ## Task 2
 
@@ -108,6 +109,7 @@
   ```
   JARKOM25{N1c3_0ne_b4nggg_OCSFANIPNKyuMM13ypxmkeyizhikphmsqfvdqc3r4t0ps80024045837050523554_df3110ea6edbe65324f3c6aeebd6ea85}
   ```
+  ![no2](/img/no2.png)
 
 > a. Berapa banyak packet berhasil yang berbasis murni TCP dan memiliki flag [ACK]?
 
@@ -123,11 +125,11 @@
 
 - Explanation
 
-  Gunakan display filter `tcp.len == 0 && tcp.flags.ack == 1` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3210 (33.5%)`. Namun, waktu saya submit `3210` keluar response `incorrect answer` lalu saya coba submit dengan angka `-1` dari package yang terdisplay yaitu `3209` ternyata jawabannya benar.
+  Gunakan display filter `tcp.len == 0 && tcp.flags.ack == 1` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3210 (33.5%)`. Namun, sama seperti soal sebelumnya waktu saya submit `3210` keluar response `incorrect answer` lalu saya coba submit dengan angka `-1` dari package yang terdisplay yaitu `3209` ternyata jawabannya benar.
 
 - Output result
 
-  ![no 2](./img/no2.png)
+  ![no 2a](./img/no2a.png)
 
   <br>
   <br>
@@ -150,7 +152,7 @@
 
 - Output result
 
-  ![no 2](./img/no2.png)
+  ![no 2b](./img/no2b.png)
 
   <br>
   <br>
@@ -173,7 +175,7 @@
 
 - Output result
 
-  ![no 2](./img/no2.png)
+  ![no 2c](./img/no2c.png)
 
   <br>
   <br>
@@ -182,25 +184,30 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{W0w_Y0uU_h4V33e_d0n3_444_90od_j@bB_ BB7AFg0dl1k39c112cobifvvdncfgoehvv_ab5830b2c3341a3281c555dd3213ee11}
+  ```
+  ![no3](/img/no3.png)
 
 > a. Pada port berapa client telnet terbuka?
 
 > _a. In what port is the telnet client open?_
 
-**Answer:** `put your answer here`
+**Answer:** `54184`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `telnet` untuk menampilkan packet dengan protokol telnet, lalu pilih satu packet yang pertama kali ditangkap oleh wireshark, disitu terlihat bahwa `port destination` nya adalah `54184`.
 
 - Output result
 
-  `put your output result here`
+  ![no3a](./img/no3a.png)
 
   <br>
   <br>
@@ -209,19 +216,21 @@
 
 > _b. How many bytes of the response files are sent from the server?_
 
-**Answer:** `put your answer here`
+**Answer:** `1449`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Gunakan display filter `telnet` untuk menampilkan packet dengan protokol telnet, lalu buka menu tcp stream pada analyze > follow > tcp stream, lalu pada bagian bawah terdapat tulisan `entire conversation`, klik lalu pada `dropdown` terdapat `172.16.16.101:23` (sebagai server) -> `172.16.16.101:54184` (sebagai client) disitu kita bisa lihat ada tulisan `1449 bytes`.
 
 - Output result
 
-  `put your output result here`
+  ![no3b](./img/no3b.png)
 
   <br>
   <br>
@@ -230,19 +239,21 @@
 
 > _c. What telnet client's username is used to connect with the server?_
 
-**Answer:** `put your answer here`
+**Answer:** `jovyan`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama sepert soal sebelumnya, kita gunakan display filter 'telnet' untuk menampilkan packet dengan protokol telnet, lalu buka menu tcp stream pada analyze > follow > tcp stream, lalu pada bagian text area setelah `login:` terdapat username yang digunakan client telnet untuk berhubungan dengan server yaitu `jovyan`.
 
 - Output result
 
-  `put your output result here`
+  ![no3c](./img/no3cd.png)
 
   <br>
   <br>
@@ -251,19 +262,21 @@
 
 > _d. What is the telnet client's password?_
 
-**Answer:** `put your answer here`
+**Answer:** `123`
 
 - Filter expression
 
-  `put your filter here (if any)`
+  ```
+  telnet
+  ```
 
 - Explanation
 
-  `put your explanation here`
+  Sama seperti sebelumnya, kita tinggal liat saja kata setelah `Password:` pada bagian text area di tcp stream, disitu tertulis passwordnya yaitu `123`.
 
 - Output result
 
-  `put your output result here`
+  ![no3c](./img/no3cd.png)
 
   <br>
   <br>
