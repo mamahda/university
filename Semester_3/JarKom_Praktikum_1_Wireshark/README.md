@@ -127,7 +127,7 @@
 
 - Explanation
 
-  Gunakan display filter `tcp.len == 0 && tcp.flags.ack == 1` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3210 (33.5%)`. Namun, sama seperti soal sebelumnya waktu saya submit `3210` keluar response `incorrect answer` lalu saya coba submit dengan angka `-1` dari package yang terdisplay yaitu `3209` ternyata jawabannya benar.
+  Gunakan display filter `tcp.len == 0 && tcp.flags.ack == 1` untuk menampilkan packet dengan protokol TCP murni (tanpa data) dan memiliki flag [ACK], lalu lihat di pojok kanan bawah wireshark, disitu ada tulisan `Displayed: 3210 (33.5%)`. Namun, waktu saya submit `3210` keluar response `incorrect answer` lalu saya coba submit dengan angka `-1` dari package yang terdisplay yaitu `3209` ternyata jawabannya benar.
 
 - Output result
 
@@ -631,7 +631,9 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{j4rk000000mmm_g4mpp4444n9999999_31713354758i41L4hejfgfiivhn321k0ncolYGERLD3DRS7BVL6_7ead6e8d38b5ee8edc951ef 79b4c7638}
+  ```
   ![no9](./img/no9.png)
 
 > a. Apa alamat IP dari FTP server?
@@ -707,7 +709,9 @@
 
 - Flag
 
-  `put your flag here`
+  ```
+  JARKOM25{f1nisssshs55s5s533s_l1n333ee333E3_094558332929100r5vkgpdpz345215123123AF245TKC4QIOHBX_8ffbcb89ca00aa2028440b61c103888a}
+  ```
   ![no10](./img/no10.png)
 
 > a. Apa nama file yang mengandung string terencode?
@@ -781,5 +785,7 @@
   <br>
 
 ## Summary
+Pada praktikum kali ini, saya belajar bagaimana cara menggunakan Wireshark untuk menganalisa sebuah file pcapng. Saya juga belajar bagaimana cara menggunakan display filter pada Wireshark untuk mempermudah pencarian paket yang diinginkan. Selain itu, saya juga belajar bagaimana cara mengikuti alur komunikasi dari sebuah protokol seperti TCP, HTTP, FTP, dan Telnet. 
 
 ## Problems
+Pada praktikum kali ini, saya menemukan beberapa masalah ketika menjawab soal, yaitu ketika saya menjawab dengan angka yang sesuai dengan hasil yang ditampilkan di Wireshark, namun jawaban tersebut dianggap salah. Setelah mencoba beberapa kali dengan angka yang berbeda, akhirnya saya menemukan jawaban yang benar. Saya juga menemukan beberapa soal yang tidak memiliki display filter yang spesifik, sehingga saya harus mencari jawaban dengan cara manual. Hal ini membuat saya harus lebih teliti dalam membaca soal dan mencari jawaban yang tepat.
