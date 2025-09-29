@@ -1,0 +1,125 @@
+.food {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.food .header {
+  margin: auto;
+  margin-top: 11.9rem;
+  height: 20vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.food .header h1 {
+  background: var(--gradient-food) border-box;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+  font-size: clamp(3rem, 6vw, 3.75rem);
+  margin-bottom: 0;
+  animation: zoomIn 1.5s forwards;
+  opacity: 0;
+}
+
+.food .header h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--black);
+  margin: 0 0 1.25rem 0;
+  animation: slideDown 2s forwards 0.8s;
+  opacity: 0;
+}
+
+.food .slider-container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  padding-top: 3.125rem;
+}
+
+.food .card-wrapper {
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  animation: slide-cards 20s linear infinite;
+}
+
+.food .card-wrapper:hover {
+  animation-play-state: paused;
+}
+
+.food .card {
+  position: relative;
+  width: 15.625rem;
+  height: 18.75rem;
+  background: #f2f2f2;
+  border-radius: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 62.5rem;
+  box-shadow: 0 0 0 0.3125rem #ffffff80;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: zoomIn 1s forwards;
+}
+
+.food .card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.625rem;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.food .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.2);
+}
+
+.food .card__content {
+  position: absolute;
+  inset: 0;
+  padding: 1.25rem;
+  background: #f2f2f2;
+  box-sizing: border-box;
+  transform: rotateX(-90deg);
+  transform-origin: bottom;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.food .card:hover .card__content {
+  transform: rotateX(0deg);
+}
+
+.food .card__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.food .card__description {
+  margin-top: 0.625rem;
+  font-size: 0.75rem;
+  color: #777;
+  line-height: 1.4;
+  text-align: justify;
+}

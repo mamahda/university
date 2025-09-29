@@ -1,0 +1,59 @@
+.navbar {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.navbar-container {
+  background: var(--secondary-blue);
+  padding: 0 0.6rem;
+  border-radius: 1.9rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.5);
+  animation: slideDown 1s;display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font: 700 1rem "Montserrat", serif;
+  width: 40rem;
+  height: 3.5rem;
+  margin: auto;
+}
+
+.navbar .navbar-nav {
+  padding: 0;
+}
+
+.navbar p {
+  font-weight: 700;
+  letter-spacing: 0.06rem;
+  margin-right: auto;
+  animation: slideDown 1s;
+}
+
+.navbar ul {
+  display: flex;
+  flex-direction: row;
+  gap: 2.3rem;
+  animation: slideDown 1s;
+}
+
+.navbar li {
+  list-style: none;
+}
+
+.navbar a {
+  font-size: 1rem;
+  color: var(--white);
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar a:hover {
+  background: var(--gradient-navbar) border-box;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transform: scale(1.1);
+}
