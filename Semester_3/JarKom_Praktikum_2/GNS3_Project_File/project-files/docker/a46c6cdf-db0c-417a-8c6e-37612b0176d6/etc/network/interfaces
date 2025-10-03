@@ -1,0 +1,5 @@
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:6c:6c:df:00
+    hostname Thor
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf

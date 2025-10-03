@@ -1,0 +1,5 @@
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:a0:00:a2:00
+    hostname Hawkeye
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf

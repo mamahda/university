@@ -4,7 +4,7 @@
 #include <algorithm>
 using namespace std;
 
-queue<int> team, each_team[1001];
+queue<int> team, each_team[21];
 map<int, int> on_team;
 
 int main() {

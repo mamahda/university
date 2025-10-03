@@ -1,0 +1,89 @@
+APT-GET UPDATE
+apt-get install isc-dhcp-server
+echo -e "INTERFACESv4=\"eth0\"" > /etc/default/isc-dhcp-server
+
+echo -e "failover peer \"failover-partner\" {
+    primary;
+    address 10.125.3.2;      
+    peer address 10.125.4.2;
+    max-response-delay 60;
+    max-unacked-updates 10;
+    mclt 3600;             
+    split 128;            
+    load balance max seconds 3;
+}
+
+subnet 10.125.3.0 netmask 255.255.255.0 {
+  option routers 10.125.3.1;
+  option domain-name-servers 192.168.122.1;
+  default-lease-time 120;
+  max-lease-time 6000;
+  pool {
+    failover peer \"failover-partner\";
+    range 10.125.3.20 10.125.3.25;
+  }
+}
+
+subnet 10.125.4.0 netmask 255.255.255.0 {
+  option routers 10.125.4.1;
+  option domain-name-servers 192.168.122.1;
+  default-lease-time 300;
+  max-lease-time 7200;
+  pool {
+    failover peer \"failover-partner\";
+    range 10.125.4.30 10.125.4.35;
+  }
+}
+
+subnet 10.125.5.0 netmask 255.255.255.0 {
+  option routers 10.125.5.1;
+  option domain-name-servers 192.168.122.1;
+  default-lease-time 120;
+  max-lease-time 6000;
+  pool {
+    failover peer \"failover-partner\";
+    range 10.125.5.40 10.125.5.45;
+    range 10.125.5.100 10.125.5.105;
+  }
+}
+
+subnet 10.125.6.0 netmask 255.255.255.0 {
+  option routers 10.125.6.1;
+  option domain-name-servers 192.168.122.1;
+  default-lease-time 120;
+  max-lease-time 6000;
+  pool {
+    failover peer \"failover-partner\";
+    range 10.125.6.50 10.125.6.55;
+  }
+}
+
+subnet 10.125.7.0 netmask 255.255.255.0 {
+  option routers 10.125.7.1;
+  option domain-name-servers 192.168.122.1;
+  default-lease-time 600;
+  max-lease-time 7200;
+  pool {
+    failover peer \"failover-partner\";
+    range 10.125.7.60 10.125.7.65;
+    range 10.125.7.110 10.125.7.115;
+  }
+}
+
+host Hawkeye {
+  hardware ethernet 02:42:a0:00:a2:00;
+  fixed-address 10.125.4.5;
+}
+
+host Thor {
+  hardware ethernet 02:42:6c:6c:df:00;
+  fixed-address 10.125.5.5;
+}
+
+host SpiderMan {
+  hardware ethernet 02:42:58:08:f0:00;
+  fixed-address 10.125.7.5;
+}
+" > /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server restart

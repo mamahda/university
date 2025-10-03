@@ -1,0 +1,23 @@
+auto eth0
+iface eth0 inet dhcp
+    hostname IronMan
+
+auto eth1
+iface eth1 inet static
+    address 10.125.1.1
+    netmask 255.255.255.0
+    post-up ip route add 10.125.3.0/24 via 10.125.1.2
+    post-up ip route add 10.125.4.0/24 via 10.125.1.2
+    pre-down ip route del 10.125.3.0/24 via 10.125.1.2
+    pre-down ip route del 10.125.4.0/24 via 10.125.1.2
+
+auto eth2
+iface eth2 inet static
+    address 10.125.2.1
+    netmask 255.255.255.0
+    post-up ip route add 10.125.5.0/24 via 10.125.2.2
+    post-up ip route add 10.125.6.0/24 via 10.125.2.2
+    post-up ip route add 10.125.7.0/24 via 10.125.2.2
+    pre-down ip route del 10.125.5.0/24 via 10.125.2.2
+    pre-down ip route del 10.125.6.0/24 via 10.125.2.2
+    pre-down ip route del 10.125.7.0/24 via 10.125.2.2

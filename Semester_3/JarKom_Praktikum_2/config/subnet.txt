@@ -1,0 +1,59 @@
+Subnet NAT
+eth0 IronMan(router) Dinamis
+
+Subnet 1
+eth1 IronMan(router) 10.125.1.1
+eth0 BlackPanther(router) 10.125.1.2
+
+Subnet 2
+eth2 IronMan(router) 10.125.2.1
+eth0 BlackWidow(router) 10.125.2.2
+
+Subnet 3
+eth1 BlackPanther(router) 10.125.3.1
+eth0 CaptainAmerica(server) 10.125.3.2
+eth0 Falcon(node) Dinamis 10.125.3.20 - 10.125.3.25
+
+Subnet 4
+eth2 BlackPanther(router) 10.125.4.1
+eth0 WinterSoldier(server) 10.125.4.2
+eth0 Hawkeye(node) Dinamis 10.125.4.30 - 10.125.4.35
+
+Subnet 5
+eth2 BlackWidow(router) 10.125.5.1
+eth0 ScarletWitch(node) Dinamis 10.125.5.40 - 10.125.5.45
+eth0 Thor(node) Dinamis 10.125.5.100 - 10.125.5.105
+
+Subnet 6
+eth1 BlackWidow(router) 10.125.6.1
+eth0 Vision(router) 10.125.6.2
+eth0 Hulk(node) Dinamis 10.125.6.50 - 10.125.6.55
+
+Subnet 7
+eth1 Vision(router) 10.125.7.1
+eth0 SpiderMan(node) Dinamis 10.125.7.60 - 10.125.7.65
+eth0 DoctorStrange(node) Dinamis 10.125.7.110 - 10.125.7.115
+
+cat /etc/sysctl.conf
+cat /etc/default/isc-dhcp-relay
+
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.125.0.0/16
+dhcp server 10.125.3.2
+
+subnet 10.125.3.0 netmask 255.255.255.0 {
+  range 10.125.3.20 10.125.3.25;
+  option routers 10.125.3.1;
+  option domain-name-servers 192.168.122.1;
+}
+
+subnet 10.125.4.0 netmask 255.255.255.0 {
+  range 10.125.4.30 10.125.4.35;
+  option routers 10.125.4.1;
+  option domain-name-servers 192.168.122.1;
+}
+
+subnet 10.125.6.0 netmask 255.255.255.0 {
+  range 10.125.6.50 10.125.6.55;
+  option routers 10.125.6.1;
+  option domain-name-servers 192.168.122.1;
+}

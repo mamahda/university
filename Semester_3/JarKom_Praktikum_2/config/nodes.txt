@@ -1,0 +1,130 @@
+-- IronMan:
+auto eth0
+iface eth0 inet dhcp
+    hostname IronMan
+
+auto eth1
+iface eth1 inet static
+    address 10.125.1.1
+    netmask 255.255.255.0
+    post-up ip route add 10.125.3.0/24 via 10.125.1.2
+    post-up ip route add 10.125.4.0/24 via 10.125.1.2
+    pre-down ip route del 10.125.3.0/24 via 10.125.1.2
+    pre-down ip route del 10.125.4.0/24 via 10.125.1.2
+
+auto eth2
+iface eth2 inet static
+    address 10.125.2.1
+    netmask 255.255.255.0
+    post-up ip route add 10.125.5.0/24 via 10.125.2.2
+    post-up ip route add 10.125.6.0/24 via 10.125.2.2
+    post-up ip route add 10.125.7.0/24 via 10.125.2.2
+    pre-down ip route del 10.125.5.0/24 via 10.125.2.2
+    pre-down ip route del 10.125.6.0/24 via 10.125.2.2
+    pre-down ip route del 10.125.7.0/24 via 10.125.2.2
+
+-- BlackPanther:
+auto eth0 
+iface eth0 inet static
+    address 10.125.1.2
+    netmask 255.255.255.0
+    gateway 10.125.1.1
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+    address 10.125.3.1
+    netmask 255.255.255.0
+
+auto eth2
+iface eth2 inet static
+    address 10.125.4.1
+    netmask 255.255.255.0
+
+-- BlackWidow:
+auto eth0
+iface eth0 inet static
+    address 10.125.2.2
+    netmask 255.255.255.0
+    gateway 10.125.2.1
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+    address 10.125.6.1
+    netmask 255.255.255.0
+    post-up ip route add 10.125.7.0/24 via 10.125.6.2
+    pre-down ip route del 10.125.7.0/24 via 10.125.6.2
+
+auto eth2
+iface eth2 inet static
+    address 10.125.5.1
+    netmask 255.255.255.0
+
+-- Vision:
+auto eth0
+iface eth0 inet static
+    address 10.125.6.2
+    netmask 255.255.255.0
+    gateway 10.125.6.1
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+auto eth1
+iface eth1 inet static
+    address 10.125.7.1
+    netmask 255.255.255.0
+
+-- CaptainAmerica:
+auto eth0
+iface eth0 inet static
+    address 10.125.3.2
+    netmask 255.255.255.0
+    gateway 10.125.3.1
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+-- WinterSoldier:
+auto eth0
+iface eth0 inet static
+    address 10.125.4.2
+    netmask 255.255.255.0
+    gateway 10.125.4.1
+    up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+-- Falcon:
+auto eth0
+iface eth0 inet dhcp
+    hostname Falcon
+
+-- Hawkeye
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:a0:00:a2:00
+    hostname Hawkeye
+
+-- ScarletWitch:
+auto eth0
+iface eth0 inet dhcp
+    hostname ScarletWitch
+
+-- Thor:
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:6c:6c:df:00
+    hostname Thor
+
+-- Hulk:
+auto eth0
+iface eth0 inet dhcp
+    hostname Hulk
+
+-- SpiderMan:
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:58:08:f0:00
+    hostname SpiderMan
+
+-- DoctorStrange:
+auto eth0
+iface eth0 inet dhcp
+    hostname DoctorStrange
+
