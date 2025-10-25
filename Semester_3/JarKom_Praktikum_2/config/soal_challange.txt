@@ -1,0 +1,6 @@
+CHALLENGE
+1. Konfigurasi agar client A dan client B mendapat ip dari dhcp server
+2. Tambahkan konfigurasi agar AClient selalu mendapat ip 192.168.1.48 dari dhcp server. 
+Tambahkan konfigurasi agar BClient selalu mendapat ip di ranges 192.168.1.45 - 192.168.1.55 dari dhcp server.
+Untuk ip address pada CClient dam DClient dibebaskan
+3. Gunakan static routing agar semua client dapat berkomunikasi satu sama lain

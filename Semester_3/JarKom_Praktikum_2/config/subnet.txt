@@ -40,20 +40,3 @@ cat /etc/default/isc-dhcp-relay
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.125.0.0/16
 dhcp server 10.125.3.2
 
-subnet 10.125.3.0 netmask 255.255.255.0 {
-  range 10.125.3.20 10.125.3.25;
-  option routers 10.125.3.1;
-  option domain-name-servers 192.168.122.1;
-}
-
-subnet 10.125.4.0 netmask 255.255.255.0 {
-  range 10.125.4.30 10.125.4.35;
-  option routers 10.125.4.1;
-  option domain-name-servers 192.168.122.1;
-}
-
-subnet 10.125.6.0 netmask 255.255.255.0 {
-  range 10.125.6.50 10.125.6.55;
-  option routers 10.125.6.1;
-  option domain-name-servers 192.168.122.1;
-}
