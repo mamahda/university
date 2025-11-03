@@ -1,0 +1,60 @@
+cat <<'EOF' > /etc/bind/named.conf.local
+zone "lune33.com" {
+    type slave;
+    masters { 10.125.3.11; };
+    file "/var/lib/jarkom/lune33.com";
+};
+
+zone "sciel33.com" {
+    type slave;
+    masters { 10.125.3.11; };
+    file "/var/lib/jarkom/sciel33.com";
+};
+
+zone "gustave33.com" {
+    type slave;
+    masters { 10.125.3.11; };
+    file "/var/lib/jarkom/gustave33.com";
+};
+
+zone "expedition.gustave33.com" {
+    type master;
+    file "/etc/bind/delegasi/expedition.gustave33.com";
+};
+
+zone "2.125.10.in-addr.arpa" {
+    type slave;
+    masters { 10.125.3.11; };
+    file "/var/lib/jarkom/2.125.10.in-addr.arpa";
+};
+EOF
+
+cat <<'EOF' > /etc/bind/named.conf.options
+options {
+        forwarders {
+          192.168.122.1;
+        };
+        allow-query { any; };
+        directory "/var/cache/bind";
+};
+EOF
+
+mkdir -p /etc/bind/delegasi
+touch /etc/bind/delegasi/expedition.gustave33.com
+
+cat <<'EOF' > /etc/bind/delegasi/expedition.gustave33.com
+$TTL 604800
+@       IN      SOA     expedition.gustave33.com. root.expedition.gustave33.com. (
+                     2025102701 ; Serial
+                     604800     ; Refresh
+                     86400      ; Retry
+                     2419200    ; Expire
+                     604800 )   ; Negative Cache TTL
+;
+@       IN      NS      expedition.gustave33.com.
+ns1     IN      A       10.125.2.13
+@       IN      A       10.125.2.13
+EOF
+
+service named stop
+service named start

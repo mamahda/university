@@ -1,0 +1,23 @@
+-Router
+Aline   eth0 dhcp
+Aline   eth1 10.125.2.1
+Aline   eth2 10.125.3.1
+Aline   eth3 10.125.4.1
+Aline   eth4 10.125.5.1
+
+-Web server
+Lune    eth0 10.125.2.11
+Scial   eth0 10.125.2.12
+Gustave eth0 10.125.2.13
+
+-DNS server
+Renoir  eth0 10.125.3.11
+Verso   eth0 10.125.3.12
+
+-Reverse Proxy server
+Alicia  eth0 10.125.4.11
+
+-Client machines
+Esquie  eth0 10.125.5.11
+Monocco eth0 10.125.5.12
+Maelle  eth0 10.125.5.13

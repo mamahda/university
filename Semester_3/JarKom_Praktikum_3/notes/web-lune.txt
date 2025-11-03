@@ -1,0 +1,81 @@
+mkdir /var/www/public
+
+touch /var/www/public/profile_lune.html
+
+wget http://192.168.56.1:8000/lune.html -O /var/www/public/profile_lune.html
+wget http://192.168.56.1:8000/info.html -O /var/www/public/info.html
+
+cat << 'EOF' > /etc/nginx/sites-available/default
+server {
+    listen 80;
+    root /var/www/public;
+    index profile_lune.html;
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    access_log /tmp/access.log custom_access;
+    error_log /tmp/error.log;
+}
+
+server {
+    listen 8000;
+    root /var/www/public;
+    index info.html;
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    access_log /tmp/access.log custom_access;
+    error_log /tmp/error.log;
+}
+EOF
+
+cat << 'EOF' > /etc/nginx/nginx.conf
+user www-data;
+worker_processes auto;
+worker_cpu_affinity auto;
+pid /run/nginx.pid;
+error_log /var/log/nginx/error.log;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+        worker_connections 768;
+}
+
+http {
+        sendfile on;
+        tcp_nopush on;
+        types_hash_max_size 2048;
+        server_tokens off;
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers off;
+
+        log_format custom_access '[$time_local] Jarkom Node Lune Access from $remote_addr using method "$request" returned status $status with $body_bytes_sent bytes sent in $request_time seconds';
+
+        access_log /var/log/nginx/access.log;
+
+        gzip on;
+
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+}
+EOF
+
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled
+service nginx restart

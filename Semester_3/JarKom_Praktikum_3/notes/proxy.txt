@@ -1,0 +1,31 @@
+cat << 'EOF' > /etc/nginx/sites-available/default
+upstream web-servers {
+    server lune33.com:8000;
+    server sciel33.com:8100;
+    server gustave33.com:8200;
+}
+
+server {
+        listen 80;
+
+        server_name _;
+
+        location / {
+                proxy_pass http://web-servers;
+        }
+
+        location /profile_lune {
+                proxy_pass http://lune33.com/;
+        }
+
+        location /profile_sciel {
+                proxy_pass http://sciel33.com/;
+        }
+
+        location /profile_gustave {
+                proxy_pass http://gustave33.com:8080/;
+        }
+}
+EOF
+
+service nginx restart
