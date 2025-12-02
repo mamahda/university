@@ -1,0 +1,40 @@
+body {
+    background-color: #f2f2f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.auth-card {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.auth-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffc107;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.auth-btn:hover { background: #ffca2c; }
+.auth-link { color: #888; display: block; margin-top: 15px; text-decoration: none; }
+.error-msg { color: red; margin-bottom: 15px; display: block; }

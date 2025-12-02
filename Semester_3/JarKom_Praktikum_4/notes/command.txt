@@ -1,0 +1,157 @@
+apt-get update
+apt-get install -y iptables
+
+watch -n 1 "iptables -nvL FORWARD"
+
+# ---- NO 2 ---
+# ---- router2
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+# ---- NO 3 ---
+# ---- General
+cd /usr/lib/frr
+./zebra -d
+./ripd -d
+./mgmtd -d
+vtysh
+conf t
+router rip
+
+exit 
+exit
+exit
+cd /
+
+show ip rip
+show ip route
+
+# --- router1
+network 10.234.0.128/25 
+network 10.234.0.0/30  
+
+# --- router2
+network 10.234.0.0/30   
+network 10.234.0.4/30  
+network 10.234.0.8/30 
+
+# --- router3
+network 10.234.0.16/28  
+network 10.234.0.32/27  
+network 10.234.0.8/30  
+
+# --- router4
+network 10.234.0.64/27
+network 10.234.0.96/27  
+network 10.234.0.4/30  
+network 10.234.0.12/30
+
+# --- router5
+network 10.234.2.0/23
+network 10.234.0.12/30
+
+# ---- NO 4 ---
+# --- web-server 1 & 2
+wget http://192.168.56.1:8000/index.html -O /var/www/html/index.html
+
+cat << 'EOF' > /etc/nginx/sites-available/default
+server {
+    listen 80;
+    root /var/www/html;
+    index index.html;
+    server_name _;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    access_log /tmp/access.log;
+    error_log /tmp/error.log;
+}
+EOF
+service nginx restart
+
+# ---- NO 5 ---
+# --- HR-Server
+nc -l -p 1337
+
+# --- All Node
+nc 10.234.2.2 1337
+nc 20.125.2.252 4444
+
+# --- router5
+iptables -A FORWARD -p tcp -d 10.234.2.0/23 -m multiport --dports 1337,4444 -j DROP
+
+# ---- NO 6 ---
+# --- router4
+iptables -A FORWARD -p tcp -s 10.234.0.128/25 -d 10.234.0.66 --dport 22 -j ACCEPT
+iptables -A FORWARD -p tcp -s 10.234.0.128/25 -d 10.234.0.98 --dport 22 -j ACCEPT
+iptables -A FORWARD -p tcp -d 10.234.0.66 --dport 22 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.0.98 --dport 22 -j DROP
+
+# ---- NO 7 ---
+# --- router3
+date -s "2025-11-17 10:00:00"
+date -s "2025-11-17 22:00:00"
+date -s "2025-11-16 10:00:00"
+
+iptables -A FORWARD -p tcp -d 10.234.0.18 -m multiport --dports 80,443 -m time --timestart 07:00 --timestop 22:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat --kerneltz -j ACCEPT
+iptables -A FORWARD -p tcp -d 10.234.0.34 -m multiport --dports 80,443 -m time --timestart 07:00 --timestop 22:00 --weekdays Mon,Tue,Wed,Thu,Fri,Sat --kerneltz -j ACCEPT
+
+iptables -A FORWARD -p tcp -d 10.234.0.18 -m multiport --dports 80,443 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.0.34 -m multiport --dports 80,443 -j DROP
+
+# ---- NO 8 ---
+# --- router4
+iptables -D FORWARD -p tcp -s 10.234.0.128/25 -d 10.234.0.66 --dport 22 -j ACCEPT
+iptables -D FORWARD -p tcp -s 10.234.0.128/25 -d 10.234.0.98 --dport 22 -j ACCEPT
+iptables -D FORWARD -p tcp -d 10.234.0.66 --dport 22 -j DROP
+iptables -D FORWARD -p tcp -d 10.234.0.98 --dport 22 -j DROP
+
+iptables -A FORWARD -p tcp -d 10.234.0.66 --dport 80 -j ACCEPT
+iptables -A FORWARD -p tcp -d 10.234.0.98 --dport 80 -j ACCEPT
+
+iptables -A FORWARD -d 10.234.0.66 -j DROP
+iptables -A FORWARD -d 10.234.0.98 -j DROP
+
+# ---- NO 9 ---
+# --- router 1
+iptables -A FORWARD -p icmp --icmp-type echo-request -d 10.234.0.128/25 -j DROP
+
+# ---- NO 10 ---
+# ---- router1
+iptables -D FORWARD -p icmp --icmp-type echo-request -d 10.234.0.128/25 -j DROP
+iptables -A FORWARD -p icmp --icmp-type echo-request -d 10.234.0.128/25 -m limit --limit 60/min -j LOG --log-prefix "Drop-Ping-IT: " --log-level 4
+iptables -A FORWARD -p icmp --icmp-type echo-request -d 10.234.0.128/25 -j DROP
+
+# ---- router3
+# DB Server 1
+iptables -D FORWARD -p tcp -d 10.234.0.18 -m multiport --dports 80,443 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.0.18 -m multiport --dports 80,443 -m limit --limit 60/min -j LOG --log-prefix "Drop-Time-DB1: " --log-level 4
+iptables -A FORWARD -p tcp -d 10.234.0.18 -m multiport --dports 80,443 -j DROP
+
+# DB Server 2
+iptables -D FORWARD -p tcp -d 10.234.0.34 -m multiport --dports 80,443 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.0.34 -m multiport --dports 80,443 -m limit --limit 60/min -j LOG --log-prefix "Drop-Time-DB2: " --log-level 4
+iptables -A FORWARD -p tcp -d 10.234.0.34 -m multiport --dports 80,443 -j DROP
+
+# --- router4
+# Web Server 1
+iptables -D FORWARD -p tcp -d 10.234.0.66 --dport 22 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.0.66 --dport 22 -m limit --limit 60/min -j LOG --log-prefix "Drop-SSH-Web1: " --log-level 4
+iptables -A FORWARD -p tcp -d 10.234.0.66 --dport 22 -j DROP
+iptables -D FORWARD -d 10.234.0.66 -j DROP
+iptables -A FORWARD -d 10.234.0.66 -m limit --limit 60/min -j LOG --log-prefix "Drop-All-Web1: " --log-level 4
+iptables -A FORWARD -d 10.234.0.66 -j DROP
+
+# Web Server 2
+iptables -D FORWARD -p tcp -d 10.234.0.98 --dport 22 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.0.98 --dport 22 -m limit --limit 60/min -j LOG --log-prefix "Drop-SSH-Web2: " --log-level 4
+iptables -A FORWARD -p tcp -d 10.234.0.98 --dport 22 -j DROP
+iptables -D FORWARD -d 10.234.0.98 -j DROP
+iptables -A FORWARD -d 10.234.0.98 -m limit --limit 60/min -j LOG --log-prefix "Drop-All-Web2: " --log-level 4
+iptables -A FORWARD -d 10.234.0.98 -j DROP
+
+# --- router5
+iptables -D FORWARD -p tcp -d 10.234.2.0/23 -m multiport --dports 1337,4444 -j DROP
+iptables -A FORWARD -p tcp -d 10.234.2.0/23 -m multiport --dports 1337,4444 -m limit --limit 60/min -j LOG --log-prefix "Drop-HR-Port: " --log-level 4
+iptables -A FORWARD -p tcp -d 10.234.2.0/23 -m multiport --dports 1337,4444 -j DROP

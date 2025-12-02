@@ -1,0 +1,51 @@
+.container {
+    max-width: 720px;
+    margin: 0 auto;      /* Posisi Tengah Kiri-Kanan */
+    
+    /* --- BAGIAN INI YANG DIUBAH --- */
+    padding-top: 50px;  /* Sebelumnya 40px, sekarang kita buat jauh lebih lega */
+    padding-bottom: 100px; 
+}
+
+/* Opsional: Jika ingin tombol 'Back' (< Notes) ada jarak lebih jauh lagi dari judul */
+.nav-link-custom {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px; /* Tambah jarak antara tombol Back dan Input Judul */
+    display: block;
+}
+
+/* Input Judul: Sangat Besar & Bold */
+.input-title {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    
+    /* Typography Update */
+    font-weight: 800;     /* Lebih tebal */
+    font-size: 3rem;      /* Ukuran font 3x lipat (sekitar 48px) */
+    line-height: 1.2;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.input-title::placeholder {
+    color: #bdc3c7;
+}
+
+/* Input Konten: Lebih enak dibaca */
+.input-content {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 70vh;
+    resize: none;
+    
+    /* Typography Update */
+    font-size: 1.25rem;   /* Sekitar 20px (standar baca yang nyaman) */
+    line-height: 1.8;     /* Jarak antar baris lebih renggang */
+    color: #4a5568;
+}
+

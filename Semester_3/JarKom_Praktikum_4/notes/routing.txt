@@ -1,0 +1,38 @@
+-- General
+cd /usr/lib/frr
+./zebra -d
+./ripd -d
+./mgmtd -d
+vtysh
+conf t
+router rip
+
+exit 
+exit
+
+show ip rip
+show ip route
+
+-- router1
+network 10.125.0.128/25 
+network 10.125.0.0/30  
+
+-- router2
+network 10.125.0.0/30   
+network 10.125.0.4/30  
+network 10.125.0.8/30 
+
+-- router3
+network 10.125.0.16/28  
+network 10.125.0.32/27  
+network 10.125.0.8/30  
+
+-- router4
+network 10.125.0.64/27
+network 10.125.0.96/27  
+network 10.125.0.4/30  
+network 10.125.0.12/30
+
+-- router5
+network 10.125.2.0/23
+network 10.125.0.12/30
