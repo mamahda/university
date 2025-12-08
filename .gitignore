@@ -1,7 +1,9 @@
 general/*
 materi/*
 panitia/*
-buku/*
+pelatihan/*
+Organisasi/*
+Sertifikat/*
 **/*.pptx
 **/*.ppt
 **/.cph/*
