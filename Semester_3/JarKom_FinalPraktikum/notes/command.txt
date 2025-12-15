@@ -1,0 +1,3 @@
+apt-get update
+apt-get install iptables -y
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE

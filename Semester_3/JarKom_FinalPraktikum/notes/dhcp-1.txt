@@ -1,0 +1,70 @@
+apt-get update
+apt-get install isc-dhcp-server -y
+
+echo -e "INTERFACESv4=\"eth0\"" > /etc/default/isc-dhcp-server
+
+cat << 'EOF' > /etc/dhcp/dhcpd.conf
+failover peer "dhcp-failover" {
+  primary;
+  address 10.125.0.67;
+  port 647;
+  peer address 10.125.0.66;
+  peer port 647;
+  max-response-delay 60;
+  max-unacked-updates 10;
+  load balance max seconds 3;
+  mclt 3600;
+  split 128; # Pembagian beban 50-50
+}
+
+subnet 10.125.0.64 netmask 255.255.255.192 {
+}
+
+subnet 10.125.8.0 netmask 255.255.248.0 {
+  option routers 10.125.8.1;
+  option domain-name-servers 10.125.0.34, 10.125.0.35;
+  pool {
+    failover peer "dhcp-failover";
+    range 10.125.8.2 10.125.15.254;
+  }
+}
+
+subnet 10.125.32.0 netmask 255.255.224.0 {
+  option routers 10.125.32.1;
+  option domain-name-servers 10.125.0.34, 10.125.0.35;
+  pool {
+    failover peer "dhcp-failover";
+    range 10.125.32.2 10.125.63.254;
+  }
+}
+
+subnet 10.125.1.0 netmask 255.255.255.0 {
+  option routers 10.125.1.1;
+  option domain-name-servers 10.125.0.34, 10.125.0.35;
+  pool {
+    failover peer "dhcp-failover";
+    range 10.125.1.2 10.125.1.254;
+  }
+}
+
+subnet 10.125.0.128 netmask 255.255.255.128 {
+  option routers 10.125.0.129;
+  option domain-name-servers 10.125.0.34, 10.125.0.35;
+  pool {
+    failover peer "dhcp-failover";
+    range 10.125.0.130 10.125.0.254;
+  }
+}
+
+host Slav {
+  hardware ethernet 02:42:09:a4:b5:00;
+  fixed-address 10.125.1.2;
+}
+
+host Sicilian {
+  hardware ethernet 02:42:ef:f0:75:00;
+  fixed-address 10.125.0.130;
+}
+EOF
+
+service isc-dhcp-server restart

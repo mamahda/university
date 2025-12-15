@@ -1,0 +1,19 @@
+# --- Smith-Morris ---
+ip route add 10.125.0.64/26 via 10.125.0.2
+ip route add 10.125.0.128/25 via 10.125.0.2
+ip route add 10.125.0.32/28 via 10.125.0.2
+ip route add 10.125.1.0/24 via 10.125.0.2
+ip route add 10.125.0.8/29 via 10.125.0.2
+ip route add 10.125.0.16/29 via 10.125.0.2
+
+# --- Fianchetto ---
+ip route add 10.125.0.64/26 via 10.125.0.18
+ip route add 10.125.0.128/25 via 10.125.0.19
+ip route add 10.125.0.32/28 via 10.125.0.19
+ip route add 10.125.1.0/24 via 10.125.0.19
+ip route add 10.125.0.8/29 via 10.125.0.19
+
+# --- Zwischenzug ---
+ip route add 10.125.0.128/25 via 10.125.0.10
+ip route add 10.125.0.32/28 via 10.125.0.10
+ip route add 10.125.1.0/24 via 10.125.0.10

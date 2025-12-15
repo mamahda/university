@@ -1,0 +1,51 @@
+# --- Smith-Morra
+ip route del 10.125.0.8/29
+ip route del 10.125.0.16/29
+ip route del 10.125.0.32/28
+ip route del 10.125.0.64/26
+ip route del 10.125.0.128/25
+ip route del 10.125.1.0/24
+
+# --- Fianchetto
+ip route del 10.125.0.8/29
+ip route del 10.125.0.32/28
+ip route del 10.125.0.64/26
+ip route del 10.125.0.128/25
+ip route del 10.125.1.0/24
+
+# --- Zwischenzug
+ip route del 10.125.0.32/28
+ip route del 10.125.0.128/25
+ip route del 10.125.1.0/24
+
+cd /usr/lib/frr
+./zebra -d
+./ripd -d
+./mgmtd -d
+  
+vtysh
+conf t
+router rip
+
+# --- Smith-Morra
+network 10.125.0.0/30
+network 10.125.32.0/19
+network 10.125.8.0/21
+
+# --- Fianchetto
+network 10.125.0.16/29
+network 10.125.0.0/30
+
+# --- Lucena
+network 10.125.0.16/29
+network 10.125.0.64/26
+
+# --- Zwischenzug
+network 10.125.0.8/29
+network 10.125.0.16/29
+
+# --- Zugzwang
+network 10.125.0.128/25
+network 10.125.0.32/28
+network 10.125.1.0/24
+network 10.125.0.8/29

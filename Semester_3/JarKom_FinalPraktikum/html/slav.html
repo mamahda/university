@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slav Defense Guide (Offline)</title>
+    <style>
+      /* General Reset and Base Styles */
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        background-color: #f3f4f6; /* Light gray background */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .container {
+        max-width: 900px;
+        width: 100%;
+      }
+
+      /* Color Variables (Simplified Palette) */
+      :root {
+        --primary-gray: #374151;
+        --primary-dark: #0f172a;
+        --card-bg: #ffffff;
+        --text-color: #374151;
+        --heading-color: #111827;
+      }
+
+      /* Header Styling */
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      header h1 {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary-dark);
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+      }
+      header p {
+        font-size: 18px;
+        color: #6b7280;
+      }
+
+      /* Card Styling */
+      .card {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-top: 4px solid var(--primary-gray); /* Darker border for Slav */
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .card-header span {
+        font-size: 28px;
+        margin-right: 12px;
+      }
+      .card-header h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary-gray);
+      }
+      .card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--heading-color);
+        margin-bottom: 20px;
+      }
+
+      /* Content Styles */
+      .content p {
+        color: var(--text-color);
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      /* Code Block/Key Lines */
+      .key-sequence {
+        background-color: #e5e7eb;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .key-sequence h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--primary-dark);
+      }
+      .key-sequence code {
+        display: block;
+        background-color: #d1d5db;
+        font-family: monospace;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: var(--primary-dark);
+        white-space: pre-wrap; /* Ensure wrapping on smaller screens */
+      }
+
+      /* List Styles */
+      .variations-list {
+        list-style: disc;
+        margin-left: 20px;
+        padding-left: 0;
+        color: var(--text-color);
+        line-height: 1.5;
+      }
+      .variations-list li {
+        margin-bottom: 8px;
+      }
+      .variations-list strong {
+        font-weight: 600;
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        text-align: center;
+        color: #6b7280;
+        font-size: 14px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      /* Responsive adjustments */
+      @media (min-width: 768px) {
+        header h1 {
+          font-size: 44px;
+        }
+        .card {
+          padding: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>The Slav Defense</h1>
+        <p>A solid, classical, and structurally sound response to 1. d4.</p>
+      </header>
+
+      <main>
+        <!-- SLAV DEFENSE CARD -->
+        <div class="card">
+          <div class="card-header">
+            <span role="img" aria-label="Rook icon">♜</span>
+            <h2>Key Strategies</h2>
+          </div>
+          <h3 class="opening-move">Start: 1. d4 d5 2. c4 c6</h3>
+
+          <div class="content">
+            <p>
+              The Slav is a reliable way for Black to meet 1. d4. The key idea
+              of 2... c6 is to reinforce the d5 pawn while keeping the
+              light-squared bishop free to develop outside the pawn chain (on f5
+              or g4). It often leads to positional maneuvering rather than the
+              sharp tactical lines found in the Sicilian, offering excellent
+              control over the center.
+            </p>
+
+            <!-- Key Lines -->
+            <div class="key-sequence">
+              <h4>Key Move Sequence (Slav Accepted)</h4>
+              <code title="1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Nc3 dxc4">
+                1. d4 d5 2. c4 c6 3. Nf3 Nf6 4. Nc3 dxc4
+              </code>
+            </div>
+
+            <!-- Sub-Variations -->
+            <div class="variations">
+              <h3>Major Sub-Variations:</h3>
+              <ul class="variations-list">
+                <li>
+                  <strong class="font-medium">Semi-Slav:</strong> Black plays
+                  ...e6 in addition to ...c6. This leads to complex Queen's
+                  Gambit Declined structures where Black accepts a blocked c8
+                  bishop for a strong central defense.
+                </li>
+                <li>
+                  <strong class="font-medium">Anti-Slav Variations:</strong>
+                  White avoids 3. Nc3, often playing 3. Nf3 followed by 4. e3 or
+                  4. Qb3, attempting to gain space and challenge Black's
+                  development early.
+                </li>
+                <li>
+                  <strong class="font-medium">Chebanenko Slav:</strong> Black
+                  plays 3... a6, securing the b5 square for their light-squared
+                  bishop or knight, leading to more original and dynamic lines.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>This document is made for Computer Networks 2025. <br />-adieos</p>
+      </footer>
+    </div>
+  </body>
+</html>

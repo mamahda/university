@@ -1,0 +1,38 @@
+cat << EOF > /etc/bind/named.conf.local
+zone "parkov.com" {
+    type slave;
+    masters { 10.125.0.34; };
+    file "/var/lib/bind/parkov.com";
+};
+
+zone "paskarov.com" {
+    type slave;
+    masters { 10.125.0.34; };
+    file "/var/lib/bind/paskarov.com";
+};
+
+zone "openings.com" {
+    type slave;
+    masters { 10.125.0.34; };
+    file "/var/lib/bind/openings.com";
+};
+EOF
+
+cat << EOF > /etc/bind/named.conf.options
+options {
+        directory "/var/cache/bind";
+
+        recursion yes;
+        allow-query { any; };
+
+        forwarders {
+                192.168.122.1;
+        };
+
+        dnssec-validation no;
+
+        listen-on-v6 { any; };
+};
+EOF
+
+service named restart

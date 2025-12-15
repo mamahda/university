@@ -1,0 +1,10 @@
+apt-get update
+apt-get install isc-dhcp-relay -y
+
+echo "net.ipv4.ip_forward=1" > /etc/sysctl.conf
+cat << 'EOF' > /etc/default/isc-dhcp-relay
+SERVERS="10.125.0.67 10.125.0.66"
+INTERFACES=""
+OPTIONS=""
+EOF
+service isc-dhcp-relay restart

@@ -1,0 +1,50 @@
+# --- Smith-Morra
+iptables -A FORWARD -p tcp -s 10.125.32.0/19 -d 10.125.0.34 --dport 22 -j DROP
+iptables -A FORWARD -p tcp -s 10.125.32.0/19 -d 10.125.0.35 --dport 22 -j DROP
+iptables -A FORWARD -p tcp -s 10.125.8.0/21 -d 10.125.0.34 --dport 22 -j DROP
+iptables -A FORWARD -p tcp -s 10.125.8.0/21 -d 10.125.0.35 --dport 22 -j DROP
+
+iptables -A FORWARD -s 10.125.32.0/19 -d 10.125.0.130 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A FORWARD -s 10.125.8.0/21 -d 10.125.0.130 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A FORWARD -s 10.125.32.0/19 -d 10.125.1.2 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A FORWARD -s 10.125.8.0/21 -d 10.125.1.2 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A FORWARD -s 10.125.32.0/19 -d 10.125.0.130 -p tcp --dport 80 -j DROP
+iptables -A FORWARD -s 10.125.8.0/21 -d 10.125.0.130 -p tcp --dport 80 -j DROP
+
+iptables -A FORWARD -s 10.125.32.0/19 -d 10.125.1.2 -p tcp --dport 80 -j DROP
+iptables -A FORWARD -s 10.125.8.0/21 -d 10.125.1.2 -p tcp --dport 80 -j DROP
+
+
+iptables -F
+iptables -A FORWARD -s 10.125.32.0/19 -d 10.125.0.130 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A FORWARD -s 10.125.8.0/21 -d 10.125.0.130 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A FORWARD -s 10.125.32.0/19 -d 10.125.1.2 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A FORWARD -s 10.125.8.0/21 -d 10.125.1.2 -p tcp --dport 80 -m time --timestart 09:00 --timestop 17:00 --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.32.0/19 -d 10.125.0.34 -m limit --limit 5/min -j LOG --log-prefix "DROP-SSH: " --log-level 7
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.32.0/19 -d 10.125.0.34 -j DROP
+
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.32.0/19 -d 10.125.0.35 -m limit --limit 5/min -j LOG --log-prefix "DROP-SSH: " --log-level 7
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.32.0/19 -d 10.125.0.35 -j DROP
+
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.8.0/21 -d 10.125.0.34 -m limit --limit 5/min -j LOG --log-prefix "DROP-SSH: " --log-level 7
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.8.0/21 -d 10.125.0.34 -j DROP
+
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.8.0/21 -d 10.125.0.35 -m limit --limit 5/min -j LOG --log-prefix "DROP-SSH: " --log-level 7
+iptables -A FORWARD -p tcp --dport 22 -s 10.125.8.0/21 -d 10.125.0.35 -j DROP
+
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.32.0/19 -d 10.125.0.130 -m limit --limit 5/min -j LOG --log-prefix "DROP-HTTP: " --log-level 7
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.32.0/19 -d 10.125.0.130 -j DROP
+
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.8.0/21 -d 10.125.0.130 -m limit --limit 5/min -j LOG --log-prefix "DROP-HTTP: " --log-level 7
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.8.0/21 -d 10.125.0.130 -j DROP
+
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.32.0/19 -d 10.125.1.2 -m limit --limit 5/min -j LOG --log-prefix "DROP-HTTP: " --log-level 7
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.32.0/19 -d 10.125.1.2 -j DROP
+
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.8.0/21 -d 10.125.1.2 -m limit --limit 5/min -j LOG --log-prefix "DROP-HTTP: " --log-level 7
+iptables -A FORWARD -p tcp --dport 80 -s 10.125.8.0/21 -d 10.125.1.2 -j DROP
+

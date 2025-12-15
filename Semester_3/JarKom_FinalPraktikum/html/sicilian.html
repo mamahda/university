@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sicilian Defense Guide (Offline)</title>
+    <style>
+      /* General Reset and Base Styles */
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        background-color: #f3f4f6; /* Light gray background */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .container {
+        max-width: 900px;
+        width: 100%;
+      }
+
+      /* Color Variables (Simplified Palette) */
+      :root {
+        --primary-blue: #1e40af;
+        --primary-dark: #0f172a;
+        --card-bg: #ffffff;
+        --text-color: #374151;
+        --heading-color: #111827;
+      }
+
+      /* Header Styling */
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      header h1 {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--primary-dark);
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+      }
+      header p {
+        font-size: 18px;
+        color: #6b7280;
+      }
+
+      /* Card Styling */
+      .card {
+        background-color: var(--card-bg);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-top: 4px solid var(--primary-blue);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .card-header span {
+        font-size: 28px;
+        margin-right: 12px;
+      }
+      .card-header h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary-blue);
+      }
+      .card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--heading-color);
+        margin-bottom: 20px;
+      }
+
+      /* Content Styles */
+      .content p {
+        color: var(--text-color);
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      /* Code Block/Key Lines */
+      .key-sequence {
+        background-color: #e5e7eb;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .key-sequence h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--primary-dark);
+      }
+      .key-sequence code {
+        display: block;
+        background-color: #d1d5db;
+        font-family: monospace;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        color: var(--primary-dark);
+        white-space: pre-wrap; /* Ensure wrapping on smaller screens */
+      }
+
+      /* List Styles */
+      .variations-list {
+        list-style: disc;
+        margin-left: 20px;
+        padding-left: 0;
+        color: var(--text-color);
+        line-height: 1.5;
+      }
+      .variations-list li {
+        margin-bottom: 8px;
+      }
+      .variations-list strong {
+        font-weight: 600;
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        text-align: center;
+        color: #6b7280;
+        font-size: 14px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      /* Responsive adjustments */
+      @media (min-width: 768px) {
+        header h1 {
+          font-size: 44px;
+        }
+        .card {
+          padding: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>The Sicilian Defense</h1>
+        <p>
+          Black's most popular, aggressive, and counter-attacking response to 1.
+          e4.
+        </p>
+      </header>
+
+      <main>
+        <!-- SICILIAN DEFENSE CARD -->
+        <div class="card">
+          <div class="card-header">
+            <span role="img" aria-label="Knight icon">♞</span>
+            <h2>Key Strategies</h2>
+          </div>
+          <h3 class="opening-move">Start: 1. e4 c5</h3>
+
+          <div class="content">
+            <p>
+              The Sicilian is a commitment to imbalance. Black immediately
+              fights for the d4 square without directly occupying the center,
+              inviting White to expand. This often leads to sharp battles,
+              especially in the Open Sicilian variations where White plays d4.
+              Black aims to undermine White's central control and use the
+              half-open c-file. Favored by champions like Kasparov and Fischer,
+              this opening requires high skill to play but can be deadly in the
+              right hands.
+            </p>
+
+            <!-- Key Lines -->
+            <div class="key-sequence">
+              <h4>Key Move Sequence (Open Sicilian)</h4>
+              <code title="1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4">
+                1. e4 c5 2. Nf3 Nc6 3. d4 cxd4 4. Nxd4
+              </code>
+            </div>
+
+            <!-- Sub-Variations -->
+            <div class="variations">
+              <h3>Major Sub-Variations:</h3>
+              <ul class="variations-list">
+                <li>
+                  <strong class="font-medium">Najdorf:</strong> 4... a6.
+                  Extremely flexible and deep. Black often prepares to challenge
+                  the center with ...e5 or initiate queenside play with ...b5.
+                </li>
+                <li>
+                  <strong class="font-medium">Dragon:</strong> 6... g6. Black
+                  fianchettoes the dark-squared bishop, leading to sharp,
+                  opposite-side castling positions, often involving an attack
+                  down the h-file.
+                </li>
+                <li>
+                  <strong class="font-medium">Scheveningen:</strong> Black
+                  places pawns on e6 and d6, forming a solid central fortress,
+                  but risking a Keres Attack if White is aggressive.
+                </li>
+                <li>
+                  <strong class="font-medium">Taimanov/Kan:</strong> Solid and
+                  positional setups, often involving ...e6 and ...a6,
+                  prioritizing development and flexible pawn structures over
+                  immediate conflict.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          This document is made for Computer Networks 2025.<br />
+          -adieos
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

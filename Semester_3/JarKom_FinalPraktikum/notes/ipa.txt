@@ -1,0 +1,176 @@
+# --- Smith-Morra ----
+auto eth0
+iface eth0 inet dhcp
+      hostname Smith-Morra
+
+auto eth1
+iface eth1 inet static
+      address 10.125.0.1
+      netmask 255.255.255.252
+
+auto eth2
+iface eth2 inet static
+      address 10.125.32.1
+      netmask 255.255.224.0 
+
+auto eth3
+iface eth3 inet static
+      address 10.125.8.1
+      netmask 255.255.248.0 
+
+up ip route add 10.125.0.64/26 via 10.125.0.2
+up ip route add 10.125.0.128/25 via 10.125.0.2
+up ip route add 10.125.0.32/28 via 10.125.0.2
+up ip route add 10.125.1.0/24 via 10.125.0.2
+up ip route add 10.125.0.8/29 via 10.125.0.2
+up ip route add 10.125.0.16/29 via 10.125.0.2
+
+# --- Fianchetto ----
+auto eth0
+iface eth0 inet static
+      address 10.125.0.2
+      netmask 255.255.255.252
+      gateway 10.125.0.1
+
+auto eth1
+iface eth1 inet static
+      address 10.125.0.17
+      netmask 255.255.255.248 
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+up ip route add 10.125.0.64/26 via 10.125.0.18
+up ip route add 10.125.0.128/25 via 10.125.0.19
+up ip route add 10.125.0.32/28 via 10.125.0.19
+up ip route add 10.125.1.0/24 via 10.125.0.19
+up ip route add 10.125.0.8/29 via 10.125.0.19
+
+# --- Lucena ----
+auto eth0
+iface eth0 inet static
+      address 10.125.0.18
+      netmask 255.255.255.248
+      gateway 10.125.0.17
+
+auto eth1
+iface eth1 inet static
+      address 10.125.0.65
+      netmask 255.255.255.192 
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Zwischenzug ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.19
+      netmask 255.255.255.248
+      gateway 10.125.0.17
+
+auto eth1
+iface eth1 inet static
+      address 10.125.0.9
+      netmask 255.255.255.248
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+up ip route add 10.125.0.128/25 via 10.125.0.10
+up ip route add 10.125.0.32/28 via 10.125.0.10
+up ip route add 10.125.1.0/24 via 10.125.0.10
+
+# --- Zugzwang ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.10
+      netmask 255.255.255.248
+      gateway 10.125.0.9
+
+auto eth1
+iface eth1 inet static
+      address 10.125.0.129
+      netmask 255.255.255.128
+
+auto eth2
+iface eth2 inet static
+      address 10.125.0.33
+      netmask 255.255.255.240
+
+auto eth3
+iface eth3 inet static
+      address 10.125.1.1
+      netmask 255.255.255.0
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Ponziani ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.67
+      netmask 255.255.255.192
+      gateway 10.125.0.65
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- RuyLopez ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.66
+      netmask 255.255.255.192
+      gateway 10.125.0.65
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Sicilian ---
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:ef:f0:75:00
+      hostname Sicilian
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Alekhine ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.35
+      netmask 255.255.255.240
+      gateway 10.125.0.33
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Caro-Kann ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.34
+      netmask 255.255.255.240
+      gateway 10.125.0.33
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Slav ---
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 02:42:09:a4:b5:00
+      hostname Slav
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Petrov ---
+auto eth0
+iface eth0 inet static
+      address 10.125.0.11
+      netmask 255.255.255.248
+      gateway 10.125.0.9
+
+up echo -e "nameserver 10.125.0.34\nnameserver 10.125.0.35" > /etc/resolv.conf
+
+# --- Blackmar-Diemer ---
+auto eth0
+iface eth0 inet dhcp
+      hostname Blackmar-Diemer
+
+# --- Budapest ---
+auto eth0
+iface eth0 inet dhcp
+      hostname Budapest
+
+# --- Stafford ---
+auto eth0
+iface eth0 inet dhcp
+      hostname Stafford

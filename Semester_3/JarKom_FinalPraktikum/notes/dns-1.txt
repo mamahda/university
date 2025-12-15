@@ -1,0 +1,87 @@
+cat << EOF > /etc/bind/named.conf.local
+zone "parkov.com" {
+    type master;
+    notify yes;
+    also-notify { 10.125.0.35; };
+    allow-transfer { 10.125.0.35; };
+    file "/etc/bind/zones/parkov.com";
+};
+
+zone "paskarov.com" {
+    type master;
+    notify yes;
+    also-notify { 10.125.0.35; };
+    allow-transfer { 10.125.0.35; };
+    file "/etc/bind/zones/paskarov.com";
+};
+
+zone "openings.com" {
+    type master;
+    notify yes;
+    also-notify { 10.125.0.35; };
+    allow-transfer { 10.125.0.35; };
+    file "/etc/bind/zones/openings.com";
+};
+EOF
+
+mkdir -p /etc/bind/zones
+cat << EOF > /etc/bind/zones/parkov.com
+\$TTL    604800
+@       IN      SOA     parkov.com. root.parkov.com. (
+                              2024062701         ; Serial
+                                   604800         ; Refresh
+                                    86400         ; Retry
+                                  2419200         ; Expire
+                                   604800 )       ; Negative Cache TTL
+;
+@     IN      NS      parkov.com.
+@     IN      A       10.125.1.2
+www   IN      CNAME   parkov.com.
+EOF
+
+cat << EOF > /etc/bind/zones/paskarov.com
+\$TTL    604800
+@       IN      SOA     paskarov.com. root.paskarov.com. (
+                              2024062701         ; Serial
+                                  604800         ; Refresh
+                                   86400         ; Retry
+                                 2419200         ; Expire
+                                  604800 )       ; Negative Cache TTL
+;
+@     IN      NS      paskarov.com.
+@     IN      A       10.125.0.130
+www   IN      CNAME   paskarov.com.
+EOF
+
+cat << EOF > /etc/bind/zones/openings.com
+\$TTL    604800
+@       IN      SOA     openings.com. root.openings.com. (
+                              2024062701         ; Serial
+                                  604800         ; Refresh
+                                   86400         ; Retry
+                                 2419200         ; Expire
+                                  604800 )       ; Negative Cache TTL
+;
+@     IN      NS      openings.com.
+@     IN      A       10.125.0.11
+www   IN      CNAME   openings.com.
+EOF
+
+cat << EOF > /etc/bind/named.conf.options
+options {
+        directory "/var/cache/bind";
+
+        recursion yes;
+        allow-query { any; };
+
+        forwarders {
+                192.168.122.1;
+        };
+
+        dnssec-validation no;
+
+        listen-on-v6 { any; };
+};
+EOF
+
+service named restart

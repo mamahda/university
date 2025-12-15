@@ -1,0 +1,26 @@
+cat << 'EOF' > /etc/nginx/sites-available/default
+upstream web-servers {
+  server paskarov.com:80;
+  server parkov.com:8000;
+}
+
+server {
+        listen 80;
+
+        server_name _;
+
+        location /random {
+                proxy_pass http://web-servers/;
+        }
+
+        location /sicilian {
+                proxy_pass http://paskarov.com/;
+        }
+
+        location /slav {
+                proxy_pass http://parkov.com:8000/;
+        }
+}
+EOF
+
+service nginx restart
