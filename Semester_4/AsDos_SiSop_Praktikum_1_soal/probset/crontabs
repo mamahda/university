@@ -1,0 +1,4 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+*/5 * * * * /bin/bash /home/mamahda/Kuliah/Semester_4/Sisop_Praktikum_1_Probset/filedb.sh sync >> /home/mamahda/Kuliah/Semester_4/Sisop_Praktikum_1_Probset/activity.log 2>&1

@@ -10,8 +10,8 @@ def client_program():
     port = 12345
 
     # create socket
-    client_socket = socket.socket()
-
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
+    
     # connect to server
     client_socket.connect((host, port))
 
