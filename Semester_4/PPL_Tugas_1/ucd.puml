@@ -1,0 +1,32 @@
+@startuml ucd
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Anggota" as Anggota
+actor "Pustakawan" as Pustakawan
+
+package "Sistem Peminjaman Buku Library of the End" {
+  usecase "Mencari Buku" as UC_Cari
+  usecase "Melakukan Peminjaman" as UC_Pinjam
+  usecase "Melakukan Pengembalian" as UC_Kembali
+  usecase "Konfirmasi Peminjaman" as UC_Kon_Pinjam
+  usecase "Konfirmasi Pengembalian" as UC_Kon_Kembali
+  usecase "Membayar Denda" as UC_Denda
+  usecase "Mengelola Data Buku" as UC_Buku
+  usecase "Mengelola Data Anggota" as UC_Anggota
+}
+
+' Relasi Aktor Anggota
+Anggota --> UC_Cari
+Anggota --> UC_Pinjam
+Anggota --> UC_Kembali
+
+' Relasi Aktor Pustakawan
+Pustakawan --> UC_Kon_Pinjam
+Pustakawan --> UC_Kon_Kembali
+Pustakawan --> UC_Buku
+Pustakawan --> UC_Anggota
+
+' Relasi Extend (Opsional/Kondisional)
+UC_Kembali <.. UC_Denda : <<extend>>
+@enduml
