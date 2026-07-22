@@ -1,5 +1,5 @@
 general/*
-materi/*
+Materi/*
 panitia/*
 pelatihan/*
 Organisasi/*
@@ -15,5 +15,5 @@ Sertifikat/*
 **/output
 **/*.exe
 **/root/
-Semester_2/SisOp_Praktikum_3/
+Semester_2/SisOp_Praktikum_3/osboot/*
 **/.metadata/*
