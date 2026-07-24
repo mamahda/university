@@ -1,7 +1,5 @@
-general/*
 Materi/*
-panitia/*
-pelatihan/*
+Pelatihan/*
 Organisasi/*
 Sertifikat/*
 **/*.pptx
@@ -17,3 +15,6 @@ Sertifikat/*
 **/root/
 Semester_2/SisOp_Praktikum_3/osboot/*
 **/.metadata/*
+**.zip**
+
+Semester_4/ML_Praktikum_3/creditcard.csv

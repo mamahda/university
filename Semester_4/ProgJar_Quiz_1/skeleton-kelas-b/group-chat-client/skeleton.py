@@ -1,33 +1,33 @@
 # client.py
 
-import socket
-import unittest
+import ?  
+import ?
 import sys
-import select
+import ?
 from io import StringIO
 from unittest.mock import patch, MagicMock
 
 class ChatClient:
-    def __init__(self, nickname=None, host='127.0.0.1', port=65432):
+    def __init__(self, nickname, host='?', port=?):
         # define host and port
-        self.host = host
-        self.port = port
+        self.host = ?
+        self.port = ?
 
         # create socket
-        self.client_socket = socket.socket()
+        self.client_socket = ?
 
         # do not forget to encode nickname
-        self.nickname = str(nickname).encode()
+        self.nickname = ?
 
     def connect(self):
         # connect to server
-        self.client_socket.connect((self.host, self.port))
+        self.client_socket.?
 
         # set blocking to False
         self.client_socket.setblocking(False)
 
         # send nickname
-        self.client_socket.send(self.nickname)
+        self.client_socket.send(?)
 
     def main_loop(self):
         while True:
@@ -35,29 +35,29 @@ class ChatClient:
 
     def loop_iteration(self):
         # second element of the sockets_list is the client_socket
-        sockets_list = [sys.stdin, self.client_socket]
+        sockets_list = [sys.stdin, ?]
 
         # use select to check which one is read ready: stdin or client socket
-        read_sockets, _, _ = select.select(sockets_list, [], [])
+        read_sockets, _, _ = select.select(?, [], [])
 
         # check for read-ready socket
-        for read in read_sockets:
+        for ? in ?:
             # if the read-ready socket is the client socket
-            if read == self.client_socket:
+            if ? == ?:
                 # receive message
-                message = self.client_socket.recv(1024).decode()
+                message = ?
 
                 # write message to stdout
-                sys.stdout.write(message)
+                sys.stdout.write(?)
             else:
                 # read message from readline
-                message = sys.stdin.readline().strip()
+                message = sys.stdin.?
 
                 # send message
-                self.client_socket.send(message.encode())
+                ?
 
                 # flush the stdout
-                sys.stdout.flush()
+                sys.stdout.?
 
 
 # A 'null' stream that discards anything written to it
