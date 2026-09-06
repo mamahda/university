@@ -2,8 +2,6 @@ Materi/*
 Pelatihan/*
 Organisasi/*
 Sertifikat/*
-**/*.pptx
-**/*.ppt
 **/.cph/*
 **/*.aux
 **/*.fdb_latexmk
@@ -18,3 +16,5 @@ Semester_2/SisOp_Praktikum_3/osboot/*
 **.zip**
 
 Semester_4/ML_Praktikum_3/creditcard.csv
+
+
