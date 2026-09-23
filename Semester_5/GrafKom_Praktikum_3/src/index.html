@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Interactive Transformation Playground
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+</head>
+
+<body>
+
+  <main class="app">
+    <header>
+      <h1>
+        Interactive Transformation Playground
+      </h1>
+
+      <p>
+        WebGL — Pertemuan 3
+      </p>
+    </header>
+
+    <canvas
+      id="glCanvas"
+      width="900"
+      height="600">
+    </canvas>
+
+    <section id="hud">
+      <div>
+        Position:
+        <span id="positionInfo"></span>
+      </div>
+
+      <div>
+        Rotation:
+        <span id="rotationInfo"></span>
+      </div>
+
+      <div>
+        Scale:
+        <span id="scaleInfo"></span>
+      </div>
+
+      <div>
+        Order:
+        <span id="orderInfo">
+          Scale → Rotate → Translate
+        </span>
+      </div>
+    </section>
+
+    <section class="controls">
+      <strong>Kontrol:</strong>
+
+      <span>
+        Arrow Keys = Move
+      </span>
+
+      <span>
+        Q/E = Rotate
+      </span>
+
+      <span>
+        +/- = Uniform Scale
+      </span>
+
+      <span>
+        Z/X = Scale X
+      </span>
+
+      <span>
+        C/V = Scale Y
+      </span>
+
+      <span>
+        R = Reset
+      </span>
+
+      <span>
+        1/2/3 = Preset
+      </span>
+
+      <span>
+        T = Ganti Transform Order
+      </span>
+    </section>
+  </main>
+
+  <script
+    type="module"
+    src="./main.js">
+  </script>
+
+</body>
+</html>
