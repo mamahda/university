@@ -1,0 +1,44 @@
+<!--
+5025241102 Kemas Muhammad Athariq
+5025241134 Gilbran Mahdavikia Raja
+-->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replikasi Gambar dengan WebGL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="judul">
+    <h1>Tugas 1 Grafika Komputer</h1>
+    <p>5025241102 Kemas Muhammad Athariq</p>
+    <p>5025241134 Gilbran Mahdavikia Raja</p>
+  </header>
+
+  <main class="wrapper">
+    <figure class="panel">
+      <img id="referensi" src="./image.png" alt="Gambar referensi pemandangan gunung, jalan, dan rumah" width="600" height="395">
+      <figcaption>Gambar Referensi</figcaption>
+    </figure>
+
+    <figure class="panel">
+      <canvas id="glCanvas" width="600" height="395"></canvas>
+      <figcaption>Hasil WebGL</figcaption>
+    </figure>
+  </main>
+
+  <section class="controls">
+    <strong>Kontrol:</strong>
+    <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> Gerakkan burung</span>
+    <span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> Perbesar / perkecil matahari</span>
+    <span><kbd>W</kbd> Ganti siang / malam</span>
+    <span><kbd>E</kbd> Pause / lanjutkan animasi</span>
+    <span><kbd>R</kbd> Reset</span>
+  </section>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
