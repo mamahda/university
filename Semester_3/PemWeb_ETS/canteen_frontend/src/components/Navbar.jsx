@@ -15,16 +15,11 @@ import {
   CardContent,
   Divider,
   Fade,
-  Drawer,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import CartPopup from "./Cart";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/UserContext";
@@ -40,11 +35,8 @@ export default function Navbar({
   onSearch,
 }) {
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery("(max-width:480px)");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showProfileCard, setShowProfileCard] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
@@ -65,8 +57,7 @@ export default function Navbar({
     setUser({ name: "Guest", email: "Not logged in" });
     setIsLoggedIn(false);
     setShowProfileCard(false);
-    setMobileMenuOpen(false);
-    location.reload();
+    location.reload()
   };
 
   const toggleProfileCard = () => {
@@ -85,366 +76,180 @@ export default function Navbar({
     }
   };
 
-  // Mobile Menu Content
-  const MobileMenu = () => (
-    <Box
+  return (
+    <AppBar
+      position="fixed"
+      elevation={1}
       sx={{
-        width: "100vw",
-        height: "100vh",
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
+        backgroundColor: "#ffffff",
+        color: "black",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+      <Toolbar sx={{ py: 1 }}>
         <Box
           component="img"
           src={logo}
           alt="TCanteen Logo"
-          sx={{ height: 25 }}
-        />
-        <IconButton onClick={() => setMobileMenuOpen(false)}>
-          <CloseIcon />
-        </IconButton>
-      </Box>
-
-      {/* Search in Mobile Menu */}
-      <Box sx={{ mb: 3 }}>
-        <TextField
-          placeholder="Search menu..."
-          size="small"
-          fullWidth
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
           sx={{
-            "& .MuiOutlinedInput-root": {
-              bgcolor: "#f5f5f5",
-              borderRadius: "12px",
-              "& fieldset": { borderColor: "transparent" },
-              "&:hover fieldset": { borderColor: "#ccc" },
-              "&.Mui-focused fieldset": { borderColor: "primary.main" },
-            },
+            height: 25,
+            cursor: "pointer",
           }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: "grey.600" }} />
-              </InputAdornment>
-            ),
-          }}
+          onClick={() => navigate("/")}
         />
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={handleSearchClick}
-          sx={{
-            mt: 1,
-            borderRadius: "12px",
-            boxShadow: "none",
-            "&:hover": {
-              boxShadow: "none",
-            },
-          }}
-        >
-          Search
-        </Button>
-      </Box>
 
-      <Divider sx={{ mb: 3 }} />
+        <Box sx={{ flexGrow: 1 }} />
 
-      {/* User Profile Section */}
-      {isLoggedIn ? (
-        <Box sx={{ mb: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-            <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>
-              <PersonIcon />
-            </Avatar>
-            <Box>
-              <Typography fontWeight="bold">{user.name}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {user.email}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Button
-            fullWidth
-            variant="outlined"
-            onClick={() => {
-              navigate("/order");
-              setMobileMenuOpen(false);
-            }}
+        {/* SEARCH */}
+        <Box sx={{ display: "flex", alignItems: "center", mr: 3 }}>
+          <TextField
+            placeholder="Search menu..."
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
             sx={{
-              mb: 1,
-              borderRadius: "10px",
-              textTransform: "none",
-            }}
-          >
-            View Order
-          </Button>
-
-          <Button
-            fullWidth
-            variant="contained"
-            color="error"
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-            sx={{
-              borderRadius: "10px",
-              textTransform: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Logout
-          </Button>
-        </Box>
-      ) : (
-        <Box>
-          <Button
-            fullWidth
-            variant="outlined"
-            sx={{
-              mb: 1.5,
-              borderRadius: "10px",
-              "&:hover": {
-                borderColor: "#30468b",
-                color: "#30468b",
+              width: 300,
+              "& .MuiOutlinedInput-root": {
+                bgcolor: "#f5f5f5",
+                borderRadius: "12px 0 0 12px",
+                "& fieldset": { borderColor: "transparent" },
+                "&:hover fieldset": { borderColor: "#ccc" },
+                "&.Mui-focused fieldset": { borderColor: "primary.main" },
               },
             }}
-            onClick={() => {
-              handleAuthNav("login");
-              setMobileMenuOpen(false);
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: "grey.600" }} />
+                </InputAdornment>
+              ),
             }}
-          >
-            Login
-          </Button>
+          />
           <Button
-            fullWidth
             variant="contained"
-            sx={{ borderRadius: "10px" }}
-            onClick={() => {
-              handleAuthNav("register");
-              setMobileMenuOpen(false);
+            onClick={handleSearchClick}
+            sx={{
+              height: "40px",
+              minWidth: "60px",
+              borderRadius: "0 12px 12px 0",
+              boxShadow: "none",
+              "&:hover": {
+                boxShadow: "none",
+              },
             }}
           >
-            Register
+            Search
           </Button>
         </Box>
-      )}
-    </Box>
-  );
 
-  return (
-    <>
-      <AppBar
-        position="fixed"
-        elevation={1}
-        sx={{
-          backgroundColor: "#ffffff",
-          color: "black",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
-        }}
-      >
-        <Toolbar sx={{ py: 1, minHeight: { xs: 56, sm: 64 } }}>
-          <Box
-            component="img"
-            src={logo}
-            alt="TCanteen Logo"
-            sx={{
-              height: { xs: 20, sm: 25 },
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
-          />
+        {/* CART */}
+        <IconButton onClick={() => setOpenCart(true)} sx={{ mr: 2 }}>
+          <Badge badgeContent={cartCount} color="primary">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
+        <CartPopup open={openCart} onClose={() => setOpenCart(false)} />
 
-          <Box sx={{ flexGrow: 1 }} />
+        {/* 🔹 Auth Section */}
+        {!isLoggedIn ? (
+          <>
+            <Button
+              variant="outlined"
+              sx={{
+                mr: 1.5,
+                borderRadius: "10px",
+                "&:hover": {
+                  borderColor: "#30468b",
+                  color: "#30468b",
+                },
+              }}
+              onClick={() => handleAuthNav("login")}
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ borderRadius: "10px" }}
+              onClick={() => handleAuthNav("register")}
+            >
+              Register
+            </Button>
+          </>
+        ) : (
+          <Box sx={{ position: "relative" }}>
+            <IconButton onClick={toggleProfileCard}>
+              <Avatar sx={{ bgcolor: "primary.main" }}>
+                <PersonIcon />
+              </Avatar>
+            </IconButton>
 
-          {/* Desktop View */}
-          {!isMobile ? (
-            <>
-              {/* SEARCH */}
-              <Box sx={{ display: "flex", alignItems: "center", mr: 3 }}>
-                <TextField
-                  placeholder="Search menu..."
-                  size="small"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  sx={{
-                    width: 300,
-                    "& .MuiOutlinedInput-root": {
-                      bgcolor: "#f5f5f5",
-                      borderRadius: "12px 0 0 12px",
-                      "& fieldset": { borderColor: "transparent" },
-                      "&:hover fieldset": { borderColor: "#ccc" },
-                      "&.Mui-focused fieldset": { borderColor: "primary.main" },
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon sx={{ color: "grey.600" }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  onClick={handleSearchClick}
-                  sx={{
-                    height: "40px",
-                    minWidth: "60px",
-                    borderRadius: "0 12px 12px 0",
-                    boxShadow: "none",
-                    "&:hover": {
-                      boxShadow: "none",
-                    },
-                  }}
-                >
-                  Search
-                </Button>
-              </Box>
-
-              {/* CART */}
-              <IconButton onClick={() => setOpenCart(true)} sx={{ mr: 2 }}>
-                <Badge badgeContent={cartCount} color="primary">
-                  <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
-
-              {/* Auth Section */}
-              {!isLoggedIn ? (
-                <>
-                  <Button
-                    variant="outlined"
+            {/* 🔽 Profile Card */}
+            <Fade in={showProfileCard}>
+              <Card
+                sx={{
+                  position: "absolute",
+                  top: "50px",
+                  right: 0,
+                  width: 250,
+                  borderRadius: "16px",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+                  overflow: "hidden",
+                  zIndex: 1000,
+                }}
+              >
+                <CardContent sx={{ textAlign: "center", p: 2.5 }}>
+                  <Avatar
                     sx={{
-                      mr: 1.5,
-                      borderRadius: "10px",
-                      "&:hover": {
-                        borderColor: "#30468b",
-                        color: "#30468b",
-                      },
+                      bgcolor: "primary.main",
+                      width: 56,
+                      height: 56,
+                      mx: "auto",
+                      mb: 1.5,
                     }}
-                    onClick={() => handleAuthNav("login")}
                   >
-                    Login
-                  </Button>
+                    <PersonIcon fontSize="large" />
+                  </Avatar>
+                  <Typography fontWeight="bold">{user.name}</Typography>
+                  <Typography variant="body2" color="text.secondary" mb={2}>
+                    {user.email}
+                  </Typography>
+
                   <Button
-                    variant="contained"
-                    sx={{ borderRadius: "10px" }}
-                    onClick={() => handleAuthNav("register")}
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => navigate("/order")}
+                    sx={{
+                      mb: 1,
+                      borderRadius: "10px",
+                      textTransform: "none",
+                    }}
                   >
-                    Register
+                    View Order
                   </Button>
-                </>
-              ) : (
-                <Box sx={{ position: "relative" }}>
-                  <IconButton onClick={toggleProfileCard}>
-                    <Avatar sx={{ bgcolor: "primary.main" }}>
-                      <PersonIcon />
-                    </Avatar>
-                  </IconButton>
 
-                  {/* Profile Card */}
-                  <Fade in={showProfileCard}>
-                    <Card
-                      sx={{
-                        position: "absolute",
-                        top: "50px",
-                        right: 0,
-                        width: 250,
-                        borderRadius: "16px",
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-                        overflow: "hidden",
-                        zIndex: 1000,
-                      }}
-                    >
-                      <CardContent sx={{ textAlign: "center", p: 2.5 }}>
-                        <Avatar
-                          sx={{
-                            bgcolor: "primary.main",
-                            width: 56,
-                            height: 56,
-                            mx: "auto",
-                            mb: 1.5,
-                          }}
-                        >
-                          <PersonIcon fontSize="large" />
-                        </Avatar>
-                        <Typography fontWeight="bold">{user.name}</Typography>
-                        <Typography variant="body2" color="text.secondary" mb={2}>
-                          {user.email}
-                        </Typography>
+                  <Divider sx={{ my: 1 }} />
 
-                        <Button
-                          fullWidth
-                          variant="outlined"
-                          onClick={() => navigate("/order")}
-                          sx={{
-                            mb: 1,
-                            borderRadius: "10px",
-                            textTransform: "none",
-                          }}
-                        >
-                          View Order
-                        </Button>
-
-                        <Divider sx={{ my: 1 }} />
-
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          color="error"
-                          startIcon={<LogoutIcon />}
-                          onClick={handleLogout}
-                          sx={{
-                            borderRadius: "10px",
-                            textTransform: "none",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Logout
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </Fade>
-                </Box>
-              )}
-            </>
-          ) : (
-            /* Mobile View */
-            <>
-              <IconButton onClick={() => setOpenCart(true)} sx={{ mr: 1 }}>
-                <Badge badgeContent={cartCount} color="primary">
-                  <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
-
-              <IconButton onClick={() => setMobileMenuOpen(true)}>
-                <MenuIcon />
-              </IconButton>
-            </>
-          )}
-        </Toolbar>
-      </AppBar>
-
-      {/* Cart Popup */}
-      <CartPopup open={openCart} onClose={() => setOpenCart(false)} />
-
-      {/* Mobile Menu Drawer */}
-      <Drawer
-        anchor="right"
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: "100%",
-          },
-        }}
-      >
-        <MobileMenu />
-      </Drawer>
-    </>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="error"
+                    startIcon={<LogoutIcon />}
+                    onClick={handleLogout}
+                    sx={{
+                      borderRadius: "10px",
+                      textTransform: "none",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </CardContent>
+              </Card>
+            </Fade>
+          </Box>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }

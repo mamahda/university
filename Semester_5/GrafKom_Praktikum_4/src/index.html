@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Rotating 3D Cube Camera Playground
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="./style.css"
+  />
+</head>
+
+<body>
+
+  <main class="app">
+
+    <header>
+      <h1>
+        Rotating 3D Cube Camera Playground
+      </h1>
+
+      <p>
+        WebGL — Camera, Projection & 3D
+      </p>
+    </header>
+
+    <canvas
+      id="glCanvas"
+      width="960"
+      height="600">
+    </canvas>
+
+    <section id="hud">
+      <div>
+        Projection:
+        <span id="projectionInfo"></span>
+      </div>
+
+      <div>
+        Camera:
+        <span id="cameraInfo"></span>
+      </div>
+
+      <div>
+        FOV:
+        <span id="fovInfo"></span>
+      </div>
+
+      <div>
+        Near/Far:
+        <span id="clipInfo"></span>
+      </div>
+
+      <div>
+        Depth Test:
+        <span id="depthInfo"></span>
+      </div>
+    </section>
+
+    <section class="controls">
+      <strong>Kontrol:</strong>
+
+      <span>Arrow = Camera X/Y</span>
+      <span>W/S = Camera Z</span>
+      <span>P = Projection Toggle</span>
+      <span>[ / ] = FOV</span>
+      <span>N = Near/Far Preset</span>
+      <span>D = Depth Test</span>
+      <span>R = Reset</span>
+    </section>
+
+  </main>
+
+  <script
+    type="module"
+    src="./main.js">
+  </script>
+
+</body>
+
+</html>

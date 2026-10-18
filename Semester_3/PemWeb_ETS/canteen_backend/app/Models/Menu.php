@@ -15,8 +15,7 @@ class Menu extends Model
     'price',
     'stock',
     'image',
-    'description',
-    'type'
+    'type',
   ];
 
   /**

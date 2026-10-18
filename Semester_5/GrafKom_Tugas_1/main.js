@@ -11,7 +11,7 @@ function degToRad(deg) {
 }
 
 const WIDTH = 600;
-const HEIGHT = 395.25;
+const HEIGHT = 400;
 
 // Setup canvas (tajam di layar HiDPI) & WebGL2 context
 const canvas = document.getElementById("glCanvas");
@@ -89,7 +89,6 @@ const aPosition = gl.getAttribLocation(program, "a_position");
 const uMatrix = gl.getUniformLocation(program, "u_matrix");
 const uColor = gl.getUniformLocation(program, "u_color");
 
-// Koordinat piksel 600 x 395.25 -> clip space
 const projection = Mat3.projection(WIDTH, HEIGHT);
 
 // Upload vertex ke GPU buffer (sekali saat inisialisasi)

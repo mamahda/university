@@ -1,0 +1,590 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#"
+     xml:base="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:ontologi-buku="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku">
+        <rdfs:comment>Latihan PPT 06 RSBP: ontologi Publisher, Author, Book, Genre, Bookstore dengan object property functional, inverse functional, transitive, asymmetric, reflexive serta data properties.</rdfs:comment>
+    </owl:Ontology>
+
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#hasGenre -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#hasGenre">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#isRelatedTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#isRelatedTo">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ReflexiveProperty"/>
+        <rdfs:comment>REFLEXIVE: setiap individual terkait dengan dirinya sendiri (reasoner menyimpulkan X isRelatedTo X untuk semua individual). Sengaja tanpa domain/range: reflexive di OWL berlaku untuk SEMUA individual, jadi kalau diberi domain Book maka semua individual (Author, Genre, dst.) ikut disimpulkan sebagai Book dan ontologi jadi inkonsisten karena class-class saling disjoint.</rdfs:comment>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#isSequelOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#isSequelOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:comment>ASYMMETRIC: jika A sekuel dari B, maka B tidak mungkin sekuel dari A. Uji: tambahkan LaskarPelangi isSequelOf SangPemimpi, reasoner akan menyatakan ontologi inkonsisten.</rdfs:comment>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publishedBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publishedBy">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <rdfs:comment>FUNCTIONAL: satu buku hanya diterbitkan oleh satu penerbit. Uji: tambahkan LaskarPelangi publishedBy Bloomsbury, karena semua individual different maka ontologi inkonsisten.</rdfs:comment>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publishes -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publishes">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publishedBy"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:comment>INVERSE FUNCTIONAL (kebalikan dari publishedBy): satu buku hanya bisa dimiliki oleh satu penerbit. Reasoner menyimpulkan relasi publishes dari publishedBy dan sebaliknya.</rdfs:comment>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#sells -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#sells">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#soldAt -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#soldAt">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#sells"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#subGenreOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#subGenreOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <rdfs:comment>TRANSITIVE: HistoricalFiction subGenreOf LiteraryFiction dan LiteraryFiction subGenreOf Fiction, maka reasoner menyimpulkan HistoricalFiction subGenreOf Fiction.</rdfs:comment>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#writtenBy -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#writtenBy">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#wrote"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+    </owl:ObjectProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#wrote -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#wrote">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+    </owl:ObjectProperty>
+
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#authorBirthYear -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#authorBirthYear">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#authorName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#authorName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#authorNationality -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#authorNationality">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookLanguage -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookLanguage">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookTitle -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookTitle">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookYear -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookYear">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookstoreCity -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookstoreCity">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookstoreName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#bookstoreName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#genreDescription -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#genreDescription">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#genreName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#genreName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publisherCity -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publisherCity">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publisherCountry -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publisherCountry">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publisherName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#publisherName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AnakSemuaBangsa -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AnakSemuaBangsa">
+        <ontologi-buku:hasGenre rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HistoricalFiction"/>
+        <ontologi-buku:isSequelOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BumiManusia"/>
+        <ontologi-buku:publishedBy rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HastaMitra"/>
+        <ontologi-buku:bookLanguage>Bahasa Indonesia</ontologi-buku:bookLanguage>
+        <ontologi-buku:bookTitle>Anak Semua Bangsa</ontologi-buku:bookTitle>
+        <ontologi-buku:bookYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1980</ontologi-buku:bookYear>
+        <rdfs:comment>Sengaja tidak diberi Type. Reasoner menyimpulkan type Book dari domain/range property yang dipakai.</rdfs:comment>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AndreaHirata -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AndreaHirata">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <ontologi-buku:wrote rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi"/>
+        <ontologi-buku:wrote rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#SangPemimpi"/>
+        <ontologi-buku:authorBirthYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1967</ontologi-buku:authorBirthYear>
+        <ontologi-buku:authorName>Andrea Hirata</ontologi-buku:authorName>
+        <ontologi-buku:authorNationality>Indonesia</ontologi-buku:authorNationality>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BentangPustaka -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BentangPustaka">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <ontologi-buku:publisherCity>Yogyakarta</ontologi-buku:publisherCity>
+        <ontologi-buku:publisherCountry>Indonesia</ontologi-buku:publisherCountry>
+        <ontologi-buku:publisherName>Bentang Pustaka</ontologi-buku:publisherName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bloomsbury -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bloomsbury">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <ontologi-buku:publishes rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1"/>
+        <ontologi-buku:publishes rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2"/>
+        <ontologi-buku:publisherCity>London</ontologi-buku:publisherCity>
+        <ontologi-buku:publisherCountry>Inggris</ontologi-buku:publisherCountry>
+        <ontologi-buku:publisherName>Bloomsbury Publishing</ontologi-buku:publisherName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BumiManusia -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BumiManusia">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <ontologi-buku:hasGenre rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HistoricalFiction"/>
+        <ontologi-buku:isRelatedTo rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AnakSemuaBangsa"/>
+        <ontologi-buku:publishedBy rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HastaMitra"/>
+        <ontologi-buku:bookLanguage>Bahasa Indonesia</ontologi-buku:bookLanguage>
+        <ontologi-buku:bookTitle>Bumi Manusia</ontologi-buku:bookTitle>
+        <ontologi-buku:bookYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1980</ontologi-buku:bookYear>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#ComingOfAge -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#ComingOfAge">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <ontologi-buku:subGenreOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LiteraryFiction"/>
+        <ontologi-buku:genreDescription>Kisah pertumbuhan tokoh dari masa kanak-kanak atau remaja menuju dewasa</ontologi-buku:genreDescription>
+        <ontologi-buku:genreName>Coming of Age</ontologi-buku:genreName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fantasy -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fantasy">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <ontologi-buku:subGenreOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fiction"/>
+        <ontologi-buku:genreDescription>Cerita dengan unsur sihir atau dunia rekaan</ontologi-buku:genreDescription>
+        <ontologi-buku:genreName>Fantasi</ontologi-buku:genreName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fiction -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fiction">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <ontologi-buku:genreDescription>Karya naratif yang bersifat rekaan</ontologi-buku:genreDescription>
+        <ontologi-buku:genreName>Fiksi</ontologi-buku:genreName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#GramediaExpoSurabaya -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#GramediaExpoSurabaya">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#SangPemimpi"/>
+        <ontologi-buku:bookstoreCity>Surabaya</ontologi-buku:bookstoreCity>
+        <ontologi-buku:bookstoreName>Gramedia Expo</ontologi-buku:bookstoreName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <ontologi-buku:hasGenre rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fantasy"/>
+        <ontologi-buku:isRelatedTo rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2"/>
+        <ontologi-buku:bookLanguage>Bahasa Inggris</ontologi-buku:bookLanguage>
+        <ontologi-buku:bookTitle>Harry Potter and the Philosopher&apos;s Stone</ontologi-buku:bookTitle>
+        <ontologi-buku:bookYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1997</ontologi-buku:bookYear>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <ontologi-buku:hasGenre rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fantasy"/>
+        <ontologi-buku:isSequelOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1"/>
+        <ontologi-buku:bookLanguage>Bahasa Inggris</ontologi-buku:bookLanguage>
+        <ontologi-buku:bookTitle>Harry Potter and the Chamber of Secrets</ontologi-buku:bookTitle>
+        <ontologi-buku:bookYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1998</ontologi-buku:bookYear>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HastaMitra -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HastaMitra">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        <ontologi-buku:publisherCity>Jakarta</ontologi-buku:publisherCity>
+        <ontologi-buku:publisherCountry>Indonesia</ontologi-buku:publisherCountry>
+        <ontologi-buku:publisherName>Hasta Mitra</ontologi-buku:publisherName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HistoricalFiction -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HistoricalFiction">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <ontologi-buku:subGenreOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LiteraryFiction"/>
+        <ontologi-buku:genreDescription>Fiksi dengan latar peristiwa sejarah</ontologi-buku:genreDescription>
+        <ontologi-buku:genreName>Fiksi Sejarah</ontologi-buku:genreName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#JKRowling -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#JKRowling">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <ontologi-buku:wrote rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1"/>
+        <ontologi-buku:wrote rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2"/>
+        <ontologi-buku:authorBirthYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1965</ontologi-buku:authorBirthYear>
+        <ontologi-buku:authorName>J. K. Rowling</ontologi-buku:authorName>
+        <ontologi-buku:authorNationality>Inggris</ontologi-buku:authorNationality>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <ontologi-buku:hasGenre rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#ComingOfAge"/>
+        <ontologi-buku:isRelatedTo rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#SangPemimpi"/>
+        <ontologi-buku:publishedBy rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BentangPustaka"/>
+        <ontologi-buku:bookLanguage>Bahasa Indonesia</ontologi-buku:bookLanguage>
+        <ontologi-buku:bookTitle>Laskar Pelangi</ontologi-buku:bookTitle>
+        <ontologi-buku:bookYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2005</ontologi-buku:bookYear>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LiteraryFiction -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LiteraryFiction">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+        <ontologi-buku:subGenreOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fiction"/>
+        <ontologi-buku:genreDescription>Fiksi yang menekankan kedalaman karakter dan nilai sastra</ontologi-buku:genreDescription>
+        <ontologi-buku:genreName>Fiksi Sastra</ontologi-buku:genreName>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#PramoedyaAnantaToer -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#PramoedyaAnantaToer">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+        <ontologi-buku:wrote rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AnakSemuaBangsa"/>
+        <ontologi-buku:wrote rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BumiManusia"/>
+        <ontologi-buku:authorBirthYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1925</ontologi-buku:authorBirthYear>
+        <ontologi-buku:authorName>Pramoedya Ananta Toer</ontologi-buku:authorName>
+        <ontologi-buku:authorNationality>Indonesia</ontologi-buku:authorNationality>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#SangPemimpi -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#SangPemimpi">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+        <ontologi-buku:hasGenre rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#ComingOfAge"/>
+        <ontologi-buku:isSequelOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi"/>
+        <ontologi-buku:publishedBy rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BentangPustaka"/>
+        <ontologi-buku:bookLanguage>Bahasa Indonesia</ontologi-buku:bookLanguage>
+        <ontologi-buku:bookTitle>Sang Pemimpi</ontologi-buku:bookTitle>
+        <ontologi-buku:bookYear rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2006</ontologi-buku:bookYear>
+    </owl:NamedIndividual>
+
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#TogamasDiponegoro -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#TogamasDiponegoro">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AnakSemuaBangsa"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BumiManusia"/>
+        <ontologi-buku:sells rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi"/>
+        <ontologi-buku:bookstoreCity>Surabaya</ontologi-buku:bookstoreCity>
+        <ontologi-buku:bookstoreName>Togamas Diponegoro</ontologi-buku:bookstoreName>
+    </owl:NamedIndividual>
+
+
+
+    <!--
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Author"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Book"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bookstore"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Genre"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Publisher"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AnakSemuaBangsa"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#AndreaHirata"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BentangPustaka"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Bloomsbury"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#BumiManusia"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#ComingOfAge"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fantasy"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#Fiction"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#GramediaExpoSurabaya"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter1"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HarryPotter2"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HastaMitra"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#HistoricalFiction"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#JKRowling"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LaskarPelangi"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#LiteraryFiction"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#PramoedyaAnantaToer"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#SangPemimpi"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/9/ontologi-buku#TogamasDiponegoro"/>
+        </owl:distinctMembers>
+    </rdf:Description>
+</rdf:RDF>

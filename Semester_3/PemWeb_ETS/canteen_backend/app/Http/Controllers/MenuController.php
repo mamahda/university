@@ -33,8 +33,6 @@ class MenuController
         $searchTerm = strtolower($name);
         return $query->whereRaw('LOWER(name) LIKE ?', ["%{$searchTerm}%"]);
       })
-      ->orderBy('type', 'desc')
-      ->orderBy('name', 'asc')
       ->get();
 
     return response()->json([
@@ -57,7 +55,6 @@ class MenuController
       'price' => ['required', 'integer', 'min:0'],
       'stock' => ['required', 'integer', 'min:0'],
       'type' => ['required', 'string', Rule::in(['Main Course', 'Snack', 'Beverage'])],
-      'description' => ['nullable', 'string'],
     ]);
 
     $menu = Menu::create($validatedData);
@@ -115,7 +112,7 @@ class MenuController
         'max:255',
         Rule::unique('menus')->ignore($menu->id)  // Abaikan nama menu ini sendiri
       ],
-      'price' => ['sometimes', 'integer', 'min:1'],
+      'price' => ['sometimes', 'integer', 'min:0'],
       'stock' => ['sometimes', 'integer', 'min:0'],
       'type' => ['sometimes', 'string', Rule::in(['Main Course', 'Snack', 'Beverage'])],
     ]);

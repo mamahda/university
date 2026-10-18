@@ -1,0 +1,472 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4/"
+     xml:base="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-4="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#belongsTo">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#enrolledIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#enrolledIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#hasPrerequisite -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#hasPrerequisite">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#teaches -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#teaches">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#courseCode -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#courseCode">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#courseName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#courseName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#courseSKS -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#courseSKS">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#deptCode -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#deptCode">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#deptLocation -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#deptLocation">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#deptName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#deptName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturerExpertise -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturerExpertise">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturerNIP -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturerNIP">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturerPosition -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturerPosition">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#personEmail -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#personEmail">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#personName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#personName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#personPhone -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#personPhone">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#studentEntryYear -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#studentEntryYear">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#studentIPK -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#studentIPK">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#studentNRP -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#studentNRP">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#uniAddress -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#uniAddress">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#uniCode -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#uniCode">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#uniName -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#uniName">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#person"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Aqil -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Aqil">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#SBD"/>
+        <untitled-ontology-4:personEmail>Aqil@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Aqil</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone>08234567890</untitled-ontology-4:personPhone>
+        <untitled-ontology-4:studentEntryYear rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">24</untitled-ontology-4:studentEntryYear>
+        <untitled-ontology-4:studentIPK rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3.6</untitled-ontology-4:studentIPK>
+        <untitled-ontology-4:studentNRP>5025241120</untitled-ontology-4:studentNRP>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Bu_Kelly -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Bu_Kelly">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer"/>
+        <untitled-ontology-4:teaches rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD"/>
+        <untitled-ontology-4:teaches rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#RSBP"/>
+        <untitled-ontology-4:lecturerExpertise>MCI</untitled-ontology-4:lecturerExpertise>
+        <untitled-ontology-4:lecturerNIP>2</untitled-ontology-4:lecturerNIP>
+        <untitled-ontology-4:lecturerPosition>Dosen</untitled-ontology-4:lecturerPosition>
+        <untitled-ontology-4:personEmail>bukelly@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Bu kelly</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone>080987654321</untitled-ontology-4:personPhone>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#ITS -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#ITS">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#university"/>
+        <untitled-ontology-4:uniAddress>Jl. Raya ITS, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60111</untitled-ontology-4:uniAddress>
+        <untitled-ontology-4:uniCode>002002</untitled-ontology-4:uniCode>
+        <untitled-ontology-4:uniName>Institut Teknologi Sepuluh Nopember</untitled-ontology-4:uniName>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <untitled-ontology-4:belongsTo rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Teknik_Informatika"/>
+        <untitled-ontology-4:hasPrerequisite rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#SBD"/>
+        <untitled-ontology-4:courseCode>2</untitled-ontology-4:courseCode>
+        <untitled-ontology-4:courseName>Manajemen Basis Data</untitled-ontology-4:courseName>
+        <untitled-ontology-4:courseSKS rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4</untitled-ontology-4:courseSKS>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Mahda -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Mahda">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#RSBP"/>
+        <untitled-ontology-4:personEmail>Mahda@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Mahda</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">08999093934</untitled-ontology-4:personPhone>
+        <untitled-ontology-4:studentEntryYear rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">24</untitled-ontology-4:studentEntryYear>
+        <untitled-ontology-4:studentIPK rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4.0</untitled-ontology-4:studentIPK>
+        <untitled-ontology-4:studentNRP rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5025241134</untitled-ontology-4:studentNRP>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Nabila -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Nabila">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD"/>
+        <untitled-ontology-4:personEmail>nabila@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Nabila</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1234567890</untitled-ontology-4:personPhone>
+        <untitled-ontology-4:studentEntryYear rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">24</untitled-ontology-4:studentEntryYear>
+        <untitled-ontology-4:studentIPK rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3.7</untitled-ontology-4:studentIPK>
+        <untitled-ontology-4:studentNRP rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5025241078</untitled-ontology-4:studentNRP>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Prof_Riyan -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Prof_Riyan">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#lecturer"/>
+        <untitled-ontology-4:teaches rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#SBD"/>
+        <untitled-ontology-4:lecturerExpertise>MCI</untitled-ontology-4:lecturerExpertise>
+        <untitled-ontology-4:lecturerNIP>1</untitled-ontology-4:lecturerNIP>
+        <untitled-ontology-4:lecturerPosition>Dosen</untitled-ontology-4:lecturerPosition>
+        <untitled-ontology-4:personEmail>profriyan@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Prof Riyan</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone>081234567890</untitled-ontology-4:personPhone>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#RSBP -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#RSBP">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <untitled-ontology-4:belongsTo rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Teknik_Informatika"/>
+        <untitled-ontology-4:hasPrerequisite rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#MBD"/>
+        <untitled-ontology-4:courseCode>3</untitled-ontology-4:courseCode>
+        <untitled-ontology-4:courseName>Rekayasa Sistem Berbasis Pengetahuan</untitled-ontology-4:courseName>
+        <untitled-ontology-4:courseSKS rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3</untitled-ontology-4:courseSKS>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Rahma -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Rahma">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#SBD"/>
+        <untitled-ontology-4:personEmail>rahma@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Rahma</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1901302130</untitled-ontology-4:personPhone>
+        <untitled-ontology-4:studentEntryYear rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">25</untitled-ontology-4:studentEntryYear>
+        <untitled-ontology-4:studentIPK rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3.4</untitled-ontology-4:studentIPK>
+        <untitled-ontology-4:studentNRP rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5025241089</untitled-ontology-4:studentNRP>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Rara -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Rara">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#student"/>
+        <untitled-ontology-4:enrolledIn rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#RSBP"/>
+        <untitled-ontology-4:personEmail>rara@its.ac.id</untitled-ontology-4:personEmail>
+        <untitled-ontology-4:personName>Rara</untitled-ontology-4:personName>
+        <untitled-ontology-4:personPhone rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">17656789</untitled-ontology-4:personPhone>
+        <untitled-ontology-4:studentEntryYear rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">26</untitled-ontology-4:studentEntryYear>
+        <untitled-ontology-4:studentIPK rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3.9</untitled-ontology-4:studentIPK>
+        <untitled-ontology-4:studentNRP rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5025261023</untitled-ontology-4:studentNRP>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#SBD -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#SBD">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#course"/>
+        <untitled-ontology-4:belongsTo rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Teknik_Informatika"/>
+        <untitled-ontology-4:courseCode>1</untitled-ontology-4:courseCode>
+        <untitled-ontology-4:courseName>Sistem Basis Data</untitled-ontology-4:courseName>
+        <untitled-ontology-4:courseSKS rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4</untitled-ontology-4:courseSKS>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Teknik_Informatika -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#Teknik_Informatika">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mamahda/ontologies/2026/8/untitled-ontology-4#department"/>
+        <untitled-ontology-4:deptCode>25</untitled-ontology-4:deptCode>
+        <untitled-ontology-4:deptLocation>PQCW+7WH, Keputih, Kec. Sukolilo, Surabaya, Jawa Timur 60117</untitled-ontology-4:deptLocation>
+        <untitled-ontology-4:deptName>Departemen Teknik Informatika</untitled-ontology-4:deptName>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
