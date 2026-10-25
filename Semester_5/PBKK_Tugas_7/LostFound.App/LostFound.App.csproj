@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+	<TargetFramework>net9.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>LostFound.App</RootNamespace>
+    <AssemblyName>LostFound.App</AssemblyName>
+    <!-- Memungkinkan build di luar Windows (mis. CI); aplikasi tetap hanya berjalan di Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Implicit usings WPF tidak menyertakan System.IO. -->
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LostFound.Core\LostFound.Core.csproj" />
+    <ProjectReference Include="..\LostFound.Data\LostFound.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,89 @@
+<UserControl x:Class="LostFound.App.Views.ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="232" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Menu sisi kiri -->
+        <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,1,0">
+            <DockPanel Margin="14,20,14,16" LastChildFill="False">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="6,0,0,24">
+                    <Border Width="30" Height="30" CornerRadius="7" Background="{StaticResource PrimaryBrush}">
+                        <TextBlock Text="&#xE721;" Style="{StaticResource IconText}" FontSize="14"
+                                   Foreground="{StaticResource WhiteBrush}" HorizontalAlignment="Center" />
+                    </Border>
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="Lost and Found" FontWeight="SemiBold" FontSize="14" />
+                        <TextBlock Text="Teknik Informatika" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <Button DockPanel.Dock="Top" Style="{StaticResource PrimaryButton}" Command="{Binding CreatePostCommand}" Margin="0,0,0,18">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE710;" Style="{StaticResource IconText}" FontSize="12" Margin="0,0,8,0" />
+                        <TextBlock Text="Buat Posting" />
+                    </StackPanel>
+                </Button>
+
+                <TextBlock DockPanel.Dock="Top" Text="MENU" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextSubtleBrush}" Margin="12,0,0,8" />
+
+                <Button DockPanel.Dock="Top" Style="{StaticResource NavButton}" Command="{Binding ShowFoundCommand}" Tag="{Binding IsFoundActive}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE73E;" Style="{StaticResource IconText}" Margin="0,0,12,0" />
+                        <TextBlock Text="Barang Temuan" />
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Top" Style="{StaticResource NavButton}" Command="{Binding ShowLostCommand}" Tag="{Binding IsLostActive}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE7BA;" Style="{StaticResource IconText}" Margin="0,0,12,0" />
+                        <TextBlock Text="Laporan Kehilangan" />
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Top" Style="{StaticResource NavButton}" Command="{Binding ShowMyPostsCommand}" Tag="{Binding IsMyPostsActive}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE77B;" Style="{StaticResource IconText}" Margin="0,0,12,0" />
+                        <TextBlock Text="Posting Saya" />
+                    </StackPanel>
+                </Button>
+
+                <!-- Akun -->
+                <StackPanel DockPanel.Dock="Bottom">
+                    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,0,0,14" />
+                    <Grid Margin="4,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="34" Height="34" CornerRadius="17" Background="{StaticResource PrimarySoftBrush}">
+                            <TextBlock Text="{Binding Initial}" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding UserName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding UserIdentity}" FontSize="11" Foreground="{StaticResource TextMutedBrush}" />
+                                <Border Style="{StaticResource Chip}" Background="{StaticResource PrimarySoftBrush}" Margin="6,0,0,0" Padding="6,0"
+                                        Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVisibility}}">
+                                    <TextBlock Text="Admin" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}" />
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Button Style="{StaticResource NavButton}" Command="{Binding LogoutCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7E8;" Style="{StaticResource IconText}" Margin="0,0,12,0" />
+                            <TextBlock Text="Keluar" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Halaman aktif -->
+        <ContentControl Grid.Column="1" Content="{Binding Navigation.CurrentPage}" Focusable="False" />
+    </Grid>
+</UserControl>
