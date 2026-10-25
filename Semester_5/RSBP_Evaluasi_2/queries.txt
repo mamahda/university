@@ -1,0 +1,107 @@
+Evaluasi 2 RSBP - Query SPARQL Ontologi Silsilah Kasultanan Yogyakarta
+Ontologi : ontologi_kasultanan_yogyakarta.owl
+Namespace: http://www.semanticweb.org/mamahda/ontologies/2026/10/kasultanan-yogyakarta#
+
+a. Tampilkan nama penguasa, jenis kelamin penguasa, dan nama ayah dimana sang ayah pernah menjadi penguasa sebelumnya
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX : <http://www.semanticweb.org/mamahda/ontologies/2026/10/kasultanan-yogyakarta#>
+
+SELECT ?namaPenguasa ?jenisKelamin ?namaAyah
+WHERE {
+    ?penguasa rdf:type :Penguasa ;
+              :nama ?namaPenguasa ;
+              :jenisKelamin ?jenisKelamin ;
+              :tahunMulaiBerkuasa ?mulaiAnak ;
+              :punyaAyah ?ayah .
+    ?ayah rdf:type :Penguasa ;
+          :nama ?namaAyah ;
+          :tahunMulaiBerkuasa ?mulaiAyah .
+    FILTER (?mulaiAyah < ?mulaiAnak)
+}
+ORDER BY ?mulaiAnak
+
+
+b. Tampilkan nama anak, nama ayah, nama ibu dan tahun lahir dari masing-masing orangtua pada pernikahan pertama. Apabila tahun lahir tidak tercatat, data anak tetap ditampilkan dimana kolom terakhir tahun lahir kosong
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX : <http://www.semanticweb.org/mamahda/ontologies/2026/10/kasultanan-yogyakarta#>
+
+SELECT ?namaAnak ?namaAyah ?tahunLahirAyah ?namaIbu ?tahunLahirIbu
+WHERE {
+    ?nikah rdf:type :Pernikahan ;
+           :suami ?ayah ;
+           :istri ?ibu ;
+           :urutanPernikahan 1 .
+    ?anak :punyaAyah ?ayah ;
+          :punyaIbu ?ibu ;
+          :nama ?namaAnak .
+    ?ayah :nama ?namaAyah .
+    ?ibu  :nama ?namaIbu .
+    OPTIONAL { ?ayah :tahunLahir ?tahunLahirAyah . }
+    OPTIONAL { ?ibu  :tahunLahir ?tahunLahirIbu . }
+}
+ORDER BY ?namaAyah ?namaAnak
+
+
+c. Tampilkan nama cucu dan tahun lahir dari penguasa generasi pertama serta urutkan berdasarkan tahun lahirnya
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX : <http://www.semanticweb.org/mamahda/ontologies/2026/10/kasultanan-yogyakarta#>
+
+SELECT DISTINCT ?namaCucu ?tahunLahir
+WHERE {
+    ?penguasa rdf:type :Penguasa ;
+              :urutanPenguasa 1 .
+    { ?anak :punyaAyah ?penguasa . } UNION { ?anak :punyaIbu ?penguasa . }
+    { ?cucu :punyaAyah ?anak . }     UNION { ?cucu :punyaIbu ?anak . }
+    ?cucu :nama ?namaCucu .
+    OPTIONAL { ?cucu :tahunLahir ?tahunLahir . }
+}
+ORDER BY ?tahunLahir
+
+
+d. Tampilkan nama pasangan (laki-laki dan perempuan) yang merupakan sepupu yang tidak boleh menikah (ayah dari sepupu bersaudara)
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX : <http://www.semanticweb.org/mamahda/ontologies/2026/10/kasultanan-yogyakarta#>
+
+SELECT DISTINCT ?namaLakiLaki ?namaPerempuan ?ayahLakiLaki ?ayahPerempuan ?kakekBersama
+WHERE {
+    ?laki rdf:type :LakiLaki ;
+          :menikahDengan ?perempuan ;
+          :punyaAyah ?aL ;
+          :nama ?namaLakiLaki .
+    ?perempuan rdf:type :Perempuan ;
+               :punyaAyah ?aP ;
+               :nama ?namaPerempuan .
+    ?aL :punyaAyah ?kakek ; :nama ?ayahLakiLaki .
+    ?aP :punyaAyah ?kakek ; :nama ?ayahPerempuan .
+    ?kakek :nama ?kakekBersama .
+    FILTER (?aL != ?aP)
+}
+
+ 
+e. (UNION, OPTIONAL, MINUS) Tampilkan putra-putri Sultan, yaitu anak dari seorang Sultan ATAU anak dari seorang Permaisuri, yang tidak pernah naik takhta, beserta nama orang tua yang menghubungkannya dan tahun lahir jika tercatat 
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX : <http://www.semanticweb.org/mamahda/ontologies/2026/10/kasultanan-yogyakarta#>
+
+SELECT DISTINCT ?nama ?jenisKelamin ?namaOrangTua ?tahunLahir
+WHERE {
+    {
+        ?anak :punyaAyah ?ortu .
+        ?ortu rdf:type :Penguasa .
+    }
+    UNION
+    {
+        ?anak :punyaIbu ?ortu .
+        ?ortu rdf:type :Permaisuri .
+    }
+    ?anak :nama ?nama ;
+          :jenisKelamin ?jenisKelamin .
+    ?ortu :nama ?namaOrangTua .
+    OPTIONAL { ?anak :tahunLahir ?tahunLahir . }
+    MINUS { ?anak rdf:type :Penguasa . }
+}
+ORDER BY ?nama ?namaOrangTua

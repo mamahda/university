@@ -1,0 +1,757 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Soal ETS Grafika Komputer</title>
+<meta name="description" content="50 soal ETS Grafika Komputer (WebGL) pilihan majemuk dengan penilaian otomatis dan pembahasan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --bg: #F2F4F8;
+  --dot: rgba(37, 52, 92, .075);
+  --surface: #FFFFFF;
+  --sunken: #E9EDF4;
+  --ink: #151A24;
+  --muted: #5B6476;
+  --line: #D9DFE9;
+  --accent: #2E52C9;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E6EBFA;
+  --ok: #157F55;
+  --ok-soft: #E1F2E9;
+  --bad: #BB3A2F;
+  --bad-soft: #FAE7E4;
+  --code-bg: #EDF0F6;
+  --shadow: 0 1px 2px rgba(25, 36, 66, .06), 0 10px 30px -8px rgba(25, 36, 66, .14);
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0D1017; --dot: rgba(150, 170, 230, .06); --surface: #151A23; --sunken: #10141C;
+    --ink: #E4E8F0; --muted: #959DAF; --line: #262D3A;
+    --accent: #8099F8; --accent-ink: #0D1017; --accent-soft: #1C2440;
+    --ok: #4CC48D; --ok-soft: #10291F; --bad: #F07C6F; --bad-soft: #331719;
+    --code-bg: #0F131B;
+    --shadow: 0 1px 2px rgba(2, 5, 14, .5), 0 12px 32px -8px rgba(2, 5, 14, .6);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0D1017; --dot: rgba(150, 170, 230, .06); --surface: #151A23; --sunken: #10141C;
+  --ink: #E4E8F0; --muted: #959DAF; --line: #262D3A;
+  --accent: #8099F8; --accent-ink: #0D1017; --accent-soft: #1C2440;
+  --ok: #4CC48D; --ok-soft: #10291F; --bad: #F07C6F; --bad-soft: #331719;
+  --code-bg: #0F131B;
+  --shadow: 0 1px 2px rgba(2, 5, 14, .5), 0 12px 32px -8px rgba(2, 5, 14, .6);
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  /* pixel grid: a raster nod, kept faint */
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.4px);
+  background-size: 14px 14px;
+  color: var(--ink);
+  font: 400 16px/1.6 var(--body);
+  padding: 0 16px;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.skip {
+  position: absolute; left: 16px; top: -48px;
+  background: var(--ink); color: var(--bg);
+  padding: 8px 12px; border-radius: 6px; z-index: 10;
+  text-decoration: none; font-weight: 500;
+}
+.skip:focus { top: calc(env(safe-area-inset-top, 0px) + 8px); }
+
+.shell {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding-block: 22px 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 22px 32px;
+  align-items: start;
+}
+
+/* ---------- header ---------- */
+.top { grid-column: 1 / -1; display: grid; gap: 14px; }
+.top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+.eyebrow {
+  display: block;
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.brand h1 {
+  margin: 2px 0 0;
+  font: 800 clamp(26px, 4.4vw, 36px)/1.05 var(--display);
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.stats {
+  display: flex;
+  gap: 22px;
+  font: 400 13px/1.3 var(--body);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.stats b { display: block; font: 600 22px/1.15 var(--display); color: var(--ink); letter-spacing: -.01em; }
+.stats .ok b { color: var(--ok); }
+.stats .bad b { color: var(--bad); }
+.progress { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.progress span { display: block; width: 0; height: 100%; background: var(--accent); transition: width .35s var(--ease); }
+
+.notice {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bad-soft);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+/* ---------- question ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3.6vw, 34px) clamp(18px, 3.6vw, 34px) clamp(20px, 3.8vw, 36px);
+  min-width: 0;
+}
+.card:focus { outline: none; }
+.qmeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 16px;
+}
+.qnum {
+  font: 800 clamp(34px, 5.4vw, 46px)/.9 var(--display);
+  letter-spacing: -.04em;
+  margin-right: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.qpos { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; margin-left: auto; }
+.tag {
+  font: 500 12px/1 var(--mono);
+  padding: 5px 7px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tag.plain { background: var(--sunken); color: var(--muted); }
+.tag.pred { background: var(--ink); color: var(--surface); }
+
+.md { max-width: 68ch; }
+.md > :first-child { margin-top: 0; }
+.md > :last-child { margin-bottom: 0; }
+.md p, .md ul, .md ol { margin: 0 0 .8em; }
+.md p, .md li { text-wrap: pretty; }
+.md li { margin: .2em 0; }
+.md code {
+  font: 400 .88em/1.4 var(--mono);
+  background: var(--code-bg);
+  padding: .1em .35em;
+  border-radius: 4px;
+}
+.md pre {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 0 0 1em;
+}
+.md pre code { background: none; padding: 0; font-size: 13.5px; line-height: 1.55; }
+.md blockquote {
+  margin: 0 0 1em;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+.md blockquote p:last-child { margin: 0; }
+.table-wrap { overflow-x: auto; margin: 0 0 1em; }
+.md table { border-collapse: collapse; font-size: 14px; min-width: 100%; }
+.md th, .md td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+.md th { background: var(--code-bg); font-weight: 600; }
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding-block: 2px; }
+.prompt { font-size: 17px; }
+.plain-text { white-space: pre-wrap; }
+
+/* options */
+.options { display: grid; gap: 10px; margin-top: 22px; }
+.opt {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 11px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .18s var(--ease), background-color .18s var(--ease), transform .12s var(--ease);
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:active:not(:disabled) { transform: translateY(1px); }
+.opt .key {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  background: var(--sunken);
+  font: 600 13px/1 var(--mono);
+  color: var(--muted);
+  transition: background-color .18s var(--ease), color .18s var(--ease);
+}
+.opt .mark { font: 500 13px/1 var(--body); white-space: nowrap; }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+.opt.sel .key { background: var(--accent); color: var(--accent-ink); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.right .key { background: var(--ok); color: var(--surface); }
+.opt.right .mark { color: var(--ok); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .key { background: var(--bad); color: var(--surface); }
+.opt.wrong .mark { color: var(--bad); }
+.opt.dim { opacity: .5; }
+
+.essay { margin-top: 22px; display: grid; gap: 6px; }
+.essay label { font: 500 14px/1.3 var(--body); color: var(--muted); }
+.essay textarea {
+  width: 100%;
+  min-height: 104px;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--body);
+  transition: border-color .18s var(--ease);
+}
+.essay textarea:focus { border-color: var(--accent); outline: none; }
+.essay textarea:read-only { background: var(--sunken); }
+
+/* feedback + explanation */
+.verdict {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+}
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.verdict small { font-size: 15px; font-weight: 400; color: var(--ink); }
+
+.explain { margin-top: 22px; padding-top: 20px; border-top: 1px dashed var(--line); }
+.explain h3 { margin: 0 0 10px; font: 600 15px/1.3 var(--body); color: var(--ink); }
+.selfgrade {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--sunken);
+}
+.selfgrade p { margin: 0 8px 0 0; font-size: 14px; color: var(--muted); flex: 1 1 200px; }
+
+/* buttons */
+.btn {
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  border-radius: 9px;
+  padding: 9px 16px;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color .18s var(--ease), background-color .18s var(--ease), color .18s var(--ease), transform .12s var(--ease), filter .18s var(--ease);
+}
+.btn:hover:not(:disabled) { border-color: var(--ink); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover:not(:disabled) { filter: brightness(1.08); border-color: var(--accent); }
+.btn.small { padding: 6px 12px; font-size: 14px; }
+.btn.ok.on { background: var(--ok); border-color: var(--ok); color: var(--surface); }
+.btn.bad.on { background: var(--bad); border-color: var(--bad); color: var(--surface); }
+.btn.text { border-color: transparent; background: transparent; color: var(--muted); padding-inline: 10px; }
+.btn.text:hover:not(:disabled) { color: var(--ink); border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.nav .spacer { flex: 1; }
+.hint { font-size: 12px; color: var(--muted); margin-top: 12px; }
+.hint kbd {
+  font: 500 11px/1.4 var(--mono);
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 5px;
+  background: var(--surface);
+}
+
+/* ---------- sidebar (flat: spacing and rules, not cards) ---------- */
+.side {
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+}
+.side h2 { margin: 0 0 10px; font: 600 14px/1.3 var(--body); }
+.side section { min-height: 0; }
+.side .map { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.side .map + section { border-top: 1px solid var(--line); padding-top: 14px; }
+
+.seg {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 3px;
+  gap: 3px;
+  border-radius: 10px;
+  background: var(--sunken);
+  margin-bottom: 12px;
+}
+.seg button {
+  border: 0;
+  background: transparent;
+  border-radius: 7px;
+  padding: 6px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color .18s var(--ease), color .18s var(--ease);
+}
+.seg button:hover { color: var(--ink); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(25, 36, 66, .14); }
+.seg small { display: block; font: 400 11px/1.2 var(--mono); color: var(--muted); }
+
+.grid-wrap { flex: 1 1 auto; overflow-y: auto; min-height: 120px; padding: 3px; margin: -3px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)); gap: 5px; }
+.cell {
+  aspect-ratio: 1;
+  max-width: 100%;
+  border: 1.5px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  font: 500 11.5px/1 var(--mono);
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .15s var(--ease), transform .12s var(--ease);
+}
+.cell:hover { border-color: var(--ink); }
+.cell:active { transform: scale(.94); }
+.cell.s-ok { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.cell.s-bad { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.cell.s-open { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.cell.cur { outline: 2px solid var(--ink); outline-offset: 1px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; border: 1.5px solid var(--line); background: var(--surface); }
+.legend .l-ok { background: var(--ok-soft); border-color: var(--ok); }
+.legend .l-bad { background: var(--bad-soft); border-color: var(--bad); }
+.legend .l-open { background: var(--accent-soft); border-color: var(--accent); }
+
+.tools { display: flex; flex-wrap: wrap; gap: 2px 4px; margin-left: -10px; }
+.confirm { display: grid; gap: 8px; margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bad-soft); font-size: 14px; }
+.confirm div { display: flex; gap: 8px; }
+
+/* ---------- results ---------- */
+.result-score {
+  margin: 0;
+  font: 800 clamp(52px, 10vw, 84px)/1 var(--display);
+  letter-spacing: -.045em;
+  font-variant-numeric: tabular-nums;
+}
+.result-score span { font-size: .38em; color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+.result-row { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 14px 0 6px; color: var(--muted); font-size: 15px; }
+.result-row b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.jump-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+.jump-list .cell { width: 38px; }
+.result h3 { margin: 22px 0 4px; font: 600 15px/1.3 var(--body); }
+.result .lede { max-width: 52ch; color: var(--muted); margin: 8px 0 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+
+@media (max-width: 880px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-height: none; order: 3; }
+  .grid-wrap { max-height: 300px; }
+}
+@media (max-width: 480px) {
+  .stats { gap: 16px; }
+  .qpos { margin-left: 0; width: 100%; }
+  .opt { grid-template-columns: 28px 1fr; padding: 10px 12px; gap: 10px; }
+  .opt .key { width: 28px; height: 28px; }
+  .opt .mark { grid-column: 2; }
+  .opt .mark:empty { display: none; }
+  .nav .btn { flex: 1 1 auto; }
+  .nav .spacer { display: none; }
+  .hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+.opt.miss { border-color: var(--ok); border-style: dashed; }
+.opt.miss .key { background: var(--ok-soft); color: var(--ok); }
+.opt.miss .mark { color: var(--ok); }
+.opt .key.box { border-radius: 7px; }
+.fig { margin: 4px 0 16px; max-width: 360px; }
+.fig svg { display: block; width: 100%; height: auto; }
+.f-area { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+.f-guide { stroke: var(--line); stroke-width: 1.2; }
+.f-edge line { stroke: var(--accent); stroke-width: 2.4; }
+.f-dot, .f-dot circle { fill: #E8892B; }
+.f-lbl, .f-lbl text { fill: var(--ink); font: 700 14px var(--mono); }
+.f-cap { fill: var(--ink); font: 600 12px var(--body); }
+.keytab { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; margin-top: 10px; }
+.keytab div { display: flex; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 6px; background: var(--sunken); font: 500 13px/1.3 var(--mono); }
+.keytab b { color: var(--muted); font-weight: 500; min-width: 2ch; text-align: right; }
+</style>
+
+<a class="skip" href="#main">Langsung ke soal</a>
+<div class="shell">
+  <header class="top">
+    <div class="top-row">
+      <div class="brand">
+        <span class="eyebrow">Grafika Komputer · WebGL · Pilihan majemuk</span>
+        <h1>Soal ETS</h1>
+      </div>
+      <div class="stats" aria-live="polite">
+        <div>Dijawab<b id="st-done">0/0</b></div>
+        <div class="ok">Benar<b id="st-ok">0</b></div>
+        <div class="bad">Salah<b id="st-bad">0</b></div>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+  </header>
+
+  <p class="notice" id="notice" hidden>Format teks belum termuat karena library dari CDN tidak bisa diakses. Soal tetap bisa dikerjakan; sambungkan internet lalu muat ulang halaman agar tampilan rapi.</p>
+
+  <main class="card" id="main" tabindex="-1"></main>
+
+  <aside class="side" aria-label="Navigasi soal">
+    <section class="map">
+      <h2>Daftar soal</h2>
+      <div class="grid-wrap"><div class="grid" id="grid"></div></div>
+      <div class="legend">
+        <span><i></i>Belum</span>
+        <span><i class="l-ok"></i>Benar</span>
+        <span><i class="l-bad"></i>Salah</span>
+      </div>
+    </section>
+    <section>
+      <div class="tools">
+        <button class="btn small text" id="btn-shuffle" type="button">Acak urutan</button>
+        <button class="btn small text" id="btn-order" type="button">Urutkan nomor</button>
+        <button class="btn small text" id="btn-result" type="button">Lihat hasil</button>
+        <button class="btn small text" id="btn-reset" type="button">Mulai ulang</button>
+      </div>
+      <div class="confirm" id="confirm-reset" hidden>
+        Semua jawaban akan dihapus.
+        <div>
+          <button class="btn small bad on" id="btn-reset-yes" type="button">Hapus jawaban</button>
+          <button class="btn small" id="btn-reset-no" type="button">Batal</button>
+        </div>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+const QUESTIONS = [{"n": 1, "topic": "Sistem Koordinat", "prompt": "Karakteristik Normalized Device Coordinates (NDC) adalah ...", "options": [{"key": "a", "text": "Koordinat menggunakan satuan piksel"}, {"key": "b", "text": "Rentang koordinat y antara -1 dan 1"}, {"key": "c", "text": "Rentang koordinat selalu mengikuti ukuran canvas"}, {"key": "d", "text": "Rentang koordinat x antara -1 dan 1"}], "answer": ["b", "d"], "explain": "NDC adalah ruang koordinat ternormalisasi dengan rentang x, y, dan z dari -1 sampai 1, tidak bergantung pada ukuran canvas. Konversi ke piksel baru terjadi pada tahap viewport transform, sehingga a dan c salah."}, {"n": 2, "topic": "Sistem Koordinat", "prompt": "Berikut merupakan ruang koordinat yang dilalui vertex dalam pipeline WebGL ...", "options": [{"key": "a", "text": "View Space"}, {"key": "b", "text": "World Space"}, {"key": "c", "text": "Clip Space"}, {"key": "d", "text": "NDC (Normalized Device Coordinates)"}, {"key": "e", "text": "Object Space"}], "answer": ["a", "b", "c", "d", "e"], "explain": "Urutan ruang koordinat vertex: Object (Local) Space → *Model Matrix* → World Space → *View Matrix* → View Space → *Projection Matrix* → Clip Space → *perspective divide* → NDC → *viewport transform* → Screen Space. Kelima ruang di pilihan semuanya dilalui."}, {"n": 3, "topic": "Canvas 2D", "prompt": "Pada praktikum Graphics Playground, perintah `ctx.fillRect(50, 50, 200, 100);` dijalankan pada canvas 2D dengan sistem koordinat bawaan. Manakah deskripsi hasil yang tepat?", "options": [{"key": "a", "text": "Sudut kiri bawah berada di (50, 50) karena sumbu y canvas mengarah ke atas."}, {"key": "b", "text": "Persegi panjang berpusat di titik (50, 50) dengan lebar 200 dan tinggi 100 pixel."}, {"key": "c", "text": "Persegi panjang dibentuk dari titik (50, 50) hingga titik (200, 100) pada canvas."}, {"key": "d", "text": "Sudut kiri atas berada di (50, 50) dengan lebar 200 dan tinggi 100 pixel."}], "answer": ["d"], "explain": "Signature-nya `fillRect(x, y, width, height)`. Pada canvas 2D, origin ada di kiri atas dan sumbu y mengarah ke **bawah**, jadi (50, 50) adalah sudut kiri atas. Persegi panjang terbentang sampai (250, 150), bukan (200, 100). Titik (50, 50) juga bukan pusatnya."}, {"n": 4, "topic": "Transformasi MVP", "prompt": "Dalam urutan transformasi MVP, sebuah model lokal akan ditampilkan pada layar. Dengan asumsi matriks tersusun dengan benar, pernyataan mana yang benar?", "options": [{"key": "a", "text": "Projection Matrix bertugas membentuk proyeksi perspektif atau ortografik"}, {"key": "b", "text": "Projection Matrix diterapkan sebelum Model Matrix"}, {"key": "c", "text": "Model Matrix memindahkan objek dari Local Space ke World Space"}, {"key": "d", "text": "View Matrix menghasilkan koordinat layar secara langsung"}], "answer": ["a", "c"], "explain": "`gl_Position = P · V · M · v`. Karena perkalian diterapkan dari kanan, Model Matrix diterapkan **pertama** dan Projection **terakhir**, jadi b salah. View Matrix hanya membawa ke View Space; koordinat layar baru didapat setelah projection, perspective divide, dan viewport transform, jadi d salah."}, {"n": 5, "topic": "CPU vs GPU", "prompt": "Sebuah game 3D dijalankan pada layar 1920 × 1080. Berdasarkan pembagian peran CPU dan GPU, tugas manakah yang paling sesuai dikerjakan oleh GPU?", "options": [{"key": "a", "text": "Menghitung warna jutaan fragment pada setiap frame secara paralel."}, {"key": "b", "text": "Menyiapkan scene lalu menyusun perintah render yang akan dikirim."}, {"key": "c", "text": "Membaca input keyboard pemain lalu memperbarui status permainan."}, {"key": "d", "text": "Menjalankan logika percabangan AI musuh berdasarkan kondisi permainan."}], "answer": ["a"], "explain": "GPU unggul untuk pekerjaan masif yang seragam dan paralel, seperti shading ±2 juta piksel per frame. Menyiapkan scene/draw call, input, dan logika AI yang penuh percabangan dikerjakan CPU."}, {"n": 6, "topic": "Lighting", "prompt": "Dua posisi kamera berada pada sinar yang sama dari sebuah titik permukaan tetap; kamera kedua berada lebih jauh. N, cahaya, dan parameter material tetap. Model Phong sederhana menggunakan arah pandang ternormalisasi dan tidak menerapkan pelemahan berdasarkan jarak. Manakah kesimpulan yang benar?", "options": [{"key": "a", "text": "Eksponen shininess harus dinaikkan untuk mempertahankan highlight."}, {"key": "b", "text": "Faktor diffuse tetap."}, {"key": "c", "text": "Faktor specular menurun karena kamera berada lebih jauh."}, {"key": "d", "text": "Arah pandang ternormalisasi tetap."}], "answer": ["b", "d"], "explain": "Diffuse = `max(N·L, 0)` tidak bergantung pada kamera, jadi tetap. Karena kedua kamera ada di sinar yang sama, vektor `V = normalize(cam - P)` identik. Specular bergantung pada `R·V`, dan R serta V tidak berubah, jadi specular juga tetap. Tanpa atenuasi, jarak tidak berpengaruh, sehingga a dan c salah."}, {"n": 7, "topic": "Kamera", "prompt": "Pernyataan yang benar mengenai kamera virtual adalah ...", "options": [{"key": "a", "text": "Kamera direpresentasikan oleh View Matrix"}, {"key": "b", "text": "Kamera tidak berpengaruh pada rendering"}, {"key": "c", "text": "Pergerakan kamera dapat disimulasikan dengan transformasi kebalikan"}, {"key": "d", "text": "Kamera harus berupa objek fisik"}], "answer": ["a", "c"], "explain": "Kamera virtual tidak berbentuk objek fisik. Ia diwujudkan sebagai View Matrix, yaitu invers dari transformasi kamera. Menggeser kamera ke kanan setara dengan menggeser seluruh dunia ke kiri (transformasi kebalikan)."}, {"n": 8, "topic": "Texture", "prompt": "Sebuah baris horizontal texture berisi dua texel dengan nilai skalar 0 dan 1. Pusatnya berada pada U=0.25 dan U=0.75. Gunakan filtering LINEAR, CLAMP_TO_EDGE, dan tanpa mipmap; V tetap pada pusat baris. Manakah pernyataan yang benar?", "options": [{"key": "a", "text": "Sampling pada U=0.5 menghasilkan 0.5."}, {"key": "b", "text": "Sampling pada U=0.375 menghasilkan 0.25."}, {"key": "c", "text": "Sampling pada U=0.375 menghasilkan 0 karena LINEAR memilih texel terdekat."}, {"key": "d", "text": "Sampling pada U=0 menghasilkan 0 karena koordinat dibatasi pada tepi texture."}], "answer": ["a", "b", "d"], "explain": "Interpolasi linear antara pusat texel: `t = (U − 0.25) / 0.5`.\n- U = 0.5 → t = 0.5 → 0.5 ✔\n- U = 0.375 → t = 0.25 → 0.25 ✔. Yang memilih texel terdekat adalah NEAREST, bukan LINEAR, jadi c salah.\n- U = 0 → CLAMP_TO_EDGE membatasi koordinat ke rentang [0.25, 0.75] (pusat texel tepi), sehingga hasilnya nilai texel pertama = 0 ✔"}, {"n": 9, "topic": "Depth Buffer", "prompt": "Asumsikan dua objek berada pada arah pandang yang sama dan saling menutupi. Depth Test dan Depth Buffer digunakan secara normal. Pernyataan mana yang benar?", "options": [{"key": "a", "text": "Objek yang digambar terakhir selalu tampil paling depan"}, {"key": "b", "text": "Nilai kedalaman digunakan untuk menentukan fragment yang terlihat"}, {"key": "c", "text": "Projection Matrix menentukan objek mana yang berada di depan"}, {"key": "d", "text": "Depth Buffer membantu menyimpan informasi kedalaman fragment"}], "answer": ["b", "d"], "explain": "Dengan depth test aktif, urutan gambar tidak menentukan visibilitas (a salah). Fragment baru dibandingkan dengan nilai di depth buffer, dan yang lebih dekat yang disimpan. Projection Matrix memang menghasilkan nilai z, tetapi yang **memutuskan** objek mana di depan adalah depth test (c salah)."}, {"n": 10, "topic": "Transformasi", "prompt": "Pernyataan yang benar mengenai translasi adalah ...", "options": [{"key": "a", "text": "Mengubah jumlah vertex"}, {"key": "b", "text": "Mengubah warna objek"}, {"key": "c", "text": "Mengubah posisi objek"}, {"key": "d", "text": "Tidak mengubah ukuran objek"}], "answer": ["c", "d"], "explain": "Translasi menggeser semua vertex dengan vektor yang sama. Posisi berubah, sedangkan bentuk, ukuran, warna, dan jumlah vertex tetap."}, {"n": 11, "topic": "Graphics Pipeline", "prompt": "Manakah pernyataan yang tepat tentang fungsi tahapan dalam graphics pipeline?", "options": [{"key": "a", "text": "Vertex processing melakukan transformasi posisi dan normal pada setiap vertex."}, {"key": "b", "text": "Framebuffer menyimpan hasil rendering sebelum ditampilkan ke layar."}, {"key": "c", "text": "Primitive assembly mengubah triangle menjadi kandidat pixel atau fragment."}, {"key": "d", "text": "Rasterization menggabungkan vertex menjadi primitive seperti point, line, dan triangle."}], "answer": ["a", "b"], "explain": "Pilihan c dan d tertukar. Primitive assembly-lah yang **menggabungkan vertex menjadi primitive**, sedangkan rasterization yang **mengubah primitive menjadi fragment**."}, {"n": 12, "topic": "Komponen Scene", "prompt": "Manakah pernyataan yang tepat tentang peran komponen dasar sebuah scene?", "options": [{"key": "a", "text": "Camera menentukan intensitas, warna, dan arah cahaya yang mengenai objek."}, {"key": "b", "text": "Texture menentukan bagian scene yang terlihat melalui parameter FOV dan projection."}, {"key": "c", "text": "Light berupa gambar yang dipetakan ke permukaan untuk menambah detail visual."}, {"key": "d", "text": "Material menentukan bagaimana permukaan objek berinteraksi dengan cahaya."}], "answer": ["d"], "explain": "Deskripsi a, b, dan c tertukar: a adalah peran **Light**, b peran **Camera**, dan c peran **Texture**. Hanya d yang benar."}, {"n": 13, "topic": "Mesh", "prompt": "Manakah pernyataan yang tepat tentang representasi objek 3D menggunakan vertex, edge, face, triangle, dan mesh?", "options": [{"key": "a", "text": "Edge adalah permukaan bidang yang terbentuk ketika tiga vertex saling terhubung."}, {"key": "b", "text": "Vertex dapat menyimpan atribut tambahan seperti color, normal, dan texture coordinate."}, {"key": "c", "text": "Semakin tinggi triangle count, biasanya semakin ringan biaya pemrosesan geometri."}, {"key": "d", "text": "Triangle selalu planar sehingga menjadi primitive dasar yang efisien untuk GPU."}], "answer": ["b", "d"], "explain": "Edge adalah garis penghubung dua vertex. Permukaan yang dibentuk tiga vertex adalah face/triangle (a salah). Makin banyak triangle, biaya pemrosesan makin **berat** (c salah). Tiga titik selalu terletak pada satu bidang, sehingga triangle mudah dan efisien diproses GPU."}, {"n": 14, "topic": "Aplikasi Grafika", "prompt": "Manakah pasangan bidang aplikasi grafika komputer dan contoh penggunaannya yang tepat?", "options": [{"key": "a", "text": "Augmented reality: menciptakan lingkungan digital imersif yang menggantikan dunia nyata."}, {"key": "b", "text": "Scientific visualization: merancang produk mesin dan konstruksi beserta gambar teknisnya."}, {"key": "c", "text": "GIS/pemetaan: memvisualisasikan data geospasial untuk pemetaan dan analisis wilayah."}, {"key": "d", "text": "Digital twin: mengubah hasil CT scan menjadi model anatomi 3D untuk simulasi bedah."}], "answer": ["c"], "explain": "- a adalah definisi **Virtual Reality**. AR justru menambahkan objek digital ke dunia nyata.\n- b adalah **CAD**.\n- d adalah **medical imaging/visualization**. Digital twin adalah replika virtual dari sistem fisik yang disinkronkan dengan data nyata."}, {"n": 15, "topic": "Texture", "prompt": "Sampling texture asimetris dilakukan pada lokasi yang jauh dari batas filtering. Bandingkan REPEAT dan MIRRORED_REPEAT sepanjang U, dengan V tetap. Manakah pernyataan yang benar?", "options": [{"key": "a", "text": "Pada REPEAT, U=0.2 dan U=1.2 dipetakan ke posisi pola yang sama."}, {"key": "b", "text": "Pada MIRRORED_REPEAT, U=0.2 dan U=1.2 dipetakan ke posisi pola yang sama."}, {"key": "c", "text": "Pada REPEAT, U=0.2 dan U=1.8 dipetakan ke posisi pola yang sama."}, {"key": "d", "text": "Pada MIRRORED_REPEAT, U=0.2 dan U=1.8 dipetakan ke posisi pola yang sama."}], "answer": ["a", "d"], "explain": "- REPEAT memakai `fract(U)`: 1.2 → 0.2 (sama ✔), 1.8 → 0.8 (beda ✘).\n- MIRRORED_REPEAT berperiode 2 dan dicerminkan pada [1, 2], yaitu `U' = 2 − U`: 1.2 → 0.8 (beda ✘), 1.8 → 0.2 (sama ✔)."}, {"n": 16, "topic": "Shader", "prompt": "Manakah pernyataan yang tepat tentang attribute, uniform, dan data out/in pada shader?", "options": [{"key": "a", "text": "Attribute bernilai sama untuk semua vertex dalam satu draw call, misalnya u_time."}, {"key": "b", "text": "Uniform bernilai sama untuk satu draw call dan dapat digunakan oleh vertex maupun fragment."}, {"key": "c", "text": "Data out/in dikirim dari JavaScript langsung ke fragment shader tanpa melalui vertex shader."}, {"key": "d", "text": "Uniform bernilai berbeda untuk setiap vertex dan dibaca langsung dari vertex buffer."}], "answer": ["b"], "explain": "Pilihan a mendeskripsikan uniform, dan d mendeskripsikan attribute. `out`/`in` (varying) adalah data dari **vertex shader** ke fragment shader yang diinterpolasi rasterizer, bukan dari JavaScript (c salah)."}, {"n": 17, "topic": "Lighting", "prompt": "Pada suatu titik permukaan, N adalah (0,0,1) dan arah satuan menuju cahaya L adalah (0,0,-1). Komponen Phong menggunakan `diffuseFactor=max(dot(N,L),0)`, `R=reflect(-L,N)`, dan `specularFactor=pow(max(dot(R,V),0),s)`, dengan s positif. Manakah kesimpulan yang benar?", "options": [{"key": "a", "text": "Rumus tersebut menjamin specular bernilai nol setiap kali diffuse bernilai nol."}, {"key": "b", "text": "Faktor diffuse bernilai nol."}, {"key": "c", "text": "Untuk V=(0,0,-1), rumus specular tersebut menghasilkan satu."}, {"key": "d", "text": "Menonaktifkan specular ketika dot(N,L) tidak positif menghilangkan highlight akibat pencahayaan dari belakang ini."}], "answer": ["b", "c", "d"], "explain": "- `N·L = −1` → diffuse = 0 ✔\n- `−L = (0,0,1)`; `reflect(I,N) = I − 2(N·I)N = (0,0,1) − 2(1)(0,0,1) = (0,0,−1)`\n- `R·V = (0,0,−1)·(0,0,−1) = 1` → specular = 1ˢ = 1 ✔\n- Diffuse 0 tetapi specular 1, jadi a salah. Highlight palsu ini muncul karena cahaya berasal dari belakang permukaan; solusinya memeriksa `N·L > 0` sebelum menghitung specular ✔"}, {"n": 18, "topic": "Canvas 2D", "prompt": "Halaman HTML berisi elemen canvas dengan id `'canvas'`. Kode berikut dijalankan, tetapi lingkaran oranye tidak muncul.\n\n```js\nconst c = document.getElementById('kanvas');\nconst ctx = c.getContext('2d');\nctx.beginPath();\nctx.arc(400, 200, 80, 0, Math.PI * 2);\nctx.fillStyle = 'orange';\n```\n\nManakah penyebab masalah yang tepat?", "options": [{"key": "a", "text": "Path lingkaran sudah dibuat, tetapi tidak diisi warna karena fill() tidak dipanggil."}, {"key": "b", "text": "Id yang dicari tidak sesuai dengan id elemen sehingga canvas tidak ditemukan."}, {"key": "c", "text": "Sudut akhir Math.PI * 2 hanya menghasilkan setengah lingkaran, bukan lingkaran penuh."}, {"key": "d", "text": "Nilai fillStyle harus ditetapkan sebelum beginPath() agar warnanya dapat diterapkan."}], "answer": ["a", "b"], "explain": "`'kanvas'` ≠ `'canvas'`, sehingga `getElementById` mengembalikan `null`. Selain itu `ctx.fill()` tidak pernah dipanggil. `2π` sudah lingkaran penuh (setengah lingkaran = `π`). `fillStyle` cukup di-set sebelum `fill()`, tidak harus sebelum `beginPath()`."}, {"n": 19, "topic": "WebGL Dasar", "prompt": "Seorang mahasiswa akan membuat program WebGL sederhana yang menampilkan satu segitiga. Urutan langkah manakah yang tepat?", "options": [{"key": "a", "text": "Ambil context, compile dan link shader, lakukan draw call, siapkan buffer, lalu hubungkan attribute."}, {"key": "b", "text": "Ambil context, hubungkan attribute, siapkan buffer, lakukan draw call, lalu compile dan link shader."}, {"key": "c", "text": "Siapkan buffer, ambil context, hubungkan attribute, compile dan link shader, lalu draw call."}, {"key": "d", "text": "Ambil context, siapkan buffer, compile dan link shader, hubungkan attribute, lalu draw call."}], "answer": ["d"], "explain": "Context harus didapat lebih dulu karena buffer dan shader dibuat lewat `gl`. Attribute hanya bisa dihubungkan setelah program ter-link, karena `getAttribLocation` butuh program. Draw call selalu dilakukan terakhir."}, {"n": 20, "topic": "Sistem Koordinat", "prompt": "Canvas WebGL berukuran 800 × 600 piksel dengan tiga titik: P di sudut kanan atas, Q di tengah, dan R di tengah sisi kiri.\n\n<figure class=\"fig\"><svg viewBox=\"0 0 320 250\" role=\"img\" aria-label=\"Canvas 800 x 600 dengan titik P di kanan atas, Q di tengah, R di tengah sisi kiri\"><rect x=\"20\" y=\"20\" width=\"280\" height=\"200\" class=\"f-area\"/><line x1=\"160\" y1=\"20\" x2=\"160\" y2=\"220\" class=\"f-guide\"/><line x1=\"20\" y1=\"120\" x2=\"300\" y2=\"120\" class=\"f-guide\"/><circle cx=\"300\" cy=\"20\" r=\"6\" class=\"f-dot\"/><circle cx=\"160\" cy=\"120\" r=\"6\" class=\"f-dot\"/><circle cx=\"20\" cy=\"120\" r=\"6\" class=\"f-dot\"/><text x=\"284\" y=\"40\" class=\"f-lbl\">P<\/text><text x=\"168\" y=\"140\" class=\"f-lbl\">Q<\/text><text x=\"28\" y=\"140\" class=\"f-lbl\">R<\/text><text x=\"20\" y=\"242\" class=\"f-cap\">Canvas WebGL 800 × 600 pixel<\/text><\/svg><\/figure>\n\nJika posisi ditulis langsung sebagai `gl_Position` tanpa transformasi, manakah pernyataan yang tepat?", "options": [{"key": "a", "text": "Titik P ditulis pada koordinat NDC (1.0, 1.0)."}, {"key": "b", "text": "Titik R ditulis pada koordinat NDC (-1.0, 0.0)."}, {"key": "c", "text": "Titik Q ditulis pada koordinat pixel (400, 300)."}, {"key": "d", "text": "Titik R ditulis pada koordinat NDC (0.0, -1.0)."}], "answer": ["a", "b"], "explain": "`gl_Position` (dengan w = 1) langsung menjadi NDC: kanan atas = (1, 1), tengah = (0, 0), tengah kiri = (−1, 0). Q memang tampil di piksel (400, 300), tetapi nilai yang **ditulis** ke `gl_Position` adalah (0, 0), bukan koordinat piksel. (0, −1) adalah tengah sisi bawah."}, {"n": 21, "topic": "Proyeksi", "prompt": "Asumsikan Perspective Projection digunakan. FOV diubah dari 45 derajat menjadi 90 derajat tanpa mengubah posisi kamera maupun objek. Prediksi yang benar terhadap hasil render adalah sebagai berikut.", "options": [{"key": "a", "text": "Efek perspektif di bagian tepi tampilan cenderung lebih kuat"}, {"key": "b", "text": "Objek dapat tampak lebih kecil pada layar"}, {"key": "c", "text": "Area scene yang terlihat menjadi lebih luas"}, {"key": "d", "text": "Jarak objek terhadap kamera pada World Space berubah"}], "answer": ["a", "b", "c"], "explain": "FOV yang lebih lebar membuat lebih banyak scene masuk ke layar (zoom out), sehingga tiap objek tampak lebih kecil dan distorsi di tepi (efek wide-angle) makin kuat. FOV hanya mengubah Projection Matrix, sedangkan posisi di World Space tidak berubah."}, {"n": 22, "topic": "Transformasi Normal", "prompt": "Sebuah objek menggunakan transformasi linear diag(2,1,1). Normal satuan awalnya adalah (1,1,0)/√2, dan salah satu vektor tangen permukaan awalnya adalah (1,−1,0). Lighting dihitung dalam world space. Manakah kesimpulan yang benar?", "options": [{"key": "a", "text": "Vektor tangen hasil transformasi adalah (2,−1,0)."}, {"key": "b", "text": "Normal satuan yang ditransformasikan dengan benar adalah (1,2,0)/√5."}, {"key": "c", "text": "Penerapan transformasi linear secara langsung menghasilkan normal yang tegak lurus terhadap tangen hasil transformasi."}, {"key": "d", "text": "Normalisasi normal yang ditransformasikan secara langsung cukup untuk memulihkan ketegaklurusan."}], "answer": ["a", "b"], "explain": "- Tangen: `M·t = (2·1, −1, 0) = (2, −1, 0)` ✔\n- Normal harus memakai **inverse-transpose**: `(M⁻¹)ᵀ = diag(1/2, 1, 1)` → `(0.5, 1, 0)` → dinormalisasi menjadi `(1,2,0)/√5` ✔. Cek: `(2,−1,0)·(1,2,0) = 0`, tegak lurus.\n- Transformasi langsung: `M·n ∝ (2,1,0)`, dan `(2,1,0)·(2,−1,0) = 3 ≠ 0`, jadi tidak tegak lurus (c salah). Normalisasi hanya mengubah panjang, bukan arah (d salah)."}, {"n": 23, "topic": "Clipping", "prompt": "Sebuah objek berada sebagian di dalam dan sebagian di luar view frustum. Dengan asumsi clipping aktif pada pipeline grafika, apa yang mungkin terjadi?", "options": [{"key": "a", "text": "Seluruh objek selalu dihapus dari proses rendering"}, {"key": "b", "text": "View Matrix harus dihitung ulang sebelum objek dapat ditampilkan"}, {"key": "c", "text": "Bagian geometri yang masih berada di dalam frustum tetap dapat dirender"}, {"key": "d", "text": "Bagian geometri yang berada di luar frustum dapat dipotong"}], "answer": ["c", "d"], "explain": "Clipping memotong primitive di batas frustum. Bagian di dalam tetap dirender, bagian di luar dibuang. Objek tidak dihapus seluruhnya, dan View Matrix tidak perlu dihitung ulang."}, {"n": 24, "topic": "WebGL Dasar", "prompt": "Manakah pernyataan yang tepat tentang peran WebGL sebagai graphics API berbasis browser?", "options": [{"key": "a", "text": "WebGL otomatis menyediakan scene, camera, mesh, dan light seperti sebuah scene framework."}, {"key": "b", "text": "WebGL relatif low-level sehingga data, shader, dan draw call diatur sendiri oleh programmer."}, {"key": "c", "text": "WebGL berkomunikasi langsung dengan GPU sehingga tidak memerlukan graphics driver."}, {"key": "d", "text": "WebGL memungkinkan JavaScript memanfaatkan GPU untuk melakukan rendering melalui browser."}], "answer": ["b", "d"], "explain": "Scene, camera, dan light adalah fitur library tingkat tinggi seperti Three.js, bukan WebGL (a salah). WebGL tetap berjalan lewat browser → driver grafis → GPU (c salah)."}, {"n": 25, "topic": "Graphics Pipeline", "prompt": "Seorang mahasiswa menggambar urutan graphics pipeline seperti berikut:\n\n```\nVertex Data → Rasterization → Vertex Processing → Primitive Assembly → Fragment Processing → Framebuffer → Screen\n```\n\nManakah analisis yang tepat terhadap diagram tersebut?", "options": [{"key": "a", "text": "Framebuffer seharusnya berada sebelum fragment processing sebagai tempat menyimpan fragment."}, {"key": "b", "text": "Fragment processing seharusnya dipindah sebelum rasterization agar warna dihitung lebih dulu."}, {"key": "c", "text": "Vertex processing seharusnya berada setelah primitive assembly agar triangle terbentuk lebih dulu."}, {"key": "d", "text": "Rasterization ditempatkan terlalu awal; tahap ini seharusnya berada setelah primitive assembly."}], "answer": ["d"], "explain": "Urutan yang benar:\n\n```\nVertex Data → Vertex Processing → Primitive Assembly → Rasterization → Fragment Processing → Framebuffer → Screen\n```\n\nSatu-satunya kesalahan di diagram adalah posisi Rasterization. Fragment baru ada setelah rasterization, framebuffer menyimpan hasil akhir, dan vertex processing memang dilakukan sebelum primitive assembly."}, {"n": 26, "topic": "Lighting", "prompt": "Pada suatu titik permukaan, warna dasar RGB hasil sampling adalah (0.8,0.4,0.2). Faktor skalar ambient dan diffuse untuk cahaya putih adalah 0.1 dan 0.5, sedangkan kontribusi specular RGB terpisah adalah (0.2,0.2,0.2). Gunakan `finalColor = (ambientFactor + diffuseFactor) * baseColor + specular`, tanpa pembatasan nilai warna atau konversi gamma. Manakah kesimpulan yang benar?", "options": [{"key": "a", "text": "Menaikkan hanya kontribusi specular mengubah seluruh komponen RGB secara proporsional terhadap baseColor."}, {"key": "b", "text": "Mengalikan kontribusi specular dengan baseColor tidak mengubah warna akhir."}, {"key": "c", "text": "Jika kontribusi specular dikalikan dengan baseColor sebelum dijumlahkan, warna akhir menjadi (0.64,0.32,0.16)."}, {"key": "d", "text": "Warna RGB akhir adalah (0.68,0.44,0.32)."}], "answer": ["c", "d"], "explain": "- `(0.1+0.5)·(0.8,0.4,0.2) = (0.48,0.24,0.12)`; ditambah `(0.2,0.2,0.2)` = **(0.68,0.44,0.32)** ✔\n- Specular dikali baseColor: `(0.16,0.08,0.04)` → total **(0.64,0.32,0.16)** ✔. Hasilnya berbeda, jadi b salah.\n- Specular putih ditambahkan sama rata ke tiap kanal, tidak proporsional terhadap baseColor (a salah)."}, {"n": 27, "topic": "GLSL", "prompt": "Seorang mahasiswa menulis fragment shader WebGL2 berikut, tetapi proses compile gagal.\n\n```glsl\n#version 300 es\nout vec4 outColor;\nvoid main() { outColor = vec4(0.0, 0.7, 1.0, 1.0); }\n```\n\nManakah penyebab kegagalan yang tepat?", "options": [{"key": "a", "text": "Komponen warna harus memakai rentang 0 sampai 255 sehingga nilai 0.7 tidak valid."}, {"key": "b", "text": "Fragment shader belum memiliki deklarasi precision, misalnya precision highp float."}, {"key": "c", "text": "Baris #version 300 es harus dihapus karena WebGL2 tidak memerlukan deklarasi versi GLSL."}, {"key": "d", "text": "Fragment shader harus menuliskan hasilnya ke gl_Position, bukan ke variabel out."}], "answer": ["b"], "explain": "Di GLSL ES, fragment shader tidak punya default precision untuk `float`, jadi perlu `precision highp float;` (atau mediump). Warna memakai rentang 0.0–1.0. `#version 300 es` **wajib** ada di baris pertama untuk GLSL ES 3.00. `gl_Position` hanya untuk vertex shader."}, {"n": 28, "topic": "Kamera", "prompt": "Dalam WebGL2 dengan GLSL ES 3.00 digunakan perhitungan berikut: `vec3 forward = normalize(target - position);`. Dengan asumsi position dan target berbeda, pernyataan mana yang benar?", "options": [{"key": "a", "text": "Forward vector menunjukkan arah vertikal kamera"}, {"key": "b", "text": "Forward vector menunjukkan arah pandang kamera"}, {"key": "c", "text": "Forward vector tidak dipengaruhi posisi kamera"}, {"key": "d", "text": "Perubahan target dapat mengubah arah forward vector"}], "answer": ["b", "d"], "explain": "`target − position` adalah vektor dari kamera ke titik yang dilihat, yaitu arah pandang. Nilainya bergantung pada `position` dan `target`. Arah vertikal kamera adalah up vector, bukan forward."}, {"n": 29, "topic": "Draw Call", "prompt": "Buffer posisi berisi enam vertex (v0 sampai v5) yang membentuk dua segitiga terpisah. Setelah kode `gl.drawArrays(gl.TRIANGLES, 0, 3);` dijalankan, hanya satu segitiga yang tampil. Manakah analisis yang tepat?", "options": [{"key": "a", "text": "Buffer hanya menyimpan tiga vertex karena sisa data hilang saat bufferData() dipanggil."}, {"key": "b", "text": "Mode gl.TRIANGLES membatasi satu draw call agar hanya menghasilkan satu segitiga."}, {"key": "c", "text": "Nilai count 3 hanya memproses v0 sampai v2 sehingga hanya satu segitiga yang dirakit."}, {"key": "d", "text": "Mengubah count menjadi 6 membuat v3 sampai v5 dirakit menjadi segitiga kedua."}], "answer": ["c", "d"], "explain": "`drawArrays(mode, first, count)` memproses `count` vertex mulai indeks `first`. Dengan count = 3, hanya v0–v2 yang diproses. Data v3–v5 masih ada di buffer. `TRIANGLES` merakit satu segitiga per 3 vertex, jadi count = 6 menghasilkan 2 segitiga."}, {"n": 30, "topic": "Texture", "prompt": "Dua face yang bersebelahan berbagi sebuah rusuk geometris. Satu face membutuhkan U=1 pada rusuk tersebut, sedangkan face lainnya membutuhkan U=0. Pada mesh saat ini, kedua face mengacu pada record vertex yang sama, dengan satu pasangan UV per record. Manakah pernyataan yang benar?", "options": [{"key": "a", "text": "Satu record vertex bersama tidak dapat menyimpan kedua pasangan UV yang diperlukan secara bersamaan."}, {"key": "b", "text": "Record hasil duplikasi dapat mempertahankan normal yang sama agar lighting tetap halus melintasi rusuk."}, {"key": "c", "text": "Mengubah filtering dari NEAREST menjadi LINEAR memberikan pasangan UV terpisah pada record bersama."}, {"key": "d", "text": "Duplikasi record vertex pada rusuk dapat mempertahankan posisi yang sama sambil memberikan UV berbeda."}], "answer": ["a", "b", "d"], "explain": "Ini masalah **UV seam**. Satu vertex hanya bisa menyimpan satu UV, jadi solusinya menduplikasi vertex: posisi dan normal sama (lighting tetap mulus), UV berbeda. Filtering hanya memengaruhi cara texel diambil, tidak menambah data UV (c salah)."}, {"n": 31, "topic": "Proyeksi", "prompt": "Sebuah aplikasi CAD membutuhkan pengukuran dimensi objek yang konsisten walaupun jaraknya terhadap kamera berubah. Dengan asumsi parameter lain tetap, pilihan yang sesuai adalah sebagai berikut.", "options": [{"key": "a", "text": "Memperbesar FOV agar ukuran objek tetap konstan"}, {"key": "b", "text": "Menggunakan Orthographic Projection untuk menjaga skala visual"}, {"key": "c", "text": "Mengurangi ketergantungan ukuran tampilan terhadap jarak objek"}, {"key": "d", "text": "Menggunakan Perspective Projection agar efek kedalaman lebih kuat"}], "answer": ["b", "c"], "explain": "Proyeksi ortografik tidak melakukan pembagian dengan kedalaman, sehingga ukuran tampilan tidak bergantung jarak. Ini cocok untuk CAD/gambar teknik. FOV dan perspective justru membuat ukuran berubah terhadap jarak."}, {"n": 32, "topic": "Depth Buffer", "prompt": "Sebuah scene Perspective Projection menunjukkan artefak z-fighting ketika near plane sangat kecil dan far plane sangat besar. Dengan asumsi tidak ada kesalahan geometri, faktor yang mungkin berkontribusi terhadap masalah tersebut adalah sebagai berikut.", "options": [{"key": "a", "text": "Pemilihan near dan far plane memengaruhi kualitas representasi kedalaman"}, {"key": "b", "text": "Aspect ratio viewport secara langsung menyebabkan z-fighting pada kondisi tersebut"}, {"key": "c", "text": "Distribusi nilai kedalaman menjadi kurang menguntungkan untuk objek tertentu"}, {"key": "d", "text": "Presisi depth buffer menjadi kurang efektif pada rentang kedalaman yang sangat lebar"}], "answer": ["a", "c", "d"], "explain": "Depth pada perspektif bersifat non-linear (∝ 1/z). Sebagian besar presisi terkumpul dekat near plane, jadi near yang sangat kecil dan far yang besar membuat objek jauh berbagi nilai depth yang hampir sama, dan terjadilah z-fighting. Aspect ratio tidak memengaruhi nilai depth."}, {"n": 33, "topic": "WebGL Dasar", "prompt": "Perhatikan kode JavaScript berikut.\n\n```js\nconst canvas = document.getElementById('glCanvas');\nconst gl = canvas.getContext('webgl2');\n```\n\nManakah pernyataan yang tepat tentang kode tersebut?", "options": [{"key": "a", "text": "Context WebGL2 hanya mendukung gambar 2D sehingga tidak dapat digunakan untuk objek 3D."}, {"key": "b", "text": "Nilai gl tidak perlu diperiksa karena context tersedia selama canvas ada di halaman."}, {"key": "c", "text": "Objek gl menjadi interface utama untuk memanggil operasi WebGL pada canvas tersebut."}, {"key": "d", "text": "Canvas sudah menjalankan WebGL sebelum baris ini, kode hanya mengambil referensinya."}], "answer": ["c"], "explain": "`getContext('webgl2')` **membuat** (atau mengembalikan) rendering context. Hasilnya bisa `null` jika browser/GPU tidak mendukung, jadi tetap perlu dicek. WebGL2 mendukung rendering 3D."}, {"n": 34, "topic": "Shader", "prompt": "Pernyataan yang benar adalah ...", "options": [{"key": "a", "text": "Posisi vertex dikirim ke pipeline grafis"}, {"key": "b", "text": "Shader tidak dapat mengubah posisi vertex"}, {"key": "c", "text": "gl_Position merupakan variabel bawaan vertex shader"}, {"key": "d", "text": "gl_Position hanya digunakan pada fragment shader"}], "answer": ["a", "c"], "explain": "Vertex shader justru bertugas mengubah posisi vertex (transformasi MVP) lalu menuliskannya ke `gl_Position`, variabel built-in milik **vertex** shader."}, {"n": 35, "topic": "Lighting", "prompt": "Highlight Phong menggunakan `specularFactor = c^s`, dengan `c = max(dot(R,V),0)`, serta R dan V merupakan vektor satuan. Bandingkan eksponen s dan 2s untuk s positif. Manakah pernyataan yang benar?", "options": [{"key": "a", "text": "Himpunan arah dengan specularFactor minimal 0.5 menjadi lebih sempit."}, {"key": "b", "text": "Untuk 0<c<1, menggandakan eksponen menurunkan faktor specular."}, {"key": "c", "text": "Menggandakan eksponen membuat highlight lebih kuat pada setiap sudut pandang."}, {"key": "d", "text": "Pada c=1, faktor specular tetap."}], "answer": ["a", "b", "d"], "explain": "Untuk 0 < c < 1 berlaku c²ˢ < cˢ, jadi faktor turun. Batas `c ≥ 0.5^(1/2s)` lebih ketat daripada `c ≥ 0.5^(1/s)`, sehingga area highlight menyempit (lebih tajam). Pada c = 1, 1ˢ = 1²ˢ = 1. Highlight tidak menjadi lebih kuat di semua sudut (c salah)."}, {"n": 36, "topic": "Sistem Koordinat", "prompt": "Jika titik berada pada koordinat NDC (0,0), maka ...", "options": [{"key": "a", "text": "Titik berada di luar layar"}, {"key": "b", "text": "Titik berada di tengah viewport"}, {"key": "c", "text": "Titik berada di dalam area tampilan"}, {"key": "d", "text": "Titik berada di pojok kanan atas"}], "answer": ["b", "c"], "explain": "(0,0) adalah pusat rentang [−1, 1], yaitu tengah viewport, dan berada di dalam area tampilan. Pojok kanan atas adalah (1, 1)."}, {"n": 37, "topic": "Shader", "prompt": "Attribute dalam WebGL digunakan untuk ...", "options": [{"key": "a", "text": "Menyimpan objek JavaScript"}, {"key": "b", "text": "Menyimpan data vertex"}, {"key": "c", "text": "Mengatur ukuran canvas"}, {"key": "d", "text": "Mengirim data per-vertex ke vertex shader"}], "answer": ["b", "d"], "explain": "Attribute adalah input vertex shader yang berisi data per-vertex (posisi, warna, normal, UV) yang dibaca dari buffer. Secara teknis data fisiknya ada di buffer, tetapi dalam konteks materi, attribute dipahami sebagai wadah data vertex. Jika dosen memakai definisi yang ketat, jawaban yang paling aman adalah **d**."}, {"n": 38, "topic": "Kamera", "prompt": "Dalam View Space diasumsikan kamera berada di origin dan menghadap arah pandang standarnya. Sebuah objek sudah ditransformasikan oleh View Matrix. Pernyataan mana yang benar mengenai koordinat objek tersebut?", "options": [{"key": "a", "text": "Projection Matrix sudah diterapkan sehingga koordinat siap ditampilkan pada layar"}, {"key": "b", "text": "Perubahan posisi kamera akan memengaruhi koordinat hasil transformasi"}, {"key": "c", "text": "Koordinat objek dinyatakan relatif terhadap kamera"}, {"key": "d", "text": "Koordinat objek selalu sama dengan koordinat pada World Space"}], "answer": ["b", "c"], "explain": "View Space adalah koordinat relatif terhadap kamera, jadi menggeser kamera mengubah hasilnya. Projection belum diterapkan, dan koordinatnya hanya sama dengan World Space jika View Matrix = identitas."}, {"n": 39, "topic": "Texture", "prompt": "Texture tampak tercermin secara horizontal pada suatu face, tetapi lighting dan geometrinya sudah benar. Texture bersifat asimetris dan rentang UV yang dimaksud adalah nol sampai satu. Manakah tindakan yang tepat untuk memeriksa atau memperbaiki masalah pemetaan?", "options": [{"key": "a", "text": "Membalik normal permukaan untuk memulihkan orientasi texture sambil mempertahankan lighting."}, {"key": "b", "text": "Mengganti REPEAT menjadi CLAMP_TO_EDGE untuk membalik seluruh koordinat U dalam rentang tersebut."}, {"key": "c", "text": "Mengganti U dengan satu dikurangi U untuk membalik pemetaan horizontal tanpa mengubah geometri."}, {"key": "d", "text": "Membandingkan pasangan vertex dan UV dengan orientasi face yang dimaksud."}], "answer": ["c", "d"], "explain": "Masalahnya ada di pemetaan UV, jadi perbaikannya di UV: `U' = 1 − U`, atau periksa pasangan vertex–UV. Membalik normal merusak lighting dan tidak memengaruhi UV. Wrap mode tidak berpengaruh untuk UV di rentang [0, 1] dan tidak membalik apa pun."}, {"n": 40, "topic": "Proyeksi", "prompt": "Asumsikan aspect ratio pada Projection Matrix tidak diperbarui setelah viewport berubah dari 16:9 menjadi 1:1. Dampak yang mungkin terlihat pada tampilan adalah sebagai berikut.", "options": [{"key": "a", "text": "Near Plane secara otomatis berpindah posisi"}, {"key": "b", "text": "Bentuk objek dapat mengalami distorsi"}, {"key": "c", "text": "Proporsi horizontal dan vertikal dapat berubah"}, {"key": "d", "text": "Lingkaran dapat terlihat tidak lagi berbentuk lingkaran sempurna"}], "answer": ["b", "c", "d"], "explain": "Aspect ratio yang tidak cocok membuat skala x dan y tidak seimbang, sehingga gambar tampak gepeng/melar (lingkaran menjadi elips). Near plane adalah parameter terpisah dan tidak berubah sendiri."}, {"n": 41, "topic": "Buffer & Attribute", "prompt": "Data posisi disimpan sebagai `new Float32Array([-0.5, -0.5, 0.5, -0.5, 0.0, 0.5])` dan vertex shader mendeklarasikan `in vec2 a_position;`. Buffer hanya berisi data posisi tersebut. Pemanggilan vertexAttribPointer manakah yang tepat?", "options": [{"key": "a", "text": "`gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);`"}, {"key": "b", "text": "`gl.vertexAttribPointer(positionLocation, 6, gl.FLOAT, false, 0, 0);`"}, {"key": "c", "text": "`gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);`"}, {"key": "d", "text": "`gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 2);`"}], "answer": ["c"], "explain": "`vec2` berarti size = 2 (6 float = 3 vertex × 2 komponen). Data rapat, jadi stride = 0. Data dimulai dari awal, jadi offset = 0. Offset dihitung dalam **byte**, sehingga offset 2 di pilihan d tidak valid (tidak kelipatan 4 dan melompati data). Size 6 juga melebihi maksimum 4."}, {"n": 42, "topic": "Graphics Pipeline", "prompt": "Manakah pernyataan yang tepat tentang vertex shader, rasterization, dan fragment shader?", "options": [{"key": "a", "text": "Fragment shader menerima data hasil interpolasi dan menghasilkan warna akhir fragment."}, {"key": "b", "text": "Vertex shader berjalan satu kali untuk setiap fragment yang dihasilkan rasterization."}, {"key": "c", "text": "Satu triangle menghasilkan tiga fragment karena setiap vertex menjadi satu fragment."}, {"key": "d", "text": "Vertex shader menghasilkan gl_Position sebagai output posisi untuk setiap vertex."}], "answer": ["a", "d"], "explain": "Vertex shader berjalan sekali per **vertex**. Fragment shader berjalan sekali per **fragment**. Satu triangle menghasilkan fragment sebanyak piksel yang tercakup, bukan hanya tiga."}, {"n": 43, "topic": "Kamera", "prompt": "Sebuah kamera virtual berada pada posisi (0,2,5) dan mengarah ke titik (0,0,0). Informasi apa yang diperlukan untuk menentukan orientasi kamera secara lengkap?", "options": [{"key": "a", "text": "Posisi kamera dan target"}, {"key": "b", "text": "Resolusi layar"}, {"key": "c", "text": "Arah pencahayaan"}, {"key": "d", "text": "Up Vector"}], "answer": ["a", "d"], "explain": "Fungsi `lookAt(eye, target, up)` butuh posisi, target (arah pandang), dan up vector (rotasi/roll kamera terhadap sumbu pandang). Resolusi dan cahaya tidak berhubungan dengan orientasi kamera."}, {"n": 44, "topic": "Pengantar", "prompt": "Manakah pernyataan yang sesuai dengan perbedaan computer graphics, image processing, dan computer vision?", "options": [{"key": "a", "text": "Computer graphics memodifikasi gambar yang sudah ada, misalnya melakukan blur dan sharpening."}, {"key": "b", "text": "Computer vision memahami isi gambar, misalnya mengenali wajah atau mendeteksi objek di jalan."}, {"key": "c", "text": "Image processing menghasilkan informasi dari gambar, misalnya mendeteksi mobil dan pejalan kaki."}, {"key": "d", "text": "Computer graphics menghasilkan gambar dari data atau model, misalnya scene 3D yang dirender."}], "answer": ["b", "d"], "explain": "- Computer graphics: model/data → gambar.\n- Image processing: gambar → gambar (blur, sharpen). Pilihan a sebenarnya mendeskripsikan image processing.\n- Computer vision: gambar → informasi/pemahaman. Pilihan c sebenarnya mendeskripsikan computer vision."}, {"n": 45, "topic": "Shader", "prompt": "Manakah yang termasuk data yang sering dikirim ke GPU sebagai uniform?", "options": [{"key": "a", "text": "Projection Matrix"}, {"key": "b", "text": "Mouse Event"}, {"key": "c", "text": "View Matrix"}, {"key": "d", "text": "Model Matrix"}, {"key": "e", "text": "HTML Element"}], "answer": ["a", "c", "d"], "explain": "Matriks MVP bernilai sama untuk semua vertex dalam satu draw call, sehingga cocok dikirim sebagai uniform. Mouse event dan elemen HTML adalah objek JavaScript/DOM. Datanya mungkin diolah menjadi uniform, tetapi objeknya sendiri tidak dikirim."}, {"n": 46, "topic": "Lighting", "prompt": "Objek bertekstur yang berotasi menampilkan pola texture dengan benar, tetapi bagian terang diffuse tetap pada lokasi yang sama relatif terhadap objek meskipun lampu titik tetap dalam world space. Posisi permukaan dalam world space sudah benar. Manakah tindakan diagnosis yang relevan?", "options": [{"key": "a", "text": "Mengubah texture wrapping agar bagian terang diffuse mengikuti lampu dalam world space."}, {"key": "b", "text": "Menghitung ulang dan menormalisasi normal world space menggunakan transformasi objek saat ini."}, {"key": "c", "text": "Sebagai alternatif, mentransformasikan lampu ke object space dan menghitung seluruh vektor lighting secara konsisten di ruang tersebut."}, {"key": "d", "text": "Memeriksa apakah normal masih ditafsirkan dalam object space ketika lighting dihitung dalam world space."}], "answer": ["b", "c", "d"], "explain": "Gejalanya klasik: normal tidak ikut ditransformasi ke world space (masih object space), sehingga hasil `N·L` \"menempel\" pada objek. Solusinya: transformasikan normal dengan normal matrix (inverse-transpose dari model matrix) lalu normalisasi, **atau** hitung semuanya konsisten di object space. Texture wrapping tidak ada hubungannya dengan lighting."}, {"n": 47, "topic": "Sistem Koordinat", "prompt": "Pernyataan yang benar mengenai Clip Space adalah ...", "options": [{"key": "a", "text": "Hasil transformasi projection matrix berada pada ruang ini"}, {"key": "b", "text": "Vertex di luar rentang tertentu dapat terpotong (clipping)"}, {"key": "c", "text": "Clip Space identik dengan World Space"}, {"key": "d", "text": "Clip Space merupakan koordinat piksel"}], "answer": ["a", "b"], "explain": "Output `P·V·M·v` (yaitu `gl_Position`) berada di Clip Space. Vertex dengan `|x|, |y|, |z| > w` di-clip. Clip Space berbeda dari World Space dan bukan koordinat piksel."}, {"n": 48, "topic": "Proyeksi", "prompt": "Projection Matrix digunakan untuk ...", "options": [{"key": "a", "text": "Mengubah koordinat view space ke clip space"}, {"key": "b", "text": "Mengatur translasi objek"}, {"key": "c", "text": "Menghasilkan perspektif tampilan"}, {"key": "d", "text": "Mengatur tekstur objek"}], "answer": ["a", "c"], "explain": "Projection Matrix memetakan View Space ke Clip Space dan menghasilkan efek perspektif (atau ortografik). Translasi objek adalah tugas Model Matrix, sedangkan tekstur diatur lewat UV/sampler."}, {"n": 49, "topic": "Mesh", "prompt": "Perhatikan mesh 2D berikut. Setiap titik oranye adalah vertex dan setiap garis biru adalah edge.\n\n<figure class=\"fig\"><svg viewBox=\"0 0 320 190\" role=\"img\" aria-label=\"Mesh 2D dengan vertex V0 sampai V5 dan diagonal V0-V4 serta V1-V5\"><polygon points=\"30,40 160,40 290,40 290,150 160,150 30,150\" class=\"f-area\"/><g class=\"f-edge\"><line x1=\"30\" y1=\"40\" x2=\"290\" y2=\"40\"/><line x1=\"30\" y1=\"150\" x2=\"290\" y2=\"150\"/><line x1=\"30\" y1=\"40\" x2=\"30\" y2=\"150\"/><line x1=\"160\" y1=\"40\" x2=\"160\" y2=\"150\"/><line x1=\"290\" y1=\"40\" x2=\"290\" y2=\"150\"/><line x1=\"30\" y1=\"150\" x2=\"160\" y2=\"40\"/><line x1=\"160\" y1=\"150\" x2=\"290\" y2=\"40\"/><\/g><g class=\"f-dot\"><circle cx=\"30\" cy=\"40\" r=\"6\"/><circle cx=\"160\" cy=\"40\" r=\"6\"/><circle cx=\"290\" cy=\"40\" r=\"6\"/><circle cx=\"30\" cy=\"150\" r=\"6\"/><circle cx=\"160\" cy=\"150\" r=\"6\"/><circle cx=\"290\" cy=\"150\" r=\"6\"/><\/g><g class=\"f-lbl\"><text x=\"18\" y=\"26\">V3<\/text><text x=\"148\" y=\"26\">V4<\/text><text x=\"278\" y=\"26\">V5<\/text><text x=\"18\" y=\"178\">V0<\/text><text x=\"148\" y=\"178\">V1<\/text><text x=\"278\" y=\"178\">V2<\/text><\/g><\/svg><\/figure>\n\nManakah pernyataan yang tepat tentang mesh tersebut?", "options": [{"key": "a", "text": "Mesh tersebut memiliki 6 vertex unik."}, {"key": "b", "text": "Mesh tersebut memiliki 8 vertex unik."}, {"key": "c", "text": "Mesh tersebut memiliki 7 edge unik."}, {"key": "d", "text": "Mesh tersebut tersusun dari 4 triangle."}], "answer": ["a", "d"], "explain": "- Vertex: V0–V5 = **6**\n- Edge: horizontal 4 (V0V1, V1V2, V3V4, V4V5) + vertikal 3 (V0V3, V1V4, V2V5) + diagonal 2 (V0V4, V1V5) = **9**, bukan 7\n- Triangle: 2 persegi × 2 = **4** (V0V1V4, V0V4V3, V1V2V5, V1V5V4)"}, {"n": 50, "topic": "Shader", "prompt": "Manakah pernyataan yang tepat tentang proses compile dan link shader di WebGL?", "options": [{"key": "a", "text": "Kesalahan sintaks GLSL dapat diperiksa melalui info log shader atau info log program."}, {"key": "b", "text": "Proses link menggabungkan buffer dan attribute menjadi satu objek sebelum shader dikompilasi."}, {"key": "c", "text": "Program langsung aktif setelah proses link sehingga gl.useProgram() tidak diperlukan."}, {"key": "d", "text": "Vertex shader dan fragment shader dikompilasi lebih dulu sebelum di-link menjadi satu program."}], "answer": ["a", "d"], "explain": "Alurnya `createShader → shaderSource → compileShader` (cek `getShaderInfoLog`), lalu `attachShader → linkProgram` (cek `getProgramInfoLog`), lalu `useProgram`. Link menggabungkan **shader** menjadi program, bukan buffer/attribute. Program harus diaktifkan dengan `gl.useProgram()`."}];
+const STORE_KEY = "grafkom-ets-pembahasan-v1";
+const $ = (id) => document.getElementById(id);
+const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (!window.marked) $("notice").hidden = false;
+
+/* ---------- state ---------- */
+const allIds = () => QUESTIONS.map((_, i) => i);
+let S = load() || fresh();
+function fresh() {
+  return { order: allIds(), pos: 0, view: "quiz", ans: {} };
+}
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (s && Array.isArray(s.order) && s.order.length === QUESTIONS.length &&
+        s.order.every((i) => Number.isInteger(i) && i >= 0 && i < QUESTIONS.length)) {
+      s.pos = Math.min(s.pos || 0, s.order.length - 1);
+      s.ans ||= {};
+      return s;
+    }
+  } catch (e) {}
+  return null;
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) {}
+}
+const A = (i) => (S.ans[i] ||= { pick: [], submitted: false });
+const sameSet = (x, y) => x.length === y.length && x.every((k) => y.includes(k));
+const keysText = (arr) => arr.slice().sort().map((k) => k.toUpperCase()).join(", ");
+
+// status: none | ok | bad
+function status(i) {
+  const a = S.ans[i];
+  if (!a || !a.submitted) return "none";
+  return sameSet(a.pick, QUESTIONS[i].answer) ? "ok" : "bad";
+}
+
+/* ---------- markdown ---------- */
+function esc(s) {
+  return s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+function md(text, inline) {
+  if (!window.marked) return inline ? esc(text) : `<p class="plain-text">${esc(text)}</p>`;
+  return inline ? marked.parseInline(text) : marked.parse(text);
+}
+function wrapTables(el) {
+  el.querySelectorAll(".md table").forEach((t) => {
+    if (t.parentElement.classList.contains("table-wrap")) return;
+    const w = document.createElement("div");
+    w.className = "table-wrap";
+    t.replaceWith(w);
+    w.appendChild(t);
+  });
+}
+
+/* ---------- render ---------- */
+function render() {
+  if (S.view === "result") renderResult();
+  else renderQuestion();
+  renderSide();
+  renderStats();
+  save();
+}
+
+function renderStats() {
+  const all = S.order.map(status);
+  const done = all.filter((s) => s !== "none").length;
+  $("st-done").textContent = `${done}/${S.order.length}`;
+  $("st-ok").textContent = all.filter((s) => s === "ok").length;
+  $("st-bad").textContent = all.filter((s) => s === "bad").length;
+  $("bar").style.width = (done / S.order.length) * 100 + "%";
+}
+
+function renderSide() {
+  const g = $("grid");
+  g.innerHTML = "";
+  S.order.forEach((qi, p) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = `cell s-${status(qi)}` + (S.view === "quiz" && p === S.pos ? " cur" : "");
+    b.textContent = QUESTIONS[qi].n;
+    b.title = `Soal ${QUESTIONS[qi].n}`;
+    if (S.view === "quiz" && p === S.pos) b.setAttribute("aria-current", "true");
+    b.onclick = () => go(p);
+    g.appendChild(b);
+  });
+  const cur = g.querySelector(".cur"), wrap = g.parentElement;
+  if (cur && wrap.scrollHeight > wrap.clientHeight) {
+    const top = cur.offsetTop - wrap.offsetTop;
+    if (top < wrap.scrollTop || top + cur.offsetHeight > wrap.scrollTop + wrap.clientHeight)
+      wrap.scrollTop = top - wrap.clientHeight / 2;
+  }
+}
+
+function renderQuestion() {
+  const qi = S.order[S.pos], q = QUESTIONS[qi], a = A(qi);
+  const last = S.pos === S.order.length - 1;
+  const st = status(qi);
+  const main = $("main");
+
+  let body = `
+    <div class="qmeta">
+      <div class="qnum">${q.n}</div>
+      <span class="tag">${esc(q.topic)}</span>
+      <span class="tag plain">Pilih semua yang benar</span>
+      <span class="qpos">Soal ${S.pos + 1} dari ${S.order.length}</span>
+    </div>
+    <div class="md prompt">${md(q.prompt)}</div>`;
+
+  body += `<div class="options" role="group" aria-label="Pilihan jawaban">`;
+  q.options.forEach((o) => {
+    const picked = a.pick.includes(o.key), correct = q.answer.includes(o.key);
+    let cls = "opt", mark = "";
+    if (a.submitted) {
+      if (correct && picked) { cls += " right"; mark = "✓ Benar"; }
+      else if (correct) { cls += " miss"; mark = "Seharusnya dipilih"; }
+      else if (picked) { cls += " wrong"; mark = "✗ Salah pilih"; }
+      else cls += " dim";
+    } else if (picked) cls += " sel";
+    body += `<button type="button" class="${cls}" data-key="${o.key}" role="checkbox"
+      aria-checked="${picked}" ${a.submitted ? "disabled" : ""}>
+      <span class="key box">${o.key.toUpperCase()}</span><span>${md(o.text, true)}</span><span class="mark">${mark}</span></button>`;
+  });
+  body += `</div>`;
+
+  if (a.submitted) {
+    body += st === "ok"
+      ? `<div class="verdict ok">Benar. <small>Jawaban: <b>${keysText(q.answer)}</b></small></div>`
+      : `<div class="verdict bad">Kurang tepat. <small>Jawabanmu: <b>${keysText(a.pick)}</b> · Jawaban yang benar: <b>${keysText(q.answer)}</b></small></div>`;
+    body += `<section class="explain"><h3>Pembahasan</h3><div class="md">${md(q.explain)}</div></section>`;
+  }
+
+  body += `<div class="nav">
+    <button type="button" class="btn" id="b-prev" ${S.pos === 0 ? "disabled" : ""}>← Sebelumnya</button>
+    <span class="spacer"></span>
+    ${a.submitted
+      ? `<button type="button" class="btn text" id="b-retry">Coba lagi</button>`
+      : `<button type="button" class="btn primary" id="b-submit" ${a.pick.length ? "" : "disabled"}>Submit</button>`}
+    <button type="button" class="btn ${a.submitted ? "primary" : ""}" id="b-next">${last ? "Lihat hasil" : "Berikutnya →"}</button>
+  </div>
+  <div class="hint">Pintasan: <kbd>A</kbd>–<kbd>E</kbd> centang / batal centang · <kbd>Enter</kbd> submit / lanjut · <kbd>←</kbd> <kbd>→</kbd> pindah soal</div>`;
+
+  main.innerHTML = body;
+  wrapTables(main);
+
+  main.querySelectorAll(".opt").forEach((b) => b.onclick = () => toggle(a, b.dataset.key));
+  $("b-prev").onclick = () => go(S.pos - 1);
+  $("b-next").onclick = () => (last ? showResult() : go(S.pos + 1));
+  if ($("b-submit")) $("b-submit").onclick = submit;
+  if ($("b-retry")) $("b-retry").onclick = () => { S.ans[qi] = { pick: [], submitted: false }; render(); };
+}
+
+function renderResult() {
+  const sts = S.order.map((qi) => [qi, status(qi)]);
+  const ok = sts.filter(([, s]) => s === "ok").length;
+  const bad = sts.filter(([, s]) => s === "bad");
+  const none = sts.filter(([, s]) => s === "none");
+  const graded = ok + bad.length;
+  const list = (arr) => `<div class="jump-list">${arr.map(([qi, s]) =>
+    `<button type="button" class="cell s-${s}" data-q="${qi}">${QUESTIONS[qi].n}</button>`).join("")}</div>`;
+  const keyTable = `<h3>Kunci jawaban</h3><div class="keytab">${QUESTIONS.map((q) =>
+    `<div><b>${q.n}</b>${keysText(q.answer)}</div>`).join("")}</div>`;
+  const main = $("main");
+
+  if (!graded) {
+    main.innerHTML = `<div class="result">
+      <div class="qmeta"><span class="tag">Hasil</span></div>
+      <h2 class="result-score">0<span>soal dinilai</span></h2>
+      <p class="lede">Belum ada soal yang dijawab. Skor muncul di sini setelah kamu submit jawaban pertama.</p>
+      <div class="actions"><button type="button" class="btn primary" id="r-start">Mulai dari soal ${QUESTIONS[S.order[0]].n}</button></div>
+    </div>`;
+    $("r-start").onclick = () => go(0);
+    return;
+  }
+
+  const pct = Math.round((ok / graded) * 100);
+  main.innerHTML = `<div class="result">
+    <div class="qmeta"><span class="tag">Hasil</span></div>
+    <h2 class="result-score">${pct}<span>% benar</span></h2>
+    <p class="lede">Persentase dihitung dari ${graded} soal yang sudah dijawab. Satu soal dihitung benar hanya jika semua pilihan yang benar dicentang dan tidak ada pilihan salah yang ikut dicentang.</p>
+    <div class="result-row">
+      <span><b>${ok}</b> benar</span><span><b>${bad.length}</b> salah</span><span><b>${none.length}</b> belum dijawab</span>
+    </div>
+    ${bad.length ? `<h3>Soal yang salah</h3>${list(bad)}` : ""}
+    ${none.length ? `<h3>Belum dijawab</h3>${list(none)}` : ""}
+    <div class="actions">
+      ${bad.length ? `<button type="button" class="btn primary" id="r-wrong">Ulangi ${bad.length} soal yang salah</button>` : ""}
+      <button type="button" class="btn" id="r-back">Kembali ke soal</button>
+    </div>
+    ${none.length ? "" : keyTable}
+  </div>`;
+  main.querySelectorAll("[data-q]").forEach((b) => b.onclick = () => go(S.order.indexOf(+b.dataset.q)));
+  $("r-back").onclick = () => go(S.pos);
+  if ($("r-wrong")) $("r-wrong").onclick = () => {
+    const wrong = bad.map(([qi]) => qi);
+    wrong.forEach((qi) => { S.ans[qi] = { pick: [], submitted: false }; });
+    S.order = wrong.concat(S.order.filter((qi) => !wrong.includes(qi)));
+    go(0);
+  };
+}
+
+/* ---------- actions ---------- */
+function toTop() {
+  const top = $("main").getBoundingClientRect().top;
+  if (top < 0 || top > window.innerHeight * .6) $("main").scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+}
+function go(p) {
+  S.pos = Math.max(0, Math.min(S.order.length - 1, p));
+  S.view = "quiz";
+  render();
+  toTop();
+}
+function showResult() { S.view = "result"; render(); toTop(); }
+function toggle(a, key) {
+  if (a.submitted) return;
+  a.pick = a.pick.includes(key) ? a.pick.filter((k) => k !== key) : a.pick.concat(key);
+  render();
+}
+function submit() {
+  const a = A(S.order[S.pos]);
+  if (!a.pick.length) return;
+  a.submitted = true;
+  render();
+}
+
+$("btn-shuffle").onclick = () => {
+  const o = S.order.slice();
+  for (let i = o.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; }
+  S.order = o; go(0);
+};
+$("btn-order").onclick = () => { const cur = S.order[S.pos]; S.order = allIds(); go(Math.max(0, S.order.indexOf(cur))); };
+$("btn-result").onclick = showResult;
+$("btn-reset").onclick = () => { $("confirm-reset").hidden = false; };
+$("btn-reset-no").onclick = () => { $("confirm-reset").hidden = true; };
+$("btn-reset-yes").onclick = () => { $("confirm-reset").hidden = true; S = fresh(); go(0); };
+
+document.addEventListener("keydown", (e) => {
+  if (S.view !== "quiz" || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target.matches("textarea, input")) return;
+  const qi = S.order[S.pos], q = QUESTIONS[qi], a = A(qi);
+  const k = e.key.toLowerCase();
+  if (k === "arrowleft") { e.preventDefault(); go(S.pos - 1); }
+  else if (k === "arrowright") { e.preventDefault(); S.pos === S.order.length - 1 ? showResult() : go(S.pos + 1); }
+  else if (k === "enter" && !e.target.matches("button, a")) {
+    e.preventDefault();
+    if (!a.submitted) submit();
+    else S.pos === S.order.length - 1 ? showResult() : go(S.pos + 1);
+  } else if (!a.submitted) {
+    const idx = "abcde".indexOf(k) >= 0 ? "abcde".indexOf(k) : "12345".indexOf(k);
+    if (idx >= 0 && q.options[idx]) toggle(a, q.options[idx].key);
+  }
+});
+
+render();
+</script>

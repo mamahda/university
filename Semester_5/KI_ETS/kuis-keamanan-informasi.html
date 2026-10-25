@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuis Keamanan Informasi</title>
+<style>
+:root{
+  --bg:#f3f6f6; --card:#ffffff; --ink:#14232a; --muted:#5d6f76; --line:#d9e3e5;
+  --brand:#0f5f63; --brand-2:#167a7e; --brand-soft:#e3f1f1;
+  --ok:#17803d; --ok-soft:#e6f5ea; --bad:#c2352b; --bad-soft:#fbe9e7;
+  --warn:#a35b00; --warn-soft:#fff3e2; --sel:#e8f0ff; --sel-line:#3a6fd8;
+  --tagP:#fff1c2; --tagPi:#7a5800; --tagE:#e4ecff; --tagEi:#2b4fa3; --tagK:#dff4e5; --tagKi:#1d6b36;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1517; --card:#162125; --ink:#e4eef0; --muted:#93a7ad; --line:#26363b;
+    --brand:#4fc1c4; --brand-2:#6fd3d5; --brand-soft:#173338;
+    --ok:#4cc77a; --ok-soft:#163222; --bad:#ff7b6e; --bad-soft:#3a1d1a;
+    --warn:#ffb655; --warn-soft:#352612; --sel:#1b2a45; --sel-line:#7aa2ff;
+    --tagP:#3a3014; --tagPi:#ffd76a; --tagE:#1d2a47; --tagEi:#9db8ff; --tagK:#183626; --tagKi:#7fdc9f;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:780px;margin:0 auto;padding:20px 16px 60px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+header.top h1{font-size:18px;margin:0;letter-spacing:.2px}
+header.top .sub{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card + .card{margin-top:14px}
+h2{font-size:20px;margin:0 0 6px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px}
+button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+@media (prefers-color-scheme: dark){button.primary{color:#062023}}
+button.primary:disabled{opacity:.45;cursor:not-allowed}
+button.ghost{background:transparent}
+button:focus-visible{outline:2px solid var(--sel-line);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spread{justify-content:space-between}
+.chk{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.chk + .chk{margin-top:8px}
+.chk input{width:18px;height:18px;accent-color:var(--brand)}
+.chk .cnt{margin-left:auto;color:var(--muted);font-size:13px}
+fieldset{border:0;padding:0;margin:18px 0 0}
+legend{font-weight:600;margin-bottom:8px;padding:0}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:14px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:checked + span{color:var(--brand);font-weight:600}
+.seg label:has(input:checked){border-color:var(--brand);background:var(--brand-soft)}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 16px}
+.progress > i{display:block;height:100%;background:var(--brand);width:0;transition:width .25s}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px;font-size:13px}
+.tag{border-radius:6px;padding:2px 8px;font-weight:600;font-size:12px}
+.tag.P{background:var(--tagP);color:var(--tagPi)}
+.tag.E{background:var(--tagE);color:var(--tagEi)}
+.tag.K{background:var(--tagK);color:var(--tagKi)}
+.bab{color:var(--muted)}
+.qnum{font-weight:700;color:var(--brand)}
+.qtext{font-size:18px;font-weight:600;margin:4px 0 16px;line-height:1.45}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--card)}
+.opt .l{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt:hover:not(:disabled){border-color:var(--sel-line)}
+.opt.sel{border-color:var(--sel-line);background:var(--sel)}
+.opt.sel .l{border-color:var(--sel-line);color:var(--sel-line)}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .l{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .l{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+textarea{width:100%;min-height:90px;font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.fb{margin-top:16px;border-radius:12px;padding:14px 16px;border-left:4px solid var(--ok);background:var(--ok-soft)}
+.fb.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.fb.neutral{border-left-color:var(--brand);background:var(--brand-soft)}
+.fb .verdict{font-weight:700;font-size:17px;margin-bottom:4px}
+.fb.good .verdict{color:var(--ok)} .fb.bad .verdict{color:var(--bad)}
+.fb .ans{font-weight:600;margin-bottom:6px}
+.fb p{margin:6px 0}
+.fb pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;font-size:13px}
+.warn{margin-top:10px;border-radius:10px;padding:10px 12px;background:var(--warn-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--warn) 40%,transparent);font-size:14px}
+.warn b{color:var(--warn)}
+.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap}
+.score{font-size:14px;color:var(--muted)}
+.score b{color:var(--ink)}
+.kbd{font-size:12px;color:var(--muted)}
+.sbox-wrap{overflow-x:auto;margin:0 0 14px;border:1px solid var(--line);border-radius:10px}
+table.sbox{border-collapse:collapse;font:12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;width:100%}
+table.sbox th,table.sbox td{padding:4px 5px;text-align:center;border:1px solid var(--line)}
+table.sbox th{background:var(--brand-soft);color:var(--brand)}
+.big{font-size:44px;font-weight:800;color:var(--brand);line-height:1}
+table.res{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+table.res td,table.res th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+table.res td.r,table.res th.r{text-align:right}
+.wrong-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:14px}
+.wrong-item .y{color:var(--bad)} .wrong-item .c{color:var(--ok)}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Kuis Keamanan Informasi</h1>
+      <div class="sub">Bank Soal Gabungan · 150 soal · Persiapan ETS</div>
+    </div>
+    <button class="ghost small hidden" id="btnMenu" type="button">Menu</button>
+  </header>
+
+  <!-- START -->
+  <section id="vStart">
+    <div class="card" id="resumeCard" style="display:none">
+      <div class="row spread">
+        <div><b>Sesi sebelumnya tersimpan</b><div class="muted small" id="resumeInfo"></div></div>
+        <button class="primary" id="btnResume" type="button">Lanjutkan</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Atur kuis</h2>
+      <div class="muted small">Pilih bab dan jenis soal, lalu mulai. Jawab soal, tekan <b>Submit</b> untuk melihat pembahasan, lalu <b>Next</b>.</div>
+      <fieldset>
+        <legend>Bab</legend>
+        <div id="babList"></div>
+        <div class="row" style="margin-top:8px">
+          <button type="button" class="small" id="allBab">Pilih semua</button>
+          <button type="button" class="small" id="noBab">Kosongkan</button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Asal soal</legend>
+        <div class="seg">
+          <label><input type="radio" name="src" value="all" checked><span>Semua</span></label>
+          <label><input type="radio" name="src" value="K"><span>Keduanya (paling mungkin keluar)</span></label>
+          <label><input type="radio" name="src" value="P"><span>Pretest/Posttest</span></label>
+          <label><input type="radio" name="src" value="E"><span>Latihan ETS</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Urutan</legend>
+        <div class="seg">
+          <label><input type="radio" name="ord" value="seq" checked><span>Urut nomor</span></label>
+          <label><input type="radio" name="ord" value="rnd"><span>Acak</span></label>
+        </div>
+      </fieldset>
+      <div class="actions">
+        <div class="muted small" id="selCount"></div>
+        <button class="primary" id="btnStart" type="button">Mulai kuis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="vQuiz" class="hidden">
+    <div class="card">
+      <div class="row spread small">
+        <span class="muted" id="posLabel"></span>
+        <span class="score" id="scoreLabel"></span>
+      </div>
+      <div class="progress"><i id="bar"></i></div>
+      <div class="meta">
+        <span class="qnum" id="qNum"></span>
+        <span class="tag" id="qTag"></span>
+        <span class="bab" id="qBab"></span>
+      </div>
+      <div class="qtext" id="qText"></div>
+      <div id="qExtra"></div>
+      <div class="opts" id="opts"></div>
+      <div id="fb"></div>
+      <div class="actions">
+        <span class="kbd" id="hint">Tombol: A–D / 1–4 untuk memilih, Enter untuk submit &amp; next</span>
+        <div class="row">
+          <button type="button" id="btnSkip" class="ghost">Lewati</button>
+          <button type="button" class="primary" id="btnAct" disabled>Submit</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="vEnd" class="hidden">
+    <div class="card">
+      <div class="muted small">Hasil</div>
+      <div class="row" style="gap:18px;margin:8px 0 4px">
+        <div class="big" id="endPct"></div>
+        <div><div id="endScore" style="font-weight:600"></div><div class="muted small" id="endNote"></div></div>
+      </div>
+      <table class="res" id="endTable"></table>
+      <div class="actions">
+        <button type="button" id="btnBack">Kembali ke menu</button>
+        <button type="button" class="primary" id="btnRetry">Ulangi soal yang salah</button>
+      </div>
+    </div>
+    <div class="card" id="wrongCard">
+      <b>Soal yang salah / dilewati</b>
+      <div id="wrongList"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+/*DATA*/
+const Q = [
+// ===== BAB 1 =====
+{s:"P",q:"Which additional security concept, beyond the CIA triad, refers to tracing the actions of an entity uniquely back to that entity?",o:["Accountability","Confidentiality","Availability","Authenticity"],a:0,e:"Accountability adalah kemampuan untuk melacak tindakan suatu entitas secara unik kembali ke entitas tersebut, biasanya didukung oleh logging dan audit trail. Confidentiality dan Availability adalah bagian dari CIA triad itu sendiri, sedangkan Authenticity berkaitan dengan verifikasi identitas, bukan pelacakan tindakan."},
+{s:"P",q:"A nurse authorized to update patient records deliberately enters false allergy information to harm the hospital. Which CIA property is most directly violated, and why?",o:["Availability, because the records became inaccessible","Accountability, because no one can be identified","Confidentiality, because private data was disclosed","Integrity, because authorized data was improperly altered"],a:3,e:"Integrity berarti data akurat dan tidak diubah secara tidak semestinya — bahkan oleh orang dengan akses sah. Perawat memiliki akses sah (sehingga bukan masalah confidentiality/accountability) tapi menyalahgunakannya untuk memasukkan data palsu."},
+{s:"P",q:"In the CIA triad, which security objective is defined as preventing information from being disclosed to unauthorized individuals?",o:["Integrity of information","Accountability of information","Availability of information","Confidentiality of information"],a:3,e:"Confidentiality secara spesifik berarti mencegah pengungkapan informasi yang tidak sah kepada pihak yang tidak berwenang."},
+{s:"K",q:"A company's website goes down during a scheduled sale, preventing customers from making purchases. Which CIA property is most directly compromised, and why?",o:["Accountability, because the sale cannot be traced","Integrity, because transaction records were altered","Confidentiality, because customer data was disclosed","Availability, because authorized users cannot access the service"],a:3,e:"Availability menjamin sistem dapat diakses oleh pengguna yang berhak saat dibutuhkan. Situs yang down membuat pelanggan tidak bisa membeli."},
+{s:"K",q:"A hospital's patient database can be modified by any staff member without approval, and a disgruntled employee later alters several patient records. Which security concept was mainly missing, allowing this to happen?",o:["Sufficient key-space for the encryption algorithm used","Application of Kerckhoffs' principle to the system","An adequate security policy or access control over data changes","Use of a stream cipher rather than a block cipher"],a:2,e:"Data pasien bisa diubah siapa saja tanpa persetujuan: yang hilang adalah kebijakan keamanan dan kontrol akses atas perubahan data (aspek integritas)."},
+{s:"P",q:"An attacker, without using any cryptanalytic technique, captures an encrypted funds-transfer message and resends it later to trigger a duplicate payment. Which weakness does this scenario mainly expose?",o:["The cipher fails to conceal single-letter frequencies","The system lacks authentication and integrity checks","The key was reused across multiple messages","The encryption algorithm has too small a key space"],a:1,e:"Ini adalah replay attack — penyerang tidak perlu memecahkan enkripsi, hanya menangkap dan mengirim ulang ciphertext yang valid. Tanpa mekanisme autentikasi/integritas (nonce, timestamp, sequence number), sistem menerimanya sebagai transaksi baru yang sah."},
+{s:"P",q:"Which OSI security architecture category refers to a process or device designed to detect, prevent, or recover from a security attack?",o:["Security mechanism","Security service","Security policy","Security attack"],a:0,e:"Security mechanism adalah proses atau perangkat yang dirancang untuk mendeteksi, mencegah, atau memulihkan dari serangan keamanan. Sementara security service memanfaatkan satu atau lebih mekanisme untuk mencapai tujuan keamanan tertentu."},
+{s:"K",q:"What is the key difference between a threat and a vulnerability in computer security terminology?",o:["A threat is always intentional, a vulnerability is always accidental","A threat is a potential danger, a vulnerability is an exploitable weakness","A threat only applies to hardware, a vulnerability only to software","A threat is a weakness, while a vulnerability is a potential danger"],a:1,e:"Vulnerability adalah kelemahan sistem yang dapat dimanfaatkan oleh threat. Threat adalah potensi bahaya."},
+{s:"K",q:"A security incident report identifies a former employee with intent to leak confidential files as the party responsible for the breach. Which computer security term best describes this party?",o:["Asset","Countermeasure","Adversary","Vulnerability"],a:2,e:"Adversary adalah pihak yang menjalankan atau berniat menjalankan ancaman, termasuk orang dalam."},
+{s:"K",q:"What trade-off is illustrated when a system becomes very secure but increasingly difficult to use?",o:["Threat versus vulnerability","Cost of security versus cost of recovery","Ease-of-use versus security","Confidentiality versus availability"],a:2,e:"Makin ketat pengamanan (misalnya autentikasi berlapis), sistem biasanya makin sulit dipakai. Inilah trade-off ease-of-use versus security."},
+{s:"K",q:"A security team is deciding whether to invest heavily in advanced defenses for a low-value, easily replaceable asset. Which trade-off should most influence their decision?",o:["The application of Kerckhoffs' principle","The ease-of-use versus security trade-off","The choice between block and stream ciphers","The cost of security versus the cost of failure and recovery"],a:3,e:"Untuk aset bernilai rendah dan mudah diganti, biaya pengamanan yang besar tidak sebanding dengan biaya kegagalan dan pemulihan. Inilah trade-off biaya keamanan terhadap biaya kegagalan."},
+{s:"E",q:"What security goal guarantees that the sender of a message cannot deny having sent it?",o:["Confidentiality","Availability","Non-repudiation","Anonymity"],a:2,e:"Non-repudiation mencegah pihak menyangkal tindakannya (misalnya mengirim pesan), biasanya lewat tanda tangan digital."},
+{s:"E",q:"Which type of attack relies on analyzing physical implementation characteristics like power consumption or execution timing?",o:["Linear Cryptanalysis","Side-Channel Attack","Differential Cryptanalysis","Social Engineering"],a:1,e:"Side-channel attack memanfaatkan kebocoran fisik (daya, waktu eksekusi, radiasi EM), bukan kelemahan matematis algoritma."},
+// ===== BAB 2 =====
+{s:"P",q:"What distinguishes a known-plaintext attack from a ciphertext-only attack on an encryption scheme?",o:["The analyst has no knowledge of the algorithm used","The analyst also has plaintext-ciphertext pairs to study","The analyst can freely choose new plaintext to encrypt","The analyst can freely choose ciphertext to decrypt"],a:1,e:"Pada known-plaintext attack, analis memiliki beberapa pasangan plaintext-ciphertext yang diketahui (bukan dipilih sendiri) untuk dipelajari dan digunakan menyimpulkan kunci. Opsi c menggambarkan chosen-plaintext attack, dan opsi d menggambarkan chosen-ciphertext attack — keduanya model serangan yang lebih kuat."},
+{s:"P",q:"Why is an encryption scheme considered computationally secure rather than unconditionally secure?",o:["It hides all statistical patterns in the ciphertext","It relies on a random key as long as the plaintext","Breaking it costs more than the value of the protected data","It uses a key that is never reused for other messages"],a:2,e:"Computationally secure berarti skema secara teori dapat dipecahkan, tapi biaya (waktu, sumber daya komputasi) untuk memecahkannya melebihi nilai atau masa guna data yang dilindungi. Opsi b dan d menggambarkan kondisi one-time pad (unconditionally secure)."},
+{s:"P",q:"What is the term for the scrambled, unintelligible output produced by an encryption algorithm?",o:["Digram output value","Plaintext output","Secret key output","Ciphertext output"],a:3,e:"Ciphertext adalah hasil teracak dan tidak dapat dibaca dari proses enkripsi plaintext."},
+{s:"K",q:"A message is encrypted using the Caesar cipher, and an analyst simply tries all twenty-five possible shifts to recover the plaintext. Which attack strategy is being used, and why is it feasible here?",o:["Frequency analysis, feasible because letter frequencies are known","Chosen-ciphertext attack, feasible because the algorithm is public","Known-plaintext attack, feasible because plaintext samples exist","Brute-force attack, feasible because the key space is very small"],a:3,e:"Mencoba semua kemungkinan kunci adalah brute-force. Caesar cipher hanya punya 25 kunci bermakna, sehingga semuanya mudah dicoba."},
+{s:"P",q:"In the symmetric cipher model, what term describes the original readable message before encryption is applied?",o:["Decryption algorithm","Ciphertext message","Plaintext message","Encryption key value"],a:2,e:"Plaintext message adalah pesan asli yang dapat dibaca sebelum proses enkripsi diterapkan."},
+{s:"K",q:"Which term describes the process of converting plaintext into ciphertext?",o:["Encryption","Decryption","Cryptanalysis","Steganography"],a:0,e:"Enkripsi adalah proses mengubah teks asli (plaintext) menjadi teks tersandi (ciphertext)."},
+{s:"K",q:"A messaging app encrypts each character of a chat message as it is typed and sent, rather than waiting to encrypt a fixed-size group of characters. Which encryption approach does this best describe?",o:["Monoalphabetic cipher","Block cipher","Transposition cipher","Stream cipher"],a:3,e:"Stream cipher mengenkripsi data secara kontinu, bit demi bit atau karakter demi karakter."},
+{s:"K",q:"How does the symmetric encryption notation C = E(M, K) relate to the decryption process?",o:["The notation only applies to asymmetric encryption schemes","Decryption does not require knowledge of K at all","The same key K is reused, so that M = D(C, K)","A different key K' must be used, so that M = D(C, K')"],a:2,e:"Enkripsi simetris memakai kunci yang sama untuk enkripsi dan dekripsi."},
+{s:"K",q:"Why is Kerckhoffs' principle important when designing an encryption method?",o:["Security should rely on hiding the encryption algorithm itself","Security should rely on the secrecy of the key, not the algorithm","Security should rely on making the key space as small as possible","Security should rely on avoiding key distribution altogether"],a:1,e:"Menurut prinsip Kerckhoffs, keamanan harus bergantung pada kerahasiaan kunci, bukan kerahasiaan algoritma. Algoritma dianggap bisa diketahui musuh."},
+{s:"K",q:"An organization publishes its encryption algorithm's full specification but keeps only the key secret, and security experts endorse this design choice. Which principle supports this practice?",o:["The cost-of-security trade-off","Sufficient key-space principle","The CIA triad","Kerckhoffs' principle"],a:3,e:"Keamanan harus bergantung pada kerahasiaan kunci, bukan kerahasiaan algoritma."},
+{s:"E",q:"In classical cryptography, what does the term plaintext refer to?",o:["The encryption algorithm","The original message","The coded message","The secret key value"],a:1,e:"Plaintext adalah pesan asli sebelum dienkripsi. Pesan terkode adalah ciphertext."},
+{s:"E",q:"Which parameter determines the total strength of a symmetric key encryption system against brute-force attacks?",o:["Block size","Key size / Key length in bits","Number of rounds","Plaintext size"],a:1,e:"Jika algoritmanya tidak punya kelemahan, ruang pencarian brute force sebesar 2ⁿ dengan n = panjang kunci, jadi kekuatan ditentukan oleh key size."},
+{s:"E",q:"In key management hierarchy, why are master keys used to encrypt session keys?",o:["To reduce memory footprint","To limit master key exposure and facilitate safe session key distribution","To increase encryption speed","To avoid using block ciphers"],a:1,e:"Master key disimpan lama dan jarang dipakai, sedangkan session key berumur pendek untuk data; ini membatasi paparan master key dan mempermudah distribusi."},
+{s:"K",q:"Why does a monoalphabetic cipher remain vulnerable even when its letter mapping is unknown to an attacker?",o:["The frequency distribution of letters in the language is still preserved","It requires a shared secure channel for every message","It always uses a block cipher structure internally","Its key space is smaller than that of the Caesar cipher"],a:0,e:"Substitusi satu huruf ke satu huruf menjaga pola frekuensi huruf bahasa aslinya, sehingga bisa dipecahkan dengan analisis frekuensi walau pemetaan kuncinya tidak diketahui."},
+{s:"K",q:"Which classical cipher shifts every letter of the alphabet by a fixed number of positions, originally three places forward?",o:["Vigenere cipher","Monoalphabetic cipher","One-time pad cipher","Caesar cipher"],a:3,e:"Caesar cipher menggeser setiap huruf sejauh k posisi tetap (aslinya 3). Vigenere memakai beberapa pergeseran berbeda sesuai kata kunci."},
+{s:"P",q:"An analyst suspects a Vigenere cipher and finds identical ciphertext sequences repeating at distances of 6 and 9 characters. What is the most reasonable next step?",o:["Conclude the cipher is unbreakable and abandon analysis","Assume the keyword length is fifteen and stop searching","Treat the ciphertext as a columnar transposition instead","Test keyword lengths that are common factors, such as 3"],a:3,e:"Ini adalah teknik Kasiski examination — jarak pengulangan 6 dan 9 menunjukkan panjang kata kunci kemungkinan merupakan faktor persekutuan dari kedua jarak tersebut (GCD), sehingga panjang seperti 3 perlu diuji sebagai kandidat panjang kata kunci."},
+{s:"P",q:"How does the Playfair cipher reduce the frequency information available to a cryptanalyst compared to the Caesar cipher?",o:["It performs an XOR between plaintext and key bits","It encrypts pairs of letters rather than single letters","It rearranges letters instead of substituting them","It uses a truly random key for every message"],a:1,e:"Dengan mengenkripsi digram (pasangan huruf) bukan huruf tunggal, Playfair meratakan statistik frekuensi huruf tunggal, membuat analisis frekuensi sederhana jauh kurang efektif."},
+{s:"P",q:"Which cipher uses linear algebra and matrix multiplication to transform several plaintext letters at once?",o:["Playfair cipher","Rail fence cipher","Hill cipher","Caesar cipher"],a:2,e:"Hill cipher menggunakan perkalian matriks (dengan matriks kunci yang invertible) untuk mentransformasi blok beberapa huruf plaintext sekaligus, berdasarkan aljabar linear."},
+{s:"P",q:"Which cipher encrypts pairs of plaintext letters using a five-by-five matrix built from a keyword?",o:["Playfair cipher","Vernam cipher","Hill cipher","Caesar cipher"],a:0,e:"Playfair cipher membangun matriks 5×5 dari sebuah keyword dan menggunakannya untuk mengenkripsi huruf plaintext secara berpasangan (digram)."},
+{s:"K",q:"Why is a longer, less-repeated key generally harder to attack in a Vigenere cipher?",o:["It reduces the chance that identical plaintext segments produce identical ciphertext","It changes the cipher into a block cipher structure","It removes the need for a shared secret key altogether","It converts letters into binary before encryption is applied"],a:0,e:"Kasiski examination bergantung pada pola ciphertext yang berulang. Kunci lebih panjang mengurangi pengulangan tersebut."},
+{s:"K",q:"An analyst trying to break a suspected monoalphabetic cipher starts by counting how often each ciphertext letter appears. What should be the analyst's very next step, and why?",o:["Convert the ciphertext into binary before further analysis","Assume the cipher is unbreakable and stop the analysis","Try all possible keys exhaustively, since the key space is small","Compare the counted frequencies to known language letter frequencies to guess the mapping"],a:3,e:"Langkah selanjutnya dalam frequency analysis adalah membandingkan frekuensi kemunculan karakter ciphertext dengan distribusi frekuensi huruf standar dalam bahasa asli (misalnya huruf 'E', 'T', 'A' pada bahasa Inggris)."},
+{s:"K",q:"An attacker who intercepted an encrypted message notices the letter mapping is fixed for the whole message and that English letter frequencies are well known. Which classical cipher is most likely being attacked here?",o:["Stream cipher","Vigenere cipher","Monoalphabetic cipher","One-time pad"],a:2,e:"Pemetaan huruf yang tetap membuat frequency analysis efektif pada monoalphabetic cipher."},
+{s:"E",q:"Which classical cipher uses a keyword to shift letters by varying amounts across the message?",o:["Caesar Cipher","Vigenère Cipher","Rail Fence Cipher","Playfair Cipher"],a:1,e:"Vigenère adalah cipher polialfabetik: kata kunci diulang, tiap huruf kunci menentukan besar geseran huruf plaintext pada posisinya."},
+{s:"P",q:"What is the simplest transposition method, in which plaintext is written diagonally and read off row by row?",o:["Vigenere technique","Columnar transposition","Rail fence technique","Playfair technique"],a:2,e:"Rail fence technique menulis plaintext secara diagonal melintasi sejumlah “rel” lalu dibaca baris per baris untuk menghasilkan ciphertext."},
+{s:"P",q:"Why does applying a second round of columnar transposition make ciphertext harder to cryptanalyze than a single round?",o:["It produces a more irregular, less structured permutation","It shortens the overall length of the ciphertext","It converts the transposition into a substitution cipher","It changes the actual letters used in the plaintext"],a:0,e:"Transposisi ganda menggabungkan dua permutasi, menghasilkan pengacakan posisi yang jauh lebih kompleks dan tidak teratur dibanding satu ronde — huruf asli tidak berubah (hanya posisinya), dan panjang teks tetap sama."},
+{s:"P",q:"Two branch offices need constant secure communication but cannot arrange a secure channel to exchange a new key for every message. Which classical scheme becomes impractical for them, and why?",o:["The one-time pad, since each message needs an equally long key","The Playfair cipher, since it cannot encrypt repeated letters","The Caesar cipher, since it only has twenty-five possible keys","The Hill cipher, since it requires an invertible key matrix"],a:0,e:"OTP unconditionally secure, tapi setiap pesan membutuhkan kunci acak sepanjang pesan itu sendiri dan tidak boleh digunakan ulang. Tanpa saluran aman untuk distribusi kunci sebanyak itu secara terus-menerus, OTP menjadi tidak praktis."},
+{s:"P",q:"Which cipher uses a truly random key as long as the message, applied only once, to achieve unbreakable secrecy?",o:["One-time pad","Vigenere cipher","Playfair cipher","Hill cipher"],a:0,w:"Di bank soal aslinya ini soal isian singkat; pilihan jawabannya ditambahkan agar bisa dikerjakan sebagai pilihan ganda.",e:"One-Time Pad memiliki keamanan sempurna apabila:<ul><li>Kunci benar-benar acak</li><li>Panjang kunci sama dengan pesan</li><li>Kunci hanya digunakan sekali</li></ul>"},
+// ===== BAB 3 =====
+{s:"K",q:"How are two elements of GF(2ⁿ) added when each is represented as an n-bit string?",o:["By a bitwise OR of the two strings","By a bitwise XOR of the two strings","By a bitwise AND of the two strings","By integer addition modulo 2ⁿ"],a:1,e:"Koefisien dijumlahkan modulo 2, yang identik dengan XOR pada tiap posisi bit, tanpa carry."},
+{s:"K",q:"A developer writes a custom cipher that multiplies bytes using (a * b) % 256 and decrypts by dividing. What problem will appear?",o:["Bytes such as {02} have no inverse, so some blocks cannot be decrypted","Every byte then has two inverses, so decryption is ambiguous","Multiplication becomes non-commutative, so round order is lost","Results can exceed 255, so they no longer fit into a single byte"],a:0,e:"Modulo 256 membentuk ring, bukan medan. Byte genap tidak memiliki invers perkalian."},
+{s:"K",q:"In GF(2³) defined by x³ + x + 1 with generator g, which power of g equals g¹⁰?",o:["g³","g¹","g⁴","g²"],a:0,e:"GF(2³) punya 2³ − 1 = 7 elemen bukan nol, sehingga g⁷ = 1. Maka g¹⁰ = g⁷ · g³ = g³."},
+{s:"K",q:"Which statement about subtraction in GF(2ⁿ) is correct?",o:["It is undefined, since GF(2ⁿ) only supports addition and division","It is identical to addition, because every element is its own negative","It is identical to multiplication by the additive inverse of one","It needs a borrow chain, just like subtraction of ordinary integers"],a:1,e:"Karena karakteristiknya 2, a + a = 0, sehingga setiap elemen adalah negatif dirinya sendiri. Pengurangan sama dengan penjumlahan, yaitu XOR, tanpa borrow."},
+{s:"K",q:"AES needs 8-bit arithmetic that supports division. Why is GF(2⁸) used instead of arithmetic modulo 256?",o:["Arithmetic modulo 256 cannot represent the byte values 251 to 255","Every nonzero byte has an inverse in GF(2⁸), but not modulo 256","Addition modulo 256 is not closed, while addition in GF(2⁸) is closed","GF(2⁸) contains more elements than there are 8-bit byte values"],a:1,e:"GF(2⁸) adalah medan, sehingga setiap byte bukan nol memiliki invers perkalian. Modulo 256 tidak demikian."},
+{s:"K",q:"How many elements does the finite field GF(2ⁿ) contain?",o:["n²","2ⁿ − 1","2n","2ⁿ"],a:3,e:"Jumlah string n-bit yang mungkin adalah 2ⁿ. Pada AES, GF(2⁸) memiliki 256 elemen."},
+{s:"P",q:"What is a finite field?",o:["A set of numbers that we can add, subtract, multiply, and divide together and the result is always an element of the set","A set of numbers with finite elements","A set of numbers that we can add, subtract, multiply, and divide together and the result can be outside of the set","A set of numbers with specific addition and substraction operations"],a:0,e:"Finite field adalah himpunan elemen berhingga yang tertutup (closed) terhadap penjumlahan, pengurangan, perkalian, dan pembagian (kecuali dengan nol) — artinya hasil dari operasi apapun ini selalu tetap berada di dalam himpunan tersebut."},
+{s:"P",q:"Why finite fields are used in Cryptography?",o:["All other answers are correct","Because finite fields simplify arithmetical operations of large numbers","Because cryptography works with small finite numbers","Because finite field is the perfect pair for cryptography"],a:1,e:"Finite field menjaga semua nilai tetap berada dalam rentang yang tetap (mis. satu byte di GF(2⁸)), sehingga operasi seperti penjumlahan, perkalian, dan invers tidak pernah “membesar” melebihi ukuran tetap — berbeda dengan aritmetika integer biasa. Ini membuat komputasi cepat, dapat diprediksi, dan cocok untuk implementasi hardware/software dalam algoritma seperti AES."},
+{s:"E",q:"In a finite field GF(p), how many non-zero elements have a multiplicative inverse?",o:["Only p/2 elements","All p − 1 non-zero elements","None","Only prime elements"],a:1,e:"Definisi field: setiap elemen bukan-nol punya tepat satu invers perkalian, jadi pada GF(p) ada p − 1 elemen berinvers."},
+{s:"E",q:"Which algorithm is used to compute the multiplicative inverse in GF(2ⁿ) or modulo p?",o:["Extended Euclidean Algorithm","Fermat's Primality Test","Miller-Rabin Algorithm","Diffie-Hellman Key Exchange"],a:0,e:"Extended Euclidean Algorithm menghitung x dan y pada ax + my = gcd(a, m) = 1, sehingga x adalah invers dari a."},
+{s:"K",q:"How is multiplication of a byte by {02} carried out in the AES field?",o:["Shift right by one bit, then XOR with {1B} if the original top bit was 1","Shift left by one bit, then always XOR the result with the value {1B}","Shift left by one bit, then XOR with {1B} if the original low bit was 1","Shift left by one bit, then XOR with {1B} if the original top bit was 1"],a:3,e:"Kali {02} adalah geser kiri 1 bit. Jika bit paling atas (bit ke-7) semula 1, terjadi overflow sehingga hasilnya di-XOR dengan {1B} (reduksi oleh polinomial 0x11B)."},
+{s:"K",q:"A student is writing MixColumns in Python and must compute {02} · {87}. What value should the function return?",o:["{0E}","{15}","{95}","{1D}"],a:1,e:"{02}·{87}: geser kiri 1 bit → 1 0000 1110 (0x10E). Bit ke-8 menyala, maka XOR dengan {1B}: 0x10E ⊕ 0x11B = 0x015 = {15}."},
+{s:"K",q:"What is {3C} + {A5} in the AES field?",o:["{BD}","{E1}","{99}","{24}"],a:2,e:"Penjumlahan pada GF(2⁸) adalah XOR. 0011 1100 ⊕ 1010 0101 = 1001 1001 = {99}."},
+{s:"E",q:"What irreducible polynomial is standardly used in AES for arithmetic in GF(2⁸)?",o:["m(x) = x⁸ + x⁴ + x³ + x + 1 (0x11B)","m(x) = x⁸ + x⁶ + x³ + x² + 1","m(x) = x⁸ + 1","m(x) = x⁸ + x⁷ + x² + 1"],a:0,e:"AES memakai polinomial tak-tereduksi tetap x⁸ + x⁴ + x³ + x + 1 (0x11B) agar hasil perkalian selalu tetap berukuran satu byte."},
+{s:"E",q:"What is the result of adding 0x57 and 0x83 in GF(2⁸)?",o:["0xDA","0xD4","0x3A","0xFF"],a:1,e:"Penjumlahan di GF(2⁸) = XOR bit demi bit: 0x57 ⊕ 0x83 = 01010111 ⊕ 10000011 = 11010100 = 0xD4."},
+// ===== BAB 4 =====
+{s:"K",q:"An IoT company upgrades its devices from AES-128 to AES-256. Which change should the engineering team expect?",o:["Rounds fall from 14 to 10, while the block size stays at 128 bits","Rounds rise from 10 to 14, and the block size grows to 256 bits","Rounds stay at 10, while the block size grows from 128 to 256 bits","Rounds rise from 10 to 14, while the block size stays at 128 bits"],a:3,e:"AES-128 memakai 10 round dan AES-256 memakai 14 round. Ukuran blok AES tetap 128 bit untuk semua panjang kunci."},
+{s:"K",q:"How many rounds does AES perform with a 128-bit key?",o:["8 rounds","12 rounds","10 rounds","14 rounds"],a:2,e:"AES-128 memakai 10 round, AES-192 memakai 12 round, dan AES-256 memakai 14 round."},
+{s:"K",q:"Which AES stage is the only one that makes use of the key?",o:["ShiftRows","AddRoundKey","MixColumns","SubBytes"],a:1,e:"Hanya AddRoundKey yang melakukan XOR state dengan round key."},
+{s:"K",q:"To save time, a programmer removes the final AddRoundKey from their AES implementation. How should this change be assessed?",o:["Performance improves without any loss, because ten keys have already been added","Decryption becomes impossible, because the key schedule is now one word too short","Security improves, because fewer round keys are exposed in the output ciphertext","An attacker can undo the keyless final stages, so the last round adds no security"],a:3,e:"SubBytes dan ShiftRows tidak memakai kunci sehingga dapat dibalikkan penyerang. Tanpa AddRoundKey terakhir, round terakhir tidak memberi keamanan."},
+{s:"K",q:"What is the plaintext block size of AES?",o:["64 bits","256 bits","128 bits","192 bits"],a:2,e:"Blok AES selalu 128 bit (16 byte). Yang bervariasi hanya panjang kunci: 128, 192, atau 256 bit."},
+{s:"K",q:"Where are the first four bytes of a 128-bit plaintext placed when the State array is loaded?",o:["In the first column of the State","In the last column of the State","On the main diagonal of the State","In the first row of the State"],a:0,e:"State diisi per kolom (column-major): byte 0 sampai 3 mengisi kolom pertama, byte 4 sampai 7 kolom kedua, dan seterusnya."},
+{s:"K",q:"Why is AES built by alternating AddRoundKey with the other three stages?",o:["The XOR alone is weak and the keyless stages alone give no security","Both parts are secure alone, and combining them lowers key size","The XOR alone is secure, and the keyless stages only add padding","The keyless stages alone are secure, and the XOR only adds speed"],a:0,e:"XOR dengan kunci saja bersifat linear dan lemah, sedangkan tahap tanpa kunci dapat dibalikkan siapa pun. Kombinasinya memberi confusion dan diffusion yang bergantung kunci."},
+{s:"K",q:"How does the final AES round differ from the earlier full rounds?",o:["It has five stages, adding a second SubBytes","It has only three stages, omitting ShiftRows","It has only two stages, omitting two key XORs","It has only three stages, omitting MixColumns"],a:3,e:"Round terakhir hanya terdiri dari SubBytes, ShiftRows, dan AddRoundKey. MixColumns dihilangkan."},
+{s:"P",q:"How to put input bytes to a state block AES?",o:["Column by column: s[r][c] = in[r + 4c]","Row by row: s[r][c] = in[4r + c]","Diagonally, starting from s[0][0]","In reverse order: s[r][c] = in[15 − (r + 4c)]"],a:0,w:"Di bank soal aslinya ini soal isian singkat; pilihan jawabannya ditambahkan agar bisa dikerjakan sebagai pilihan ganda.",e:"16 byte input (in[0] … in[15]) dimuat ke array State 4×4 secara <b>column-by-column</b>, dengan aturan s[r][c] = in[r + 4c]: kolom 0 diisi in[0]–in[3], kolom 1 diisi in[4]–in[7], kolom 2 diisi in[8]–in[11], dan kolom 3 diisi in[12]–in[15].</p><p>Inilah alasan 4 byte input pertama berada di kolom pertama State, bukan baris pertama. Setelah seluruh round selesai, State dikeluarkan kembali dengan urutan yang sama: out[r + 4c] = s[r][c]."},
+{s:"P",q:"Which AES operation that only runs nine times?",o:["Mix Row","Sub Bytes","Mix Column","Sub Bits"],a:2,e:"AES-128 memiliki 10 round, tapi MixColumns dilewatkan di round terakhir — sehingga hanya berjalan di round 1–9, yaitu 9 kali. (SubBytes berjalan di semua 10 round, termasuk round terakhir.)"},
+{s:"P",q:"AES key length is ..",o:["256 bits","128 bits","all answers are correct","192 bits"],a:2,e:"AES mendukung tiga panjang kunci: 128, 192, dan 256 bit (AES-128, AES-192, AES-256) — ukuran block selalu 128 bit, tapi panjang kunci bervariasi.",w:"Pilihan “all answers are correct” memang benar: AES mendukung kunci 128, 192, dan 256 bit."},
+{s:"P",q:"AES is a symmetric encryption because ..",o:["it uses a key for encryption and decryption","it is short for Advanced Encryption Symmetrical","AES only works on symmetrical data","AES only works with palindrom"],a:0,e:"AES disebut “symmetric” karena kunci rahasia yang sama digunakan untuk enkripsi maupun dekripsi (berbeda dengan asymmetric/public-key cryptography yang menggunakan kunci berbeda). “AES” adalah singkatan dari “Advanced Encryption Standard” — perluasan pada opsi b tidak tepat."},
+{s:"P",q:"Because of the way AES splits the plaintext into multiple parts and encrypts each part individually, AES is a .. cipher",o:["block","stream","asymmetric","symmetric"],a:0,e:"Membagi plaintext menjadi potongan berukuran tetap (block 128-bit) dan mengenkripsi setiap potongan itulah yang mendefinisikan block cipher, berbeda dengan stream cipher yang mengenkripsi data secara kontinu. “Symmetric” menjelaskan penggunaan kunci, bukan cara data dibagi."},
+{s:"P",q:"Which of the following options are the correct AES encryption operations in a round",o:["SubBits, ShiftColumn, MixRows, AddKey","AddKey, MixRow, ShiftColumn, SubBits","MixColumn, ShiftRows, SubBytes, AddRoundKey","SubBytes, ShiftRows, MixColumn, AddRoundKey"],a:3,e:"Ini adalah urutan operasi yang benar dalam satu round enkripsi AES standar."},
+{s:"P",q:"AES block contains ..",o:["32 bytes","16 bytes","32 bits","16 bits"],a:1,e:"128 bit = 16 byte, yang merupakan ukuran block AES yang tetap."},
+{s:"E",q:"What cryptographic property ensures that changing a single bit of plaintext alters approximately 50% of ciphertext bits?",o:["Avalanche Effect","Completeness","Strict Key Independence","Modulo Expansion"],a:0,e:"Avalanche effect: perubahan satu bit plaintext mengubah sekitar 50% bit ciphertext (diffusion kuat)."},
+{s:"E",q:"What algebraic property ensures that a cipher stage like SubBytes is invertible?",o:["One-to-one mapping (Bijective S-Box mapping)","Homomorphic mapping","Associative grouping","Linear reduction"],a:0,e:"S-Box harus bijektif (pemetaan 1-ke-1) agar tiap byte keluaran dapat dikembalikan unik ke byte asalnya saat dekripsi."},
+{s:"E",q:"What primary security property does the AES SubBytes stage provide?",o:["Non-linear Substitution (Confusion)","Linear Permutation (Diffusion)","Key Exchange","Integrity Checking"],a:0,e:"SubBytes = substitusi byte non-linear (S-Box) sehingga menimbulkan confusion dan menyulitkan kriptanalisis linear/diferensial."},
+{s:"E",q:"What primary security property do ShiftRows and MixColumns combined provide?",o:["Non-linear confusion","Permutation and Mixing (Diffusion)","Authentication","Key Expansion"],a:1,e:"ShiftRows memindahkan byte antar kolom, MixColumns menyebarkan perubahan satu byte ke seluruh kolom: keduanya memberi diffusion."},
+{s:"K",q:"Which AES stage is a simple permutation rather than a substitution?",o:["SubBytes","ShiftRows","MixColumns","AddRoundKey"],a:1,e:"ShiftRows hanya menggeser posisi byte pada baris (permutasi sederhana). SubBytes dan MixColumns adalah substitusi, dan AddRoundKey adalah XOR dengan kunci."},
+{s:"P",q:"If the first column of a block after ShiftRows is {87}, {6E}, {46}, and {A6}, what is the output of MixColumn?",o:["{47}, {37}, {94}, {ED}","{15}, {DC}, {8C}, {57}","{92}, {B2}, {CA}, {F1}","{47}, {94}, {37}, {ED}"],a:0,w:"Di bank soal aslinya ini soal isian singkat; pilihan jawabannya ditambahkan agar bisa dikerjakan sebagai pilihan ganda.",e:"MixColumns mengalikan setiap kolom dengan matriks tetap di GF(2⁸):<pre>| 02 03 01 01 |   | 87 |\n| 01 02 03 01 | × | 6E |\n| 01 01 02 03 |   | 46 |\n| 03 01 01 02 |   | A6 |</pre><p>Perkalian GF(2⁸) (XOR {1B} saat bit teratas overflow): 02·87={15}, 03·87={92}, 02·6E={DC}, 03·6E={B2}, 02·46={8C}, 03·46={CA}, 02·A6={57}, 03·A6={F1}.</p><p>Setiap byte output adalah XOR dari barisnya:<br>b0 = 15⊕B2⊕46⊕A6 = <b>47</b><br>b1 = 87⊕DC⊕CA⊕A6 = <b>37</b><br>b2 = 87⊕6E⊕8C⊕F1 = <b>94</b><br>b3 = 92⊕6E⊕46⊕57 = <b>ED</b>"},
+{s:"P",q:"Using the AES S-Box given above, a value of 45 will be transformed to ...",o:["20","6E","B1","63"],a:1,sbox:true,e:"Untuk input 45: baris 4x, kolom x5 → tabel memberikan 6E.",w:"Tabel S-box yang dirujuk (“given above”) tidak ada di file sumber; tabel S-box AES lengkap ditampilkan di atas soal ini. Pilihan 20 dan 63 pada sumber tertulis “20.0” dan “63.0” (salah format), di sini dirapikan."},
+{s:"P",q:"If the block below is the output of previous AES operation, what is the output of the second row after being Shift Rows-ed (Block: EA 04 65 85 / 83 45 5D 96 / 5C 33 98 B0 / F0 2D AD C5)",o:["33 98 B0 5C","5C 33 B0 98","B0 5C 33 98","98 B0 5C 33"],a:3,e:"Pada ShiftRows, baris indeks 2 (baris ketiga, “5C 33 98 B0”) digeser secara siklik ke kiri sebanyak 2 posisi: 5C 33 98 B0 → 98 B0 5C 33.",w:"Kata “second row” pada soal ambigu. Kunci sumber (d) cocok dengan baris berindeks 2 (baris ketiga: 5C 33 98 B0), yang digeser 2 posisi ke kiri. Baris kedua (83 45 5D 96) sebenarnya digeser 1 posisi menjadi 45 5D 96 83, dan itu tidak ada di pilihan. Untuk ujian, ikuti kunci d."},
+{s:"K",q:"Why does the AES-128 key schedule contain 44 words?",o:["It supplies 22 round keys of 2 words, one per half of each of 11 rounds","It supplies 11 round keys of 4 words: one per round plus the initial key","It supplies 11 round keys of 4 words, one per round plus a final check","It supplies 10 round keys of 4 words plus 4 words of padding at the end"],a:1,e:"10 round ditambah 1 initial key menghasilkan 11 round key. Dengan 4 word per key, totalnya 11 × 4 = 44 word."},
+{s:"K",q:"How is the AddRoundKey stage reversed in AES decryption?",o:["The round key is XORed with its own bitwise complement","The block is multiplied by the inverse of the round key","The same round key is XORed with the block once more","The round key is passed through the inverse S-box first"],a:2,e:"XOR adalah inversnya sendiri: (S ⊕ K) ⊕ K = S, jadi dekripsi cukup meng-XOR blok dengan round key yang sama sekali lagi."},
+{s:"K",q:"How does the AES decryption algorithm use the expanded key?",o:["It uses a separately expanded second key","It uses the round keys in reverse order","It uses the round keys in the same order","It uses only the first four words of it"],a:1,e:"Dekripsi memakai round key hasil key expansion yang sama, tetapi urutannya dibalik."},
+{s:"K",q:"Why is the AES decryption algorithm not identical to the encryption algorithm, unlike in a Feistel cipher?",o:["Its rounds process one half of the State while the other half waits","Its round keys are derived from a second, independently expanded key","Its decryption uses a different irreducible polynomial for the field","Its stages are reversed with inverse functions, a result of its structure"],a:3,e:"AES bukan Feistel cipher. Pada Feistel, enkripsi dan dekripsi memakai struktur yang sama dengan urutan round key dibalik; AES harus memakai fungsi invers tiap tahap."},
+{s:"K",q:"Both the final encryption round and the final decryption round contain only three stages. What is the reason for this?",o:["It prevents the last round key from being exposed in the ciphertext","It is required by the AES structure to keep the cipher reversible","It reduces the total running time of the cipher by roughly a tenth","It compensates for the extra key XOR applied before the first round"],a:1,e:"Menurut Stallings, round terakhir tanpa MixColumns (dan InvMixColumns) adalah konsekuensi struktur AES agar enkripsi dan dekripsi tetap dapat dibalik. Alasannya bukan kecepatan.",w:"KONFLIK KUNCI: di Batch 1 (Q16) kunci jawabannya “compensates for the extra key XOR applied before the first round”. Ini bertentangan dengan 4 set lain dan buku Stallings. Jawaban di sini mengikuti mayoritas set + buku; kalau soal serupa muncul dengan opsi “reversible”, pilih itu."},
+{s:"P",q:"What is the purpose of the Inverse ShiftRows step in AES decryption?",o:["To circularly shift rows of the state to the right","To substitute bytes using the S-box table","To mix columns of the state matrix together","To circularly shift rows of the state to the left"],a:0,e:"ShiftRows (enkripsi) menggeser setiap baris state secara siklik ke kiri sebanyak nomor barisnya. Inverse ShiftRows (dekripsi) membatalkannya dengan menggeser setiap baris secara siklik ke kanan sebanyak jumlah yang sama."},
+{s:"P",q:"What is the main purpose of the Inverse MixColumns operation in AES decryption?",o:["To expand the key used for encryption rounds","To randomize the initial key matrix order","To apply substitution to every byte in the block","To reverse the diffusion applied during encryption"],a:3,e:"MixColumns pada enkripsi mencampur byte dalam setiap kolom untuk memberikan diffusion. Inverse MixColumns membalikkan transformasi ini pada dekripsi sehingga nilai kolom asli dapat dipulihkan."},
+{s:"P",q:"What transformation substitutes bytes using the Inverse S-box in AES decryption?",o:["Inverse ShiftRows","Inverse MixColumns","AddRoundKey","Inverse SubBytes"],a:3,e:"Inverse SubBytes menggunakan Inverse S-box untuk mensubstitusi setiap byte state kembali ke nilai aslinya, membalikkan substitusi oleh SubBytes saat enkripsi."},
+{s:"P",q:"In AES decryption, which operation is the mathematical inverse of AddRoundKey?",o:["Inverse ShiftRows","AddRoundKey itself","Inverse MixColumns","Inverse SubBytes"],a:1,e:"AddRoundKey adalah operasi XOR, dan XOR merupakan inversnya sendiri (A ⊕ B ⊕ B = A). Jadi menerapkan AddRoundKey dengan round key yang sama untuk kedua kalinya membatalkannya."},
+// ===== BAB 5 =====
+{s:"K",q:"Why is ECB unsuitable for long, highly structured messages?",o:["Repeated plaintext blocks yield repeated ciphertext, exposing patterns","Repeated plaintext blocks make the last block impossible to pad","Each block depends on the previous one, so one error ruins the rest","Each block needs its own key, so key management becomes unwieldy"],a:0,e:"ECB mengenkripsi tiap blok secara independen dengan kunci yang sama. Plaintext identik menghasilkan ciphertext identik, sehingga pola pesan bocor."},
+{s:"K",q:"A hospital system encrypts fixed-format patient records block by block in ECB mode with one key. Which risk should an auditor report first?",o:["Records shorter than one block cannot be encrypted at all in this mode","Identical field values give identical ciphertext, and blocks can be swapped","Each record needs a fresh key, so the key store will run out of key space","A single transmission error will corrupt every record stored after that one"],a:1,e:"Nilai field yang identik pada record berformat tetap menghasilkan ciphertext identik sehingga pola bocor, dan blok bisa ditukar atau disalin tanpa terdeteksi."},
+{s:"K",q:"In which mode of operation is each block of plaintext encrypted independently under the same key?",o:["Output Feedback (OFB)","Electronic Codebook (ECB)","Cipher Feedback (CFB)","Cipher Block Chaining (CBC)"],a:1,e:"ECB mengenkripsi setiap blok secara terpisah dengan kunci yang sama. Mode lain memakai umpan balik atau chaining."},
+{s:"K",q:"Which expression recovers plaintext block Pⱼ (j ≥ 2) in CBC mode?",o:["Pⱼ = E(K, Cⱼ) ⊕ Cⱼ₋₁","Pⱼ = D(K, Cⱼ) ⊕ Cⱼ₊₁","Pⱼ = D(K, Cⱼ) ⊕ Cⱼ₋₁","Pⱼ = D(K, Cⱼ ⊕ Cⱼ₋₁)"],a:2,e:"Enkripsi CBC: Cⱼ = E(K, Pⱼ ⊕ Cⱼ₋₁). Dekripsi: Pⱼ = D(K, Cⱼ) ⊕ Cⱼ₋₁."},
+{s:"K",q:"In CBC encryption, what is XORed with the first plaintext block before encryption?",o:["The initialization vector","The first ciphertext block","The encrypted counter","The last plaintext block"],a:0,e:"C₁ = E(K, P₁ ⊕ IV). IV berperan sebagai ciphertext blok ke-0."},
+{s:"K",q:"An application stores the CBC initialization vector unauthenticated in a file header, so a user can edit it. What can an attacker do with this?",o:["Decrypt every block of the file, since the IV acts as a second key","Flip chosen bits of the first plaintext block by flipping those IV bits","Reorder the ciphertext blocks without the receiver noticing any change","Recover the encryption key by comparing the IV with the first block"],a:1,e:"P₁ = D(K, C₁) ⊕ IV, sehingga membalik bit IV akan membalik bit yang sama pada P₁."},
+{s:"P",q:"Which mode of operation XORs each plaintext block with the previous ciphertext block before encryption?",o:["Cipher Block Chaining (CBC)","Output Feedback (OFB)","Cipher Feedback (CFB)","Electronic Code Book (ECB)"],a:0,e:"CBC meng-XOR-kan setiap plaintext block dengan ciphertext block sebelumnya sebelum dienkripsi (IV untuk block pertama). Chaining ini membuat setiap ciphertext block bergantung pada semua plaintext block sebelumnya, sehingga mematahkan kebocoran pola pada ECB."},
+{s:"E",q:"What happens in CBC decryption if a single bit error occurs in ciphertext block C₁?",o:["Corrupts P₁ completely, and flips the exact same bit in P₂","Corrupts P₁ and all subsequent plaintext blocks","Has no effect on decryption","Causes an immediate runtime exception"],a:0,e:"C₁ didekripsi jadi P₁ yang rusak total, dan C₁ ikut di-XOR pada dekripsi P₂ sehingga bit yang sama terbalik di P₂; blok lain aman."},
+{s:"K",q:"Which function of the block cipher is used to decrypt in Cipher Feedback mode?",o:["The key expansion function","The inverse MixColumns","The encryption function","The decryption function"],a:2,e:"CFB menghasilkan keystream dengan fungsi enkripsi, baik saat enkripsi maupun dekripsi."},
+{s:"K",q:"Why must the initialization vector used in OFB be a nonce?",o:["The IV is added to the counter, so reuse would overflow that counter","The IV is sent in the clear, so reuse would disclose it to an opponent","The keystream depends on the plaintext, so reuse would stop decryption","The keystream depends only on key and IV, so reuse repeats it exactly"],a:3,e:"Pada OFB keystream hanya bergantung pada kunci dan IV. Jika dipakai ulang, keystream identik dan C₁ ⊕ C₂ = P₁ ⊕ P₂."},
+{s:"K",q:"What is fed back into the encryption function in OFB, and how does this differ from CFB?",o:["OFB feeds back the counter value; CFB feeds back the nonce value","OFB feeds back the plaintext block; CFB feeds back the round key","OFB feeds back the ciphertext unit; CFB feeds back the XOR output","OFB feeds back the encryption output; CFB feeds back the ciphertext"],a:3,e:"OFB mengumpanbalikkan keluaran enkripsi, sedangkan CFB mengumpanbalikkan ciphertext."},
+{s:"K",q:"A single bit error occurs while transmitting the first ciphertext unit. How do OFB and CFB compare?",o:["OFB corrupts only P1, while CFB also corrupts later plaintext units","OFB corrupts every later unit, while CFB corrupts only the unit P1","Both corrupt only P1, because both of them behave as stream ciphers","Both corrupt all later units, because both of them use feedback paths"],a:0,e:"Pada OFB, yang diumpan balik adalah keluaran enkripsi (bukan ciphertext), sehingga error hanya merusak P1. Pada CFB, ciphertext yang error masuk ke shift register dan merusak unit plaintext berikutnya sampai error keluar dari register."},
+{s:"K",q:"Which mode needs no padding when the final plaintext block is shorter than the block size?",o:["CBC, because the last short block is XORed with the whole IV","ECB, because the last short block is encrypted under its own key","3DES, because its 64-bit blocks always divide a message evenly","CTR, because only the needed bits of the encrypted counter are used"],a:3,e:"CTR bekerja seperti stream cipher: keluaran enkripsi counter di-XOR dengan plaintext, dan untuk blok terakhir yang pendek cukup dipakai bit yang dibutuhkan. ECB dan CBC memerlukan blok penuh sehingga butuh padding."},
+{s:"K",q:"A fleet of sensors reboots and restarts its CTR counter from the same initial value under the same key. Why is this a serious problem?",o:["Blocks sharing a counter cannot be decrypted, so the data is lost for good","The key schedule is rebuilt each time, so the round keys become predictable","The counter overflows sooner, so the final blocks are transmitted unencrypted","Blocks sharing a counter share a keystream, so one known block reveals others"],a:3,e:"Pada CTR, keystream = E(K, counter). Counter dan kunci yang sama menghasilkan keystream yang sama, sehingga C1 ⊕ C2 = P1 ⊕ P2."},
+{s:"K",q:"In Counter mode, what is XORed with each plaintext block?",o:["The encrypted counter value for that block","The decrypted counter value for that block","The initialization vector used for that block","The previous ciphertext block of the message"],a:0,e:"CTR: Cᵢ = Pᵢ ⊕ E(K, counterᵢ). Yang di-XOR dengan plaintext adalah nilai counter yang sudah dienkripsi."},
+{s:"K",q:"Why does a CTR implementation of AES need less code than a CBC implementation?",o:["Only the encryption function and its key schedule have to be built","Only the final round of the cipher has to run for each block of data","Only one counter value is needed for the whole message that is sent","Only half of the round keys are needed, so the schedule is shorter"],a:0,e:"CTR mengenkripsi nilai counter lalu meng-XOR hasilnya dengan plaintext. Dekripsi memakai operasi yang sama, sehingga fungsi dekripsi blok AES tidak perlu dibuat."},
+{s:"P",q:"Which AES mode is most suitable when random access to encrypted data blocks is needed?",o:["Electronic Code Book (ECB)","Cipher Block Chaining (CBC)","Counter Mode (CTR)","Cipher Feedback (CFB)"],a:2,e:"CTR memungkinkan mendekripsi block manapun secara independen hanya dengan menghitung E(K, counterᵢ) untuk block tersebut — tanpa memproses block sebelumnya. Ideal untuk akses acak (mis. enkripsi disk). ECB secara teknis juga bisa diakses acak, tapi membocorkan pola."},
+{s:"P",q:"Which AES mode uses a counter value that is incremented for each block encryption?",o:["Counter Mode (CTR)","Output Feedback (OFB)","Cipher Feedback (CFB)","Cipher Block Chaining (CBC)"],a:0,e:"CTR menghasilkan keystream dengan mengenkripsi nilai counter yang bertambah untuk setiap block berturut-turut, bukan merantai atau mengumpan-balikkan ciphertext/output seperti mode lain."},
+{s:"E",q:"Which block cipher mode converts a block cipher into a parallelizable stream cipher?",o:["ECB Mode","CBC Mode","Counter (CTR) Mode","CFB Mode"],a:2,e:"CTR mengenkripsi nilai counter berurutan secara independen lalu XOR ke plaintext, sehingga bisa diparalelkan dan berfungsi seperti stream cipher."},
+{s:"K",q:"Which statement about parallel processing of blocks is correct?",o:["No mode can be parallelised, because each of them uses feedback paths","CTR allows both operations in parallel; CBC encryption cannot be split","CBC allows both operations in parallel; CTR encryption cannot be split","Only CFB allows parallel work, because it processes s bits at a time"],a:1,e:"Pada CTR, tiap blok memakai counter yang independen. Enkripsi CBC bergantung pada ciphertext blok sebelumnya sehingga harus berurutan."},
+{s:"K",q:"Telemetry is sent over a satellite link where single-bit errors are common and cannot be retransmitted. Which mode best limits the damage, and why?",o:["CFB, because the shift register absorbs the error before the next segment","ECB, because each block is separate and errors are repaired during padding","OFB, because a ciphertext bit error affects only the matching plaintext bit","CBC, because the chaining lets the receiver correct the corrupted bit later"],a:2,e:"Keystream OFB tidak bergantung pada ciphertext, sehingga satu bit error hanya memengaruhi satu bit plaintext."},
+{s:"P",q:"What is the purpose of block cipher modes of operation?",o:["To compress the ciphertext after encryption","To apply block ciphers securely to data of any length","To convert plaintext to random binary digits","To convert a cipher into a stream cipher"],a:1,e:"Block cipher sendiri hanya mengenkripsi satu block berukuran tetap. Mode operasi mendefinisikan bagaimana menerapkannya berulang untuk pesan dengan panjang sembarang secara aman — chaining, feedback, counter, dsb."},
+{s:"P",q:"Which property ensures that an error in one ciphertext block affects only a few plaintext blocks during decryption?",o:["Integrity check","Error recovery","Error propagation","Diffusion property"],a:2,e:"Error propagation menggambarkan bagaimana error pada satu ciphertext block menyebar ke sejumlah plaintext block yang terbatas selama dekripsi (mis. pada CBC: block tersebut rusak total dan satu bit terbalik di block berikutnya).",w:"Kunci sumber: c. Namun istilahnya rawan. Stallings (7.2) memakai “error propagation” untuk berapa banyak blok plaintext rusak akibat satu error ciphertext, sedangkan “error recovery” untuk kemampuan mode pulih setelah error. Di ujian, ikuti kunci dosen (c), tetapi pahami perbedaannya."},
+// ===== BAB 6 =====
+{s:"K",q:"Why does the RC4 state vector S always hold a permutation of the values 0 through 255?",o:["The only operation applied to its entries is a swap of two of them","Each entry is replaced modulo 256, so no value can appear two times","The vector is reinitialised in ascending order before every output byte","The key is copied into the vector T, which is never written back to S"],a:0,e:"S diinisialisasi dengan 0 sampai 255, lalu hanya dimodifikasi dengan menukar (swap) dua entri. Pertukaran tidak menambah atau menghilangkan nilai, sehingga S selalu berupa permutasi."},
+{s:"K",q:"A product still offers RC4 in its TLS configuration because it is fast and compact. How should a reviewer assess this choice?",o:["RC4 should stay enabled, since AES in software is slower on every platform","Keystream biases allow recovery of repeatedly sent plaintext, and RFC 7465 bars it","RC4 is sound for keys of 128 bits, so the setting can stay for older clients","RC4 is sound, and the earlier WEP failure was caused only by its short period"],a:1,e:"RC4 memiliki bias keystream yang dapat dieksploitasi pada TLS, dan RFC 7465 melarang penggunaannya.",w:"Catatan: Batch 1 menyebut serangan Fluhrer-Mantin-Shamir (FMS) di sini; secara teknis FMS adalah serangan pada WEP, bukan TLS. Intinya tetap sama: bias keystream RC4, dan RC4 dilarang di TLS lewat RFC 7465."},
+{s:"K",q:"A developer reuses the same stream cipher key for two file transfers to save a handshake. What can an attacker do with the two ciphertexts?",o:["Nothing useful, because each transfer uses a different initial state vector","XOR them to obtain the encryption key directly, since the keystreams cancel","Nothing useful, unless the attacker also recovers the seed of the generator","XOR them to obtain the XOR of the plaintexts and exploit known structure"],a:3,e:"Keystream yang sama saling menghilang pada C₁ ⊕ C₂, sehingga menghasilkan P₁ ⊕ P₂ (two-time pad)."},
+{s:"K",q:"How is the keystream combined with the plaintext in a stream cipher?",o:["With a permutation of the bits","With a bitwise XOR operation","With a modular multiplication","With a bitwise AND operation"],a:1,e:"Stream cipher meng-XOR keystream dengan plaintext bit demi bit. Dekripsi dilakukan dengan XOR keystream yang sama."},
+{s:"P",q:"What makes one-time pad impractical?",o:["Ciphertext grows unpredictably","Bit frequency becomes biased","Cipher requires multiple rounds","Key management complexity issues"],a:3,e:"Masalah praktis utama OTP adalah key management — menghasilkan, mendistribusikan, dan menyimpan kunci acak sepanjang pesan untuk setiap pesan secara aman sangat membebani dalam skala besar."},
+{s:"P",q:"What is notable about RC4 key size?",o:["Dual key using hash combination","Fixed key using bit operations only","Short key using block extension","Variable size using byte operations"],a:3,e:"RC4 mendukung panjang kunci variabel (1 hingga 256 byte) dan merupakan algoritma byte-oriented yang menghasilkan output satu byte pada satu waktu."},
+{s:"P",q:"The key characteristic of a one-time pad encryption is:",o:["The key is shorter than the plaintext","The key is created after encryption","The key is as long as the message","The key is reused for many messages"],a:2,e:"Karakteristik utama OTP adalah kunci acak sejati yang panjangnya minimal sama dengan pesan itu sendiri, digunakan hanya sekali."},
+{s:"P",q:"How is keystream produced in RC4?",o:["Swap bytes then XOR with data","Multiply matrices before output","Apply hash compression first","Rotate blocks then encrypt keys"],a:0,e:"PRGA RC4 menghasilkan setiap byte keystream melalui pertukaran byte dalam state array S, lalu memakai nilai hasil swap untuk memilih byte output, yang kemudian di-XOR dengan plaintext."},
+{s:"P",q:"Who created the RC4 algorithm?",o:["Cryptographer Ronald Rivest","Claude Shannon scientist","Whitfield Diffie expert","Professor Martin Hellman"],a:0,e:"RC4 dirancang oleh Ron Rivest pada tahun 1987 saat bekerja di RSA Security."},
+{s:"P",q:"Why are stream ciphers used for real-time tasks?",o:["High overhead during setup","Low latency byte-wise processing","Static block iteration cycles","Large block merging procedures"],a:1,e:"Stream cipher mengenkripsi data satu bit/byte pada satu waktu tanpa menunggu block penuh, sehingga latensinya rendah dan cocok untuk aplikasi real-time."},
+{s:"P",q:"Which protocols historically used RC4?",o:["OpenPGP, ProtonMail, Signal","WPA networks, SSH, and Kerberos","SSL v3, TLS v2, OpenSSL","TLS 1.3, HTTPS, SecureCopy"],a:1,e:"RC4 dipakai luas, antara lain di WEP/WPA (Wi-Fi), serta secara opsional di SSH dan Kerberos (Stallings 8.5). OpenPGP, ProtonMail, dan Signal tidak memakai RC4; TLS 1.3 tidak mendukung RC4; “TLS v2” bukan nama versi protokol yang dikenal.",w:"KONFLIK KUNCI: file preposttest-04 menandai c (SSL v3, TLS v2, OpenSSL), sedangkan Pasted_text menandai WPA, SSH, dan Kerberos. Buku Stallings (8.5) mendukung b. RC4 memang pernah ada di SSL/TLS lama, tetapi dilarang oleh RFC 7465."},
+{s:"P",q:"What is the PRNG's purpose in stream ciphers?",o:["Compress ciphertext for storage","Expand plaintext into larger blocks","Authenticate message integrity","Generate pseudorandom keystream bytes"],a:3,e:"PRNG mengambil kunci (dan mungkin seed/nonce) dan memperluasnya menjadi sekuens byte pseudorandom (keystream) yang panjang."},
+{s:"P",q:"In which year was RC4 designed?",o:["The year nineteen eighty-seven","The year nineteen eighty-four","The year nineteen ninety-one","The year nineteen ninety-five"],a:0,e:"RC4 dirancang oleh Ron Rivest pada tahun 1987 saat bekerja di RSA Security."},
+{s:"P",q:"What is initialized in RC4 setup?",o:["Permutation list of byte values","Dynamic hash-expanded key set","Encrypted block of binary seeds","Fixed alternating bit sequences"],a:0,e:"Fase setup RC4 (Key-Scheduling Algorithm/KSA) menginisialisasi array state S sebagai permutasi dari 256 nilai byte (0 hingga 255), dimulai dari permutasi identitas lalu diacak menggunakan kunci."},
+{s:"P",q:"What was RC4's original confidentiality status?",o:["Military exclusive cipher suite","Secret algorithm later leaked publicly","Academic demonstration algorithm","Open-source cipher from creation"],a:1,e:"RC4 awalnya dirahasiakan sebagai trade secret oleh RSA Security, hingga bocor secara anonim ke mailing list Cypherpunks pada tahun 1994."},
+{s:"P",q:"What category of cipher is RC4 considered?",o:["A symmetric block cipher suite","A classical stream cipher design","An asymmetric key cryptosystem","A modern hashing function type"],a:1,e:"RC4 adalah stream cipher — menghasilkan keystream pseudorandom dari kunci dan meng-XOR-kannya dengan plaintext satu byte pada satu waktu, bukan beroperasi pada block berukuran tetap."},
+{s:"K",q:"Why is the raw output of a hardware entropy source usually passed through a hash function or a block cipher?",o:["To remove bias and raise the entropy rate towards one bit per bit","To extend the output, since a hash accepts an input of any length at all","To slow the output down so that it matches the speed of the consumer","To make the sequence reproducible later from the same seed material"],a:0,e:"Keluaran mentah sumber entropi fisik sering bias. Pemrosesan dengan hash atau block cipher (conditioning) menghilangkan bias dan meningkatkan entropi per bit mendekati 1."},
+{s:"K",q:"Which comparison of PRNGs and TRNGs is correct?",o:["PRNGs are efficient and aperiodic; TRNGs are slow but fully deterministic","PRNGs and TRNGs are both periodic, but only TRNGs can be reproduced","PRNGs are inefficient but aperiodic; TRNGs are efficient and deterministic","PRNGs are efficient, deterministic and periodic; TRNGs are none of these"],a:3,e:"PRNG efisien, deterministik, dan periodik. TRNG tidak deterministik, tidak periodik, dan lambat."},
+{s:"K",q:"Why is a TRNG normally used to seed a PRNG rather than to generate a keystream directly?",o:["A TRNG is deterministic, so its output would repeat once the period ended","A TRNG is too slow, and its whole output would have to be shared securely","A TRNG needs a seed itself, which only a PRNG is able to supply to it","A TRNG cannot produce binary output, so it must be converted by the PRNG"],a:1,e:"TRNG lambat dan tidak dapat direproduksi, sehingga hanya dipakai untuk seed pendek yang kemudian dikembangkan oleh PRNG."},
+{s:"P",q:"What does entropy measure in random systems?",o:["Speed of PRNG internal cycles","Unpredictability in output sequences","Cipher strength in block lengths","Padding rate in encrypted messages"],a:1,e:"Entropi mengukur ketidakpastian/unpredictability — seberapa besar kandungan keacakan/informasi dalam suatu sumber atau sekuens output."},
+{s:"P",q:"When entropy is higher, what does this imply?",o:["Values repeat with fixed spacing","Bit patterns grow more predictable","A single outcome becomes dominant","Outcomes are equally probable"],a:3,e:"Entropi lebih tinggi berarti ketidakpastian lebih besar. Entropi maksimal terjadi ketika seluruh kemungkinan outcome memiliki probabilitas yang sama."},
+{s:"P",q:"Why do we need random numbers in cryptography?",o:["To generate deterministic key output","To reduce encryption processing time","To increase ciphertext block counts","To ensure unpredictability in operations"],a:3,e:"Keamanan kriptografi bergantung pada unpredictability — kunci, nonce, IV, token sesi, dan nilai challenge-response semuanya harus tidak dapat diprediksi penyerang."},
+{s:"K",q:"NIST SP 800-22 requires uniformity, scalability and consistency. What does consistency mean?",o:["The generator must keep an equal count of zeros and ones in each block","The generator must pass each of the fifteen listed tests on every attempt","The generator must produce the same output whenever a seed is repeated","The generator must behave the same way across different starting values"],a:3,e:"Consistency berarti perilaku generator harus sama baiknya untuk seed yang berbeda."},
+{s:"K",q:"What does backward unpredictability require of a pseudorandom sequence?",o:["The next bit cannot be guessed from the earlier bits of the stream","The sequence cannot be reproduced even when the seed is known","The seed cannot be deduced from any of the values generated from it","The sequence cannot repeat itself before the key has been changed"],a:2,e:"Backward unpredictability: seed tidak boleh dapat disimpulkan dari nilai-nilai yang dihasilkannya. (Forward: bit berikutnya tidak boleh ditebak dari bit sebelumnya.)"},
+{s:"K",q:"An IoT device seeds its PRNG with the boot-time clock value because it has no entropy source. Why do its session keys end up weak?",o:["The space of possible seeds is small, so keys can be searched exhaustively","The clock value is public, so the PRNG output no longer passes the tests","The generator becomes aperiodic, so repeated keys appear within a session","The clock value changes too quickly, so the generator never reaches a seed"],a:0,e:"Nilai jam saat boot mudah ditebak dan rentangnya sempit, sehingga ruang seed kecil. Penyerang dapat mencoba semua seed (brute-force) lalu menurunkan kunci sesi yang sama."},
+{s:"K",q:"How does a pseudorandom function differ from a pseudorandom number generator?",o:["A PRF needs no seed value at all, while a PRNG always requires one","A PRF is built from block ciphers, while a PRNG is purpose-built code","A PRF returns a fixed-length string; a PRNG returns an open-ended one","A PRF is deterministic, while a PRNG draws on a true entropy source"],a:2,e:"Menurut Stallings, PRF menghasilkan string bit pseudorandom dengan panjang tertentu, sedangkan PRNG menghasilkan aliran bit yang bisa diteruskan tanpa batas."},
+{s:"K",q:"Why must the seed of a cryptographic PRNG be kept secret and be unpredictable?",o:["The seed sets the period, so a predictable seed makes the period very short","The seed is XORed with each output block, so a known seed reveals the key","The algorithm is deterministic, so the seed fixes the whole output stream","The algorithm uses the seed as a counter, so a known seed halts the output"],a:2,e:"Karena algoritma deterministik, seed yang diketahui memungkinkan penyerang mereproduksi seluruh keystream."},
+{s:"K",q:"Which two criteria are used to validate that a sequence of numbers is random in a statistical sense?",o:["Secrecy of the seed value and independence of the subsequences","Uniform distribution of bits and independence of subsequences","Uniform distribution of bits and a short period of repetition","Secrecy of the seed value and a large modulus in the generator"],a:1,e:"Kriteria statistik keacakan adalah distribusi seragam dan independensi subsequence."},
+{s:"K",q:"What input does a pseudorandom number generator use to produce its output sequence?",o:["A public certificate value","A stream of true random bits","A block of plaintext data","A fixed value called the seed"],a:3,e:"PRNG adalah algoritma deterministik yang menghasilkan barisan keluaran dari satu nilai awal tetap yang disebut seed. Seed yang sama menghasilkan barisan yang sama."},
+{s:"P",q:"Who proposed key criteria for PRNG testing in 1988?",o:["Maurer and Katz duo","Shamir and Diffie group","Park and Miller authors","Stallings and Brown pair"],a:2,e:"Park dan Miller mengusulkan kriteria/pengujian kualitas PRNG pada tahun 1988, terkait analisis linear congruential generator."},
+{s:"P",q:"Which condition must PRNG output satisfy?",o:["Sequence must match input length","Sequence must always be periodic","Sequence must reuse older bits","Sequence must appear uniformly random"],a:3,e:"Output PRNG harus tampak acak secara statistik/uniform — lolos uji distribusi uniform dan independensi — meskipun dihasilkan secara deterministik dari seed."},
+{s:"P",q:"What is required for PRNG consistency?",o:["Identical output for all inputs always","Sequence shrinking across uses","Changing behaviour for each run","Similar behaviour across different seeds"],a:3,e:"Consistency berarti kualitas statistik generator harus tetap terjaga tanpa memandang seed yang digunakan — perilaku yang serupa (baik) di seluruh rentang seed."},
+{s:"P",q:"What does Maurer's test examine?",o:["Entropy changes during tests","Imbalance in zero one ratios","Growth in ciphertext segments","Repetition in random bit patterns"],a:3,e:"Maurer's Universal Statistical Test memeriksa jarak antar pengulangan pola bit untuk mendeteksi apakah suatu barisan dapat dikompresi secara bermakna."},
+{s:"P",q:"What does scalability mean in PRNG evaluation?",o:["Binary values must repeat frequently","Sequence length must decrease steadily","Output must follow fixed cycles","Subsequences must remain random-like"],a:3,e:"Scalability berarti pengujian keacakan berlaku untuk sekuens berbagai panjang, dan subsequence dari output generator harus tetap menunjukkan sifat statistik yang random-like."},
+{s:"K",q:"What makes the ANSI X9.17 generator strong, given that it uses three EDE operations per output?",o:["Two independent inputs drive it, and an extra EDE protects the next seed","Three separate hash functions condition the output of the DES modules","Two independent keys are used, and a new key is derived for each output","Three separate seeds are mixed, and the date value is kept fully secret"],a:0,e:"X9.17 digerakkan oleh dua masukan pseudorandom, yaitu nilai tanggal/waktu dan seed. Satu EDE tambahan dipakai untuk membentuk seed berikutnya, sehingga meskipun keluaran bocor, seed berikutnya sulit ditebak."},
+{s:"K",q:"On what problem does the security of the Blum Blum Shub generator rest?",o:["The difficulty of finding collisions in a cryptographic hash function","The difficulty of factoring the modulus n into its two prime factors","The difficulty of solving the discrete logarithm in a finite field GF(p)","The difficulty of inverting the AES encryption function without a key"],a:1,e:"BBS memakai n = p × q (p dan q prima besar). Keamanannya bertumpu pada sulitnya memfaktorkan n menjadi p dan q."},
+{s:"K",q:"In the block-cipher PRNGs of SP 800-90A and X9.82, how is the value V updated in CTR mode compared with OFB mode?",o:["CTR increments V by one; OFB replaces V with the preceding output block","CTR replaces V with the output block; OFB increments V by one each time","CTR increments V by one; OFB replaces V with the preceding input block","CTR replaces V with the key value; OFB replaces V with the entropy input"],a:0,e:"Pada mode CTR, V dinaikkan 1 setiap putaran. Pada mode OFB, V diganti dengan blok keluaran enkripsi sebelumnya."},
+{s:"K",q:"A web application issues session tokens from a linear congruential generator seeded at start-up. A tester collects several consecutive tokens. What is the realistic outcome?",o:["Tokens stay safe, as long as the seed is reseeded from the system clock","Tokens stay safe, because the modulus is close to the largest integer","Only tokens issued before the collected ones can be reconstructed by it","The parameters can be solved for, so every later token can be predicted"],a:3,e:"LCG bersifat linear, sehingga parameternya dapat dipulihkan dari beberapa keluaran berurutan dan token berikutnya dapat diprediksi."},
+{s:"K",q:"Why is a linear congruential generator unsuitable for cryptographic use?",o:["Its outputs are not uniformly spread over the range from 0 to m − 1","A few observed outputs let an opponent solve for the parameters used","Its outputs repeat after at most 32 values, whatever parameters are set","A few observed outputs reveal the modulus, but never the multiplier"],a:1,e:"LCG linear: Xₙ₊₁ = (aXₙ + c) mod m. Dengan beberapa keluaran berurutan, penyerang dapat menyelesaikan persamaan untuk memperoleh a, c, m, lalu memprediksi seluruh keluaran."},
+{s:"K",q:"How does the BBS generator obtain each output bit from its internal value Xᵢ?",o:["It takes the most significant bit of Xᵢ after squaring modulo n","It takes the least significant bit of Xᵢ after squaring modulo n","It takes the parity of all bits of Xᵢ after squaring modulo n","It takes the final bit of the seed s after squaring it modulo n"],a:1,e:"Blum Blum Shub: Xᵢ = Xᵢ₋₁² mod n, lalu output Bᵢ = Xᵢ mod 2, yaitu bit paling tidak signifikan (LSB) dari Xᵢ."}
+];
+/*END*/
+
+const BAB = ["","Introduction to Information Security","Classical Encryption","Finite Fields GF(2ⁿ)","Advanced Encryption Standard (AES)","Block Cipher Modes of Operation","Random Bit Generation & Stream Cipher (RC4)"];
+const RANGES = [null,[1,13],[14,40],[41,55],[56,87],[88,110],[111,150]];
+const SRC = {P:"Pretest/Posttest",E:"Latihan ETS",K:"Keduanya"};
+const L = ["a","b","c","d","e","f"];
+Q.forEach((x,i)=>{x.n=i+1; for(let b=1;b<=6;b++){if(x.n>=RANGES[b][0]&&x.n<=RANGES[b][1]){x.b=b;break;}}});
+
+/* ---- AES S-box (computed from GF(2^8), so it is exact) ---- */
+function sboxTable(){
+  const mul=(a,b)=>{let p=0;while(b){if(b&1)p^=a;a=(a<<1)^((a&0x80)?0x11B:0);a&=0xFF;b>>=1;}return p;};
+  const inv=a=>{if(!a)return 0;for(let x=1;x<256;x++)if(mul(a,x)===1)return x;};
+  const rotl=(x,s)=>((x<<s)|(x>>(8-s)))&0xFF;
+  const S=[];for(let i=0;i<256;i++){const b=inv(i);S[i]=b^rotl(b,1)^rotl(b,2)^rotl(b,3)^rotl(b,4)^0x63;}
+  const h=v=>v.toString(16).toUpperCase().padStart(2,"0");
+  let t='<div class="sbox-wrap"><table class="sbox"><tr><th></th>';
+  for(let c=0;c<16;c++)t+='<th>x'+c.toString(16).toUpperCase()+'</th>';
+  t+='</tr>';
+  for(let r=0;r<16;r++){t+='<tr><th>'+r.toString(16).toUpperCase()+'x</th>';for(let c=0;c<16;c++)t+='<td>'+h(S[r*16+c])+'</td>';t+='</tr>';}
+  return t+'</table></div>';
+}
+
+/* ---- state ---- */
+const KEY="kuis-keaminf-v1";
+let st=null; // {order:[idx], pos, res:{idx:{ok:bool, pick:int|null, skip?:bool}}}
+let pick=null, revealed=false;
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){return null;}}
+function clearSave(){try{localStorage.removeItem(KEY);}catch(e){}}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function show(v){["vStart","vQuiz","vEnd"].forEach(x=>$(x).classList.toggle("hidden",x!==v));$("btnMenu").classList.toggle("hidden",v==="vStart");window.scrollTo(0,0);}
+
+/* ---- start screen ---- */
+function buildStart(){
+  let h="";
+  for(let b=1;b<=6;b++){
+    h+=`<label class="chk"><input type="checkbox" name="bab" value="${b}" checked><span><b>Bab ${b}</b> · ${BAB[b]}</span><span class="cnt" data-b="${b}"></span></label>`;
+  }
+  $("babList").innerHTML=h;
+  document.querySelectorAll('#vStart input').forEach(i=>i.addEventListener("change",updCount));
+  updCount();
+  const s=load();
+  if(s&&s.order&&s.pos<s.order.length){
+    $("resumeCard").style.display="";
+    const done=Object.keys(s.res).length, ok=Object.values(s.res).filter(r=>r.ok).length;
+    $("resumeInfo").textContent=`Soal ${s.pos+1} dari ${s.order.length} · ${ok} benar dari ${done} dijawab`;
+  } else $("resumeCard").style.display="none";
+}
+function selected(){
+  const babs=[...document.querySelectorAll('input[name=bab]:checked')].map(i=>+i.value);
+  const src=document.querySelector('input[name=src]:checked').value;
+  const list=[];Q.forEach((x,i)=>{if(babs.includes(x.b)&&(src==="all"||x.s===src))list.push(i);});
+  return list;
+}
+function updCount(){
+  const src=document.querySelector('input[name=src]:checked').value;
+  document.querySelectorAll('.cnt').forEach(c=>{const b=+c.dataset.b;c.textContent=Q.filter(x=>x.b===b&&(src==="all"||x.s===src)).length+" soal";});
+  const n=selected().length;
+  $("selCount").textContent=n+" soal terpilih";
+  $("btnStart").disabled=n===0;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function startWith(order){st={order,pos:0,res:{}};save();show("vQuiz");render();}
+
+/* ---- quiz ---- */
+function render(){
+  const idx=st.order[st.pos], x=Q[idx];
+  pick=null; revealed=false;
+  const done=Object.keys(st.res).length, ok=Object.values(st.res).filter(r=>r.ok).length;
+  $("posLabel").textContent=`Soal ${st.pos+1} / ${st.order.length}`;
+  $("scoreLabel").innerHTML=`Benar <b>${ok}</b> / ${done}`;
+  $("bar").style.width=(st.pos/st.order.length*100)+"%";
+  $("qNum").textContent="No. "+x.n;
+  $("qTag").className="tag "+x.s; $("qTag").textContent=SRC[x.s];
+  $("qBab").textContent="Bab "+x.b+" · "+BAB[x.b];
+  $("qText").textContent=x.q;
+  $("qExtra").innerHTML=x.sbox?sboxTable():"";
+  $("fb").innerHTML="";
+  $("btnSkip").classList.remove("hidden");
+  const box=$("opts"); box.innerHTML="";
+  if(x.short){
+    box.innerHTML='<textarea id="shortIn" placeholder="Soal jawaban singkat — tulis jawabanmu dulu (opsional), lalu tekan “Lihat jawaban”."></textarea>';
+    $("btnAct").textContent="Lihat jawaban"; $("btnAct").disabled=false;
+    $("hint").textContent="Soal isian: bandingkan jawabanmu, lalu nilai sendiri.";
+  } else {
+    x.o.forEach((t,i)=>{
+      const b=document.createElement("button");b.type="button";b.className="opt";
+      b.innerHTML=`<span class="l">${L[i].toUpperCase()}</span><span>${esc(t)}</span>`;
+      b.onclick=()=>choose(i);box.appendChild(b);
+    });
+    $("btnAct").textContent="Submit"; $("btnAct").disabled=true;
+    $("hint").textContent="Tombol: A–D / 1–4 untuk memilih, Enter untuk submit & next";
+  }
+}
+function choose(i){
+  if(revealed)return; pick=i;
+  [...$("opts").children].forEach((b,j)=>b.classList.toggle("sel",j===i));
+  $("btnAct").disabled=false;
+}
+function warnHtml(x){return x.w?`<div class="warn"><b>⚠ Catatan:</b> ${x.w}</div>`:"";}
+function submit(){
+  const idx=st.order[st.pos], x=Q[idx];
+  revealed=true; $("btnSkip").classList.add("hidden");
+  if(x.short){
+    $("shortIn").disabled=true;
+    $("fb").innerHTML=`<div class="fb neutral"><div class="ans">Jawaban: ${esc(x.short)}</div><p>${x.e}</p>${warnHtml(x)}
+      <div class="row" style="margin-top:12px"><span class="small muted">Jawabanmu benar?</span>
+      <button type="button" id="selfOk">✓ Benar</button><button type="button" id="selfNo">✗ Salah</button></div></div>`;
+    $("btnAct").disabled=true; $("btnAct").textContent="Next →";
+    const rec=ok=>{st.res[idx]={ok,pick:null};save();$("selfOk").disabled=$("selfNo").disabled=true;$("btnAct").disabled=false;$("btnAct").focus();
+      const done=Object.keys(st.res).length, c=Object.values(st.res).filter(r=>r.ok).length;$("scoreLabel").innerHTML=`Benar <b>${c}</b> / ${done}`;};
+    $("selfOk").onclick=()=>rec(true); $("selfNo").onclick=()=>rec(false);
+    return;
+  }
+  const ok=pick===x.a;
+  st.res[idx]={ok,pick}; save();
+  [...$("opts").children].forEach((b,j)=>{b.disabled=true;b.classList.remove("sel");if(j===x.a)b.classList.add("correct");else if(j===pick)b.classList.add("wrong");});
+  $("fb").innerHTML=`<div class="fb ${ok?"good":"bad"}"><div class="verdict">${ok?"✓ Benar!":"✗ Salah"}</div>
+    ${ok?"":`<div class="small" style="margin-bottom:4px">Jawabanmu: ${L[pick]}. ${esc(x.o[pick])}</div>`}
+    <div class="ans">Jawaban: ${L[x.a]}. ${esc(x.o[x.a])}</div><p>${x.e}</p>${warnHtml(x)}</div>`;
+  const done=Object.keys(st.res).length, c=Object.values(st.res).filter(r=>r.ok).length;
+  $("scoreLabel").innerHTML=`Benar <b>${c}</b> / ${done}`;
+  $("btnAct").textContent=st.pos+1<st.order.length?"Next →":"Lihat hasil";
+  $("btnAct").focus();
+  $("fb").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function next(){st.pos++;save();if(st.pos>=st.order.length)finish();else{render();window.scrollTo({top:0,behavior:"smooth"});}}
+function skip(){const idx=st.order[st.pos];st.res[idx]={ok:false,pick:null,skip:true};next();}
+$("btnAct").onclick=()=>{if(!revealed)submit();else next();};
+$("btnSkip").onclick=skip;
+document.addEventListener("keydown",e=>{
+  if($("vQuiz").classList.contains("hidden"))return;
+  if(e.target.tagName==="TEXTAREA"&&e.key!=="Enter")return;
+  if(e.target.tagName==="TEXTAREA"&&e.key==="Enter"&&!e.ctrlKey&&!e.metaKey)return;
+  const x=Q[st.order[st.pos]];
+  const k=e.key.toLowerCase();
+  if(!revealed&&!x.short){
+    let i=-1;if("1234".includes(k)&&k)i=+k-1;else if("abcd".includes(k)&&k.length===1)i=L.indexOf(k);
+    if(i>=0&&i<x.o.length){e.preventDefault();choose(i);return;}
+  }
+  if(e.key==="Enter"&&!$("btnAct").disabled&&e.target.tagName!=="BUTTON"){e.preventDefault();$("btnAct").click();}
+});
+
+/* ---- end ---- */
+function finish(){
+  show("vEnd");
+  const ids=st.order, n=ids.length, ok=ids.filter(i=>st.res[i]&&st.res[i].ok).length;
+  const pct=n?Math.round(ok/n*100):0;
+  $("endPct").textContent=pct+"%";
+  $("endScore").textContent=`${ok} benar dari ${n} soal`;
+  $("endNote").textContent=pct>=80?"Mantap, siap ETS!":pct>=60?"Lumayan — ulangi yang salah.":"Masih perlu latihan, ulangi yang salah.";
+  let t='<tr><th>Bab</th><th class="r">Benar</th><th class="r">%</th></tr>';
+  for(let b=1;b<=6;b++){const s=ids.filter(i=>Q[i].b===b);if(!s.length)continue;const c=s.filter(i=>st.res[i]&&st.res[i].ok).length;
+    t+=`<tr><td>${b}. ${BAB[b]}</td><td class="r">${c}/${s.length}</td><td class="r">${Math.round(c/s.length*100)}%</td></tr>`;}
+  $("endTable").innerHTML=t;
+  const wrong=ids.filter(i=>!(st.res[i]&&st.res[i].ok));
+  $("btnRetry").disabled=!wrong.length;
+  $("wrongCard").style.display=wrong.length?"":"none";
+  $("wrongList").innerHTML=wrong.map(i=>{const x=Q[i],r=st.res[i]||{};
+    const yours=r.skip?"(dilewati)":x.short?"(isian, dinilai salah)":r.pick!=null?`${L[r.pick]}. ${esc(x.o[r.pick])}`:"—";
+    const right=x.short?esc(x.short):`${L[x.a]}. ${esc(x.o[x.a])}`;
+    return `<div class="wrong-item"><b>No. ${x.n}</b> — ${esc(x.q)}<div class="y">Jawabanmu: ${yours}</div><div class="c">Benar: ${right}</div></div>`;}).join("");
+  st.wrong=wrong; save();
+}
+$("btnRetry").onclick=()=>{const w=st.wrong||[];if(w.length)startWith(shuffle([...w]));};
+$("btnBack").onclick=()=>{clearSave();buildStart();show("vStart");};
+$("btnMenu").onclick=()=>{buildStart();show("vStart");};
+
+/* ---- wire start ---- */
+$("allBab").onclick=()=>{document.querySelectorAll('input[name=bab]').forEach(i=>i.checked=true);updCount();};
+$("noBab").onclick=()=>{document.querySelectorAll('input[name=bab]').forEach(i=>i.checked=false);updCount();};
+$("btnStart").onclick=()=>{let o=selected();if(document.querySelector('input[name=ord]:checked').value==="rnd")o=shuffle(o);startWith(o);};
+$("btnResume").onclick=()=>{st=load();if(!st)return;show("vQuiz");render();};
+buildStart();
+</script>
+</body>
+</html>
