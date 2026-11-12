@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/**
+ * Schematics 2026 brand foundation.
+ *
+ * Ground, faces and accents are taken from the official portal
+ * (schematics-its.com) and `docs/Design Guidelines - Schematics 2026`:
+ * a deep-space navy ground, Fredoka for display, Poppins for text, and the
+ * sky accent #53D2F8 on the one primary control and on data.
+ */
+@theme {
+  --font-display: 'Fredoka', ui-rounded, 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --color-ground: #07081f;
+  --color-panel: #101333;
+  --color-well: #0b0d28;
+  --color-field: #090b24;
+  --color-edge: #23264f;
+  --color-edge-soft: #1a1d42;
+
+  --color-ink: #ffffff;
+  --color-ink-2: #c7cbe8;
+  --color-ink-3: #9aa0c8;
+
+  --color-sky: #53d2f8;
+  --color-sky-soft: #c6edfe;
+  --color-amber: #f8b400;
+
+  /*
+   * The portal sets its forms and document lists on a white sheet over the
+   * space ground, with this one ink on it. Both are read from the Schematics
+   * 2026 Figma (System/Typo/Secondary Main).
+   */
+  --color-sheet: #ffffff;
+  --color-night: #000219;
+}
+
+@layer base {
+  body {
+    @apply bg-ground text-ink-2 antialiased selection:bg-sky selection:text-black;
+    font-family: var(--font-sans);
+  }
+
+  /* Display face for every heading, as the guidelines set out. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+}
