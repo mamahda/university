@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "alpine_iso_url": "iso/alpine-standard-3.24.2-x86_64.iso",
+    "alpine_iso_checksum": "sha256:20c026e3a788bfb75fc8b50a54bcc12aee85e3c75909740bba6a6f4563d63296",
+    "output_directory": "output-alpine",
+    "vm_name": "alpine-base.qcow2",
+    "disk_size": "4096M",
+    "memory": "1024",
+    "cpus": "2",
+    "ssh_username": "root",
+    "ssh_password": "packer",
+    "ssh_timeout": "20m",
+    "headless": "true",
+    "accelerator": "kvm"
+  },
+  "builders": [
+    {
+      "type": "qemu",
+      "name": "alpine-qemu",
+      "iso_url": "{{user `alpine_iso_url`}}",
+      "iso_checksum": "{{user `alpine_iso_checksum`}}",
+      "output_directory": "{{user `output_directory`}}",
+      "vm_name": "{{user `vm_name`}}",
+      "format": "qcow2",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_interface": "virtio",
+      "net_device": "virtio-net",
+      "accelerator": "{{user `accelerator`}}",
+      "memory": "{{user `memory`}}",
+      "cpus": "{{user `cpus`}}",
+      "headless": "{{user `headless`}}",
+      "http_directory": "http",
+      "communicator": "ssh",
+      "vnc_bind_address": "0.0.0.0",
+      "vnc_port_min": 5919,
+      "vnc_port_max": 5919,
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_timeout": "{{user `ssh_timeout`}}",
+      "ssh_port": 22,
+      "boot_wait": "20s",
+      "boot_command": [
+        "root<enter><wait2>",
+        "ifconfig lo up<enter>",
+        "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>",
+        "wget -O /tmp/install-alpine-packer.sh http://{{ .HTTPIP }}:{{ .HTTPPort }}/install-alpine-packer.sh<enter><wait3>",
+        "chmod +x /tmp/install-alpine-packer.sh<enter>",
+        "PACKER_PASSWORD='{{user `ssh_password`}}' HOSTNAME='alpine-base' TARGET_DISK='/dev/vda' NETWORK_IFACE='eth0' /tmp/install-alpine-packer.sh<enter>"
+      ],
+      "shutdown_command": "poweroff"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "echo 'Packer connected to installed Alpine image'",
+        "cat /etc/alpine-release",
+        "apk info -e bash ca-certificates curl sudo util-linux e2fsprogs iproute2 openssh",
+        "rc-status",
+        "sync"
+      ]
+    }
+  ]
+}

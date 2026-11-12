@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: APP_NAME
+  namespace: cloud-dynamics
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: APP_NAME.HOST_IP.sslip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: APP_NAME
+            port:
+              number: 8080

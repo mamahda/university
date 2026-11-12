@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  webserver:
+    image: nginx:1.15.12-alpine
+    restart: unless-stopped
+    ports:
+      - "9999:80"
+    volumes:
+      - ./html:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

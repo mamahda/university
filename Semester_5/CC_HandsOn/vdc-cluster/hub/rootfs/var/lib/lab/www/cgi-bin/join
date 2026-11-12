@@ -1,0 +1,3 @@
+#!/bin/sh
+# POST token= mac= name= hostkey=   ->  OK + NODE_NAME/NODE_IP/NODE_SECRET/HUB_PUBKEY
+exec /usr/local/lib/lab/cgi.sh join

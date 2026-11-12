@@ -1,0 +1,23 @@
+# --- secrets and per-PC runtime state (never commit) ---
+# state/ holds id_lab (SSH private key), token (join token), vms/ (VM disks, pids, sockets)
+state/
+host.conf
+vdc-host-bundle*.tar
+*.tar
+
+# --- build output ---
+images/
+image/http/
+image/out-*/
+image/packer_cache/
+packer_cache/
+*.qcow2
+*.iso
+
+# --- logs ---
+logs/
+
+# --- editor / OS noise ---
+*~
+*.swp
+.DS_Store

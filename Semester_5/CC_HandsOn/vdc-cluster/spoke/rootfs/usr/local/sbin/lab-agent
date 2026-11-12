@@ -1,0 +1,263 @@
+#!/bin/sh
+# lab-agent - spoke side of vdc-cluster (like a tiny kubelet / nova-compute)
+#
+#   lab-agent join [HUB [TOKEN [NAME]]]   join (or re-join) the hub
+#   lab-agent sync                        fetch desired tenants from the hub, reconcile now
+#   lab-agent status                      identity, tenants, tunnels, guests
+#   lab-agent leave                       leave the cluster, stop auto-joining
+#   lab-agent boot | loop                 used by the OpenRC service
+#
+# Join parameters, first match wins: command line, /etc/lab/join.conf
+# (HUB= TOKEN= NAME=), SMBIOS OEM strings lab.hub= lab.token= lab.name=,
+# and HUB_IP from cluster.env for the hub. Only the join needs the token; the
+# hub hands back a per-node secret that the agent uses for every later call.
+#
+# Progress goes to /var/log/lab/agent.log and, as "LAB: ..." lines, to the serial
+# console, which the lab PC follows (cluster.sh spoke add / start).
+set -eu
+. /usr/local/lib/lab/lib.sh
+IF=${SPOKE_UNDERLAY_IF:-eth0}
+NODE_ENV=/etc/lab/node.env          # NODE_NAME NODE_IP NODE_SECRET HUB
+JOIN_CONF=/etc/lab/join.conf
+CACHE=/etc/lab/tenants              # last desired state: NAME VNI
+NOJOIN=/etc/lab/no-autojoin
+LOCK=/run/lab-agent.lock
+LAST=/run/lab-agent.last            # last noted message (dedupe)
+ONCE=/run/lab-agent.once            # .<key>: once-per-boot progress messages
+READY=/run/lab-agent.ready          # first successful sync since boot
+RETRY=2                             # seconds between attempts until ready
+
+node_get() { if [ -r "$NODE_ENV" ]; then kv "$1" <"$NODE_ENV"; fi; }
+
+# log + console, only when the message changes (attempts repeat every few seconds)
+note() {
+  if [ "$(cat "$LAST" 2>/dev/null)" != "$*" ]; then log "$*"; con "$*"; echo "$*" >"$LAST"; fi
+}
+# log + console, once per boot
+once() {
+  k=$1; shift
+  [ -e "$ONCE.$k" ] && return 0
+  : >"$ONCE.$k"; log "$*"; con "$*"
+}
+
+underlay_ip() { ip -4 -o addr show dev "$IF" 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n 1; }
+
+set_hostname() {
+  [ "$(hostname)" = "$1" ] && return 0
+  step "hostname = node name"
+  echo "$1" >/etc/hostname
+  hostname "$1"
+  if grep -q '^127\.0\.1\.1' /etc/hosts; then
+    sed -i "s/^127\.0\.1\.1.*/127.0.1.1 $1/" /etc/hosts
+  else
+    echo "127.0.1.1 $1" >>/etc/hosts
+  fi
+}
+
+do_join() {   # [HUB [TOKEN [NAME]]]
+  hub=${1:-} tok=${2:-} req=${3:-}
+  if [ -r "$JOIN_CONF" ]; then
+    [ -n "$hub" ] || hub=$(kv HUB <"$JOIN_CONF")
+    [ -n "$tok" ] || tok=$(kv TOKEN <"$JOIN_CONF")
+    [ -n "$req" ] || req=$(kv NAME <"$JOIN_CONF")
+  fi
+  [ -n "$hub" ] || hub=$(smbios_get lab.hub)
+  [ -n "$tok" ] || tok=$(smbios_get lab.token)
+  [ -n "$req" ] || req=$(smbios_get lab.name)
+  [ -n "$hub" ] || hub=$HUB_IP
+  if [ -z "$tok" ]; then
+    note "join failed: no token (SMBIOS lab.token, $JOIN_CONF, or: lab-agent join HUB TOKEN)"
+    return 1
+  fi
+  addr=$(underlay_ip)
+  if [ -z "$addr" ]; then
+    if grep -q "inet dhcp" /etc/network/interfaces 2>/dev/null; then
+      note "waiting for a DHCP lease on $IF"
+    else
+      note "waiting for an underlay address on $IF (none configured: SMBIOS lab.ip or IP= in $JOIN_CONF)"
+    fi
+    return 1
+  fi
+  once underlay "underlay $addr on $IF"
+  step "SSH host key (sent to the hub at join)"
+  [ -f /etc/ssh/ssh_host_ed25519_key.pub ] ||
+    ssh-keygen -q -t ed25519 -N '' -f /etc/ssh/ssh_host_ed25519_key
+  mac=$(cat "/sys/class/net/$IF/address")
+  body=$(printf 'token=%s\nmac=%s\nname=%s\nhostkey=%s\n' \
+    "$tok" "$mac" "$req" "$(cat /etc/ssh/ssh_host_ed25519_key.pub)")
+  once joining "joining hub $hub"
+  step "join request to the hub"
+  if ! resp=$(wget -q -T 10 -O - --post-data "$body" "http://$hub:$API_PORT/cgi-bin/join" 2>"$WGET_ERR"); then
+    note "join failed: $(wget_why) - retrying every ${RETRY}s"
+    return 1
+  fi
+  first=$(printf '%s\n' "$resp" | head -n 1)
+  if [ "$first" != OK ]; then note "join refused by $hub: $first"; return 1; fi
+  name=$(printf '%s\n' "$resp" | kv NODE_NAME)
+  ip=$(printf '%s\n' "$resp" | kv NODE_IP)
+  secret=$(printf '%s\n' "$resp" | kv NODE_SECRET)
+  hubkey=$(printf '%s\n' "$resp" | kv HUB_PUBKEY)
+  if ! is_name "$name" || [ -z "$secret" ]; then note "join failed: bad reply from $hub"; return 1; fi
+
+  (umask 077; printf 'NODE_NAME=%s\nNODE_IP=%s\nNODE_SECRET=%s\nHUB=%s\n' \
+    "$name" "$ip" "$secret" "$hub" >"$NODE_ENV")
+  # let the hub in (it runs lab-guest / lab-agent sync here over SSH)
+  mkdir -p /root/.ssh && chmod 700 /root/.ssh
+  touch /root/.ssh/authorized_keys
+  grep -v ' lab-hub$' /root/.ssh/authorized_keys >/root/.ssh/ak.tmp || true
+  echo "$hubkey" >>/root/.ssh/ak.tmp
+  mv /root/.ssh/ak.tmp /root/.ssh/authorized_keys
+  chmod 600 /root/.ssh/authorized_keys
+  rm -f "$NOJOIN"
+  set_hostname "$name"
+  note "joined as $name ($ip)"
+}
+
+apply_links() {   # HUB   - bridges + tunnels for every cached tenant
+  while read -r t v; do
+    if [ -n "$t" ]; then
+      ensure_bridge "br-t$v"
+      ensure_geneve "gnv$v" "$v" "$1" "br-t$v"
+    fi
+  done <"$CACHE"
+}
+
+prune_links() {   # remove tunnels/bridges of tenants that are gone
+  for d in /sys/class/net/gnv*; do
+    [ -e "$d" ] || continue
+    dev=${d##*/}
+    v=${dev#gnv}
+    if ! awk -v v="$v" '$2==v {f=1} END {exit !f}' "$CACHE"; then
+      step "tenant VNI $v is gone: remove its tunnel and bridge"
+      ip link del "$dev" 2>/dev/null || true
+      ip link del "br-t$v" 2>/dev/null || true
+      log "tenant VNI $v removed"
+    fi
+  done
+}
+
+sync_once() {
+  if [ ! -s "$NODE_ENV" ]; then
+    if [ -e "$NOJOIN" ]; then note "not joined (left the cluster; run lab-agent join)"; return 1; fi
+    do_join || return 1
+  fi
+  name=$(node_get NODE_NAME) secret=$(node_get NODE_SECRET) hub=$(node_get HUB)
+  # capacity for the hub's scheduler
+  mem=$(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo) cpus=$(grep -c '^processor' /proc/cpuinfo)
+  if ! resp=$(wget -q -T 10 -O - --post-data "$(printf 'name=%s\nsecret=%s\nmem=%s\ncpus=%s\n' "$name" "$secret" "$mem" "$cpus")" \
+      "http://$hub:$API_PORT/cgi-bin/state" 2>"$WGET_ERR"); then
+    note "sync failed: $(wget_why) (keeping current tunnels)"
+    return 1
+  fi
+  first=$(printf '%s\n' "$resp" | head -n 1)
+  case $first in
+    OK) ;;
+    "ERROR unknown-node"*)
+      note "hub no longer knows $name, re-joining as $name"
+      rm -f "$NODE_ENV"
+      do_join "" "" "$name" || return 1
+      sync_once
+      return ;;
+    *) note "sync refused: $first"; return 1 ;;
+  esac
+  touch "$CACHE"
+  printf '%s\n' "$resp" | awk '$1=="TENANT" {print $2, $3}' >"$CACHE.new"
+  if ! cmp -s "$CACHE" "$CACHE.new"; then
+    log "tenants: $(awk '{printf "%s(%s) ", $1, $2}' "$CACHE.new")"
+  fi
+  mv "$CACHE.new" "$CACHE"
+  apply_links "$hub"             # 1. new bridges/tunnels
+  sync_tenant_nets "$CACHE"      # 2. libvirt networks on top of them
+  prune_links                    # 3. only then drop what is gone
+  if [ ! -e "$READY" ]; then
+    : >"$READY"
+    msg="ready as $name ($(node_get NODE_IP)), $(wc -l <"$CACHE" | tr -d ' ') tenant(s)"
+    log "$msg"; con "$msg"; echo "$msg" >"$LAST"
+  fi
+}
+
+cmd_boot() {
+  rm -f "$ONCE".* "$READY" "$LAST"
+  [ ! -x "$LAB_TRACE" ] || "$LAB_TRACE" --install "$TRACE_BIN" >/dev/null 2>&1 || true
+  step "Geneve kernel module"
+  modprobe geneve 2>/dev/null || true
+  touch "$CACHE"
+  if [ -s "$NODE_ENV" ]; then
+    set_hostname "$(node_get NODE_NAME)"
+    apply_links "$(node_get HUB)"
+  else
+    set_hostname "spoke-$(cut -d: -f4-6 "/sys/class/net/$IF/address" | tr -d :)"
+  fi
+}
+
+cmd_loop() {
+  log "lab-agent running (poll ${POLL}s, retry ${RETRY}s until ready)"
+  once started "agent started ($(hostname))"
+  while :; do
+    ( flock -w 60 9 || exit 1; sync_once ) 9>"$LOCK" || true
+    if [ -e "$READY" ] || [ -e "$NOJOIN" ]; then sleep "$POLL"; else sleep "$RETRY"; fi
+  done
+}
+
+# busybox wget's own reason, e.g. "can't connect to remote host (10.20.0.2): Connection refused"
+# or "server returned error: HTTP/1.1 500 Internal Server Error"
+WGET_ERR=/run/lab-agent.wget.err
+wget_why() {
+  w=$(sed -n 's/^wget: //p' "$WGET_ERR" 2>/dev/null | tail -n 1)
+  echo "hub $hub:$API_PORT: ${w:-no answer}"
+}
+
+cmd_sync() { exec 9>"$LOCK"; flock -w 60 9 || die "agent busy"; sync_once; }
+
+cmd_join() {
+  exec 9>"$LOCK"; flock -w 60 9 || die "agent busy"
+  rm -f "$NODE_ENV" "$NOJOIN" "$LAST" "$READY" "$ONCE.joining"
+  do_join "$@" || die "$(cat "$LAST" 2>/dev/null)"
+  sync_once || true
+  cmd_status
+}
+
+cmd_leave() {
+  exec 9>"$LOCK"; flock -w 60 9 || die "agent busy"
+  [ -s "$NODE_ENV" ] || die "not joined"
+  name=$(node_get NODE_NAME) secret=$(node_get NODE_SECRET) hub=$(node_get HUB)
+  resp=$(wget -q -T 10 -O - --post-data "$(printf 'name=%s\nsecret=%s\n' "$name" "$secret")" \
+    "http://$hub:$API_PORT/cgi-bin/leave" 2>/dev/null) || die "hub $hub unreachable"
+  first=$(printf '%s\n' "$resp" | head -n 1)
+  [ "$first" = OK ] || die "hub says: $first"
+  : >"$CACHE"
+  sync_tenant_nets "$CACHE"
+  prune_links
+  rm -f "$NODE_ENV" "$READY"
+  touch "$NOJOIN"
+  note "left the cluster as $name"
+  echo "$name left the cluster (auto-join off until: lab-agent join)"
+}
+
+cmd_status() {
+  if [ -s "$NODE_ENV" ]; then
+    echo "node   $(node_get NODE_NAME)  ip $(node_get NODE_IP)  hub $(node_get HUB)"
+  else
+    echo "node   not joined ($(hostname))"
+  fi
+  echo "last   $(cat "$LAST" 2>/dev/null || echo -)"
+  echo "tenants:"
+  touch "$CACHE"
+  while read -r t v; do
+    if [ -n "$t" ]; then
+      printf '  %-16s VNI %-6s br-t%s + gnv%s  libvirt: tenant-%s\n' "$t" "$v" "$v" "$v" "$t"
+    fi
+  done <"$CACHE"
+  echo "guests:"
+  if libvirt_ready; then lab-guest list | sed 's/^/  /'; else echo "  (libvirtd not running)"; fi
+}
+
+case ${1:-} in
+  boot) cmd_boot ;;
+  loop) cmd_loop ;;
+  sync) cmd_sync ;;
+  join) shift; cmd_join "$@" ;;
+  leave) cmd_leave ;;
+  status) cmd_status ;;
+  *) sed -n '2,15s/^# \{0,1\}//p' "$0"; exit 1 ;;
+esac

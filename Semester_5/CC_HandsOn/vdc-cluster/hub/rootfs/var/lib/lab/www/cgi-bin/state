@@ -1,0 +1,3 @@
+#!/bin/sh
+# POST name= secret=   ->  OK + "TENANT <name> <vni>" lines
+exec /usr/local/lib/lab/cgi.sh state

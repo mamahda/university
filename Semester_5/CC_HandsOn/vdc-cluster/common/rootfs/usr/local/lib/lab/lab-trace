@@ -1,0 +1,206 @@
+#!/bin/sh
+# lab-trace - command journal of the vdc lab: which tool was run, by whom, why, with what result.
+#
+# Installed as symlinks named after provisioning tools (ip, virsh, qemu-img, mkfs.ext4,
+# setup-disk, ...) in a directory that the lab scripts put first in PATH. Each call is
+# logged, then the real tool runs with the same arguments, stdin/stdout and exit code.
+# Tools called by those tools are caught too (setup-disk -> sfdisk, mkfs.ext4, mount).
+#
+#   lab-trace --install DIR      (re)create the symlinks for the tools present on this system
+#   lab-trace --file PATH [NOTE] log the content of a config file a lab script just wrote
+#   lab-trace --tools            list the traced tools
+#
+# Log records (DIR/<tool>.log per tool, DIR/all.log all in order):
+#   2026-10-28 08:31:02 hv201 [lab-agent] $ ip link add gnv100 type geneve id 100 remote 10.20.0.2  # tunnel to hub
+#   2026-10-28 08:31:02 hv201 [lab-agent] = rc=0 0.01s ip
+# Nested calls are indented; config files given to virsh/nft are logged with their content.
+#
+# Environment (cluster.env on the VMs, cluster.conf on the lab PC):
+#   TRACE=changes|all|off  changes (default) skips calls that only read state (ip ... show, virsh list ...)
+#   TRACE_OUTPUT=yes       also log each command's output (stdout+stderr merged; off by default)
+#   LAB_TRACE_DIR          log directory (default /var/log/lab/commands)
+#   LAB_TRACE_CTX          caller, e.g. "lab-agent", "cluster.sh spoke add 2"
+#   LAB_STEP               why, e.g. "tunnel to hub, tenant VNI 100"
+#   LAB_TRACE_HOST         host label (default: hostname)
+#   LAB_TRACE_CONSOLE      copy every record there too, as "CMD <tool> <record>" (image build: /dev/ttyS0)
+
+TOOLS="qemu-system-x86_64 qemu-img virsh packer
+ip bridge nft iptables ip6tables ping sysctl hostname wget udhcpc socat
+mkfs.ext4 mkfs.ext3 mkfs.ext2 mkfs.vfat mkfs.fat mkfs.xfs mkfs.btrfs mkswap sfdisk fdisk parted wipefs
+mount umount losetup pvcreate vgcreate lvcreate lvremove vgremove tgtadm iscsiadm
+setup-disk extlinux syslinux update-extlinux xorriso
+apk rc-update rc-service modprobe ssh-keygen chpasswd adduser chroot setup-keymap"
+EXEC_TOOLS=" packer "     # long-running, killed by PID: replaced by the real tool (no rc line)
+
+log_name() {   # one file per tool; families share a file
+  case $1 in
+    qemu-system-*) echo qemu ;;
+    mkfs.*|mkswap) echo mkfs ;;
+    ip6tables) echo iptables ;;
+    pvcreate|vgcreate|lvcreate|lvremove|vgremove) echo lvm ;;
+    *) echo "$1" ;;
+  esac
+}
+
+# 0 = this call only reads state (skipped unless TRACE=all)
+is_query() {
+  t=$1; shift
+  case $t in
+    ip|bridge)
+      n=0
+      for a; do
+        case $a in show|list|lst|ls|get|monitor) return 0 ;; -*) ;; *) n=$((n + 1)) ;; esac
+      done
+      [ "$n" -le 1 ] ;;                         # "ip link", "ip addr" = show
+    nft)
+      for a; do case $a in list|monitor|describe|-c|--check) return 0 ;; esac; done; return 1 ;;
+    iptables|ip6tables)
+      for a; do case $a in -L|-S|--list|--list-rules|-C|--check) return 0 ;; esac; done; return 1 ;;
+    virsh)
+      for a; do
+        case $a in
+          -*) ;;
+          list|net-list|net-info|net-dumpxml|dumpxml|dominfo|domstate|domiflist|domifaddr|desc|\
+          version|capabilities|nodeinfo|console|pool-list|vol-list|net-dhcp-leases) return 0 ;;
+          *) return 1 ;;
+        esac
+      done; return 0 ;;
+    qemu-img)
+      for a; do case $a in -*) ;; info|check|map|measure|compare) return 0 ;; *) return 1 ;; esac; done; return 0 ;;
+    apk)
+      for a; do case $a in -*) ;; info|search|list|policy|dot|stats|version|audit) return 0 ;; *) return 1 ;; esac; done; return 0 ;;
+    rc-service)
+      for a; do case $a in status) return 0 ;; esac; done; return 1 ;;
+    mount) [ $# -eq 0 ] ;;
+    hostname)
+      for a; do case $a in -*) ;; *) return 1 ;; esac; done; return 0 ;;
+    sysctl)
+      for a; do case $a in *=*|-p|-w|--system|--load*) return 1 ;; esac; done; return 0 ;;
+    wget)
+      for a; do case $a in */cgi-bin/state) return 0 ;; esac; done; return 1 ;;   # agent poll
+    *) return 1 ;;
+  esac
+}
+
+# shell-quoted, single-line rendering of one argument
+q() {
+  case $1 in
+    '') printf "''" ;;
+    *[!A-Za-z0-9_./:=,@%+^-]*)
+      printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g" | awk '{printf "%s%s", (NR > 1 ? "\\n" : ""), $0}')" ;;
+    *) printf '%s' "$1" ;;
+  esac
+}
+
+stamp() { date '+%F %T'; }
+cs() { u=$(cut -d' ' -f1 /proc/uptime 2>/dev/null); u=${u:-0.00}; echo $(( ${u%.*} * 100 + 1${u#*.} - 100 )); }
+
+setup_log() {   # TOOL
+  dir=${LAB_TRACE_DIR:-/var/log/lab/commands}
+  mkdir -p "$dir" 2>/dev/null
+  f=$(log_name "$1")
+  host=${LAB_TRACE_HOST:-$(cat /proc/sys/kernel/hostname 2>/dev/null)}
+  depth=${LAB_TRACE_DEPTH:-0}
+  ind=""; i=0; while [ "$i" -lt "$depth" ]; do ind="$ind  "; i=$((i + 1)); done
+  pre="$host [${LAB_TRACE_CTX:--}] $ind"
+}
+
+emit() {   # LINE   -> tool log, all.log, console copy
+  {
+    printf '%s %s\n' "$(stamp)" "$1" >>"$dir/$f.log"
+    printf '%s %s\n' "$(stamp)" "$1" >>"$dir/all.log"
+    if [ -n "${LAB_TRACE_CONSOLE:-}" ]; then printf 'CMD %s %s %s\r\n' "$f" "$(stamp)" "$1" >"$LAB_TRACE_CONSOLE"; fi
+  } 2>/dev/null
+}
+
+emit_file() {   # PATH   -> content lines under the current record
+  [ -f "$1" ] && [ -r "$1" ] || return 0
+  [ "$(wc -c <"$1")" -le 65536 ] || { emit "$pre    | (${1}: larger than 64 KiB, not logged)"; return 0; }
+  mask <"$1" | while IFS= read -r l || [ -n "$l" ]; do emit "$pre    | $l"; done
+}
+
+# another lab-trace link (second shim dir, other spelling of ours): never the real tool
+is_shim() { [ -L "$1" ] && case $(readlink "$1") in */lab-trace|lab-trace) true ;; *) false ;; esac; }
+
+mask() {   # join token, node secret, guest/login passwords
+  sed -E -e 's/((lab\.)?token|secret)=[^ '"'"'\\]*/\1=***/g' \
+    -e 's/^([[:space:]]*password:[[:space:]]*).*/\1***/' -e 's/(echo "[a-z_]+:)[^"]*(")/\1***\2/'
+}
+
+# ---------------------------------------------------------------- lab-trace itself
+if [ "${0##*/}" = lab-trace ]; then
+  case ${1:-} in
+    --install)
+      d=${2:?usage: lab-trace --install DIR}
+      self=$(cd "$(dirname "$0")" && pwd)/lab-trace
+      mkdir -p "$d"
+      d=$(cd "$d" && pwd)
+      find "$d" -maxdepth 1 -type l -exec rm -f {} + 2>/dev/null
+      n=0
+      for t in $TOOLS; do
+        old_ifs=$IFS; IFS=:
+        for p in $PATH; do
+          IFS=$old_ifs
+          [ "$p" = "$d" ] && continue
+          is_shim "$p/$t" && continue
+          if [ -x "$p/$t" ] && [ ! -d "$p/$t" ]; then ln -s "$self" "$d/$t"; n=$((n + 1)); break; fi
+        done
+        IFS=$old_ifs
+      done
+      echo "lab-trace: $n tools traced via $d" ;;
+    --file)
+      p=${2:?usage: lab-trace --file PATH [NOTE]}
+      [ "${TRACE:-changes}" = off ] && exit 0
+      setup_log files
+      emit "$pre> wrote $p${3:+  # $3}"
+      emit_file "$p" ;;
+    --tools) echo "$TOOLS" ;;
+    *) sed -n '2,26s/^# \{0,1\}//p' "$0"; exit 1 ;;
+  esac
+  exit 0
+fi
+
+# ---------------------------------------------------------------- wrapper for one tool
+tool=${0##*/}
+self_dir=${0%/*}
+real=""
+old_ifs=$IFS; IFS=:
+for p in $PATH; do
+  [ "$p" = "$self_dir" ] && continue
+  is_shim "$p/$tool" && continue
+  if [ -x "$p/$tool" ] && [ ! -d "$p/$tool" ]; then real=$p/$tool; break; fi
+done
+IFS=$old_ifs
+if [ -z "$real" ]; then echo "$tool: not found (lab-trace)" >&2; exit 127; fi
+
+mode=${TRACE:-changes}
+if [ "$mode" = off ] || { [ "$mode" != all ] && is_query "$tool" "$@"; }; then exec "$real" "$@"; fi
+
+setup_log "$tool"
+line=$tool
+for a; do line="$line $(q "$a")"; done
+line=$(printf '%s' "$line" | mask)
+emit "$pre\$ $line${LAB_STEP:+  # $LAB_STEP}"
+case $tool in   # config handed over in a file: log what it said
+  virsh|nft) for a; do case $a in /*|./*) emit_file "$a" ;; esac; done ;;
+esac
+
+LAB_TRACE_DEPTH=$((depth + 1)); export LAB_TRACE_DEPTH
+unset LAB_STEP          # the note belongs to this call, not to what it runs
+case $EXEC_TOOLS in *" $tool "*) exec "$real" "$@" ;; esac
+
+t0=$(cs)
+if [ "${TRACE_OUTPUT:-no}" = yes ]; then
+  out=$(mktemp)
+  "$real" "$@" >"$out" 2>&1
+  rc=$?
+  cat "$out"
+  while IFS= read -r l || [ -n "$l" ]; do emit "$pre    | $l"; done <"$out"
+  rm -f "$out"
+else
+  "$real" "$@"
+  rc=$?
+fi
+d=$(( $(cs) - t0 ))
+emit "$pre= rc=$rc $((d / 100)).$(printf '%02d' $((d % 100)))s $tool"
+exit $rc

@@ -1,0 +1,24 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: coba2-app
+  labels:
+    app: coba2
+spec:
+  containers:
+    - image: royyana/mywebserver:2.1
+      name: coba2-app
+  imagePullSecrets:
+  - name : mysecret
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: coba2-service
+spec:
+  selector:
+    app: coba2
+  ports:
+  # Default port used by the image
+  - port: 80
+---

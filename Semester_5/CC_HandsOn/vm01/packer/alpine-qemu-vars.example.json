@@ -1,0 +1,8 @@
+{
+  "alpine_iso_url": "iso/alpine-standard-x86_64.iso",
+  "alpine_iso_checksum": "sha256:REPLACE_WITH_OFFICIAL_ALPINE_ISO_SHA256",
+  "output_directory": "output-alpine",
+  "vm_name": "alpine-base.qcow2",
+  "accelerator": "kvm",
+  "headless": "true"
+}

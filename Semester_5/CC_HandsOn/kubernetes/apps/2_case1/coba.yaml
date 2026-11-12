@@ -1,0 +1,22 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: coba-app
+  labels:
+    app: coba
+spec:
+  containers:
+  - image: nginx:alpine
+    name: coba-app
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: coba-service
+spec:
+  selector:
+    app: coba
+  ports:
+  # Default port used by the image
+  - port: 80
+---

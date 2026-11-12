@@ -1,0 +1,64 @@
+#!/bin/sh
+# lab-net - underlay address of a spoke; runs at boot, before "networking".
+#
+# First match wins:
+#   IP= in /etc/lab/join.conf       IP=10.20.5.101[/16]  (bare metal)   GW= optional
+#                                   IP=dhcp              force DHCP on this machine
+#   SMBIOS lab.ip                   set by cluster.sh for every clone (static mode)
+#   IP_MODE=dhcp in cluster.env     DHCP from the hub (opt-in, off by default)
+# Otherwise the link comes up without an address and lab-agent reports it.
+#
+# Writes /etc/network/interfaces (+ /etc/resolv.conf for static); log: /var/log/lab/net.log
+set -eu
+. /usr/local/lib/lab/lib.sh
+IF=${SPOKE_UNDERLAY_IF:-eth0}
+JOIN_CONF=/etc/lab/join.conf
+IFACES=/etc/network/interfaces
+RESOLV=/etc/resolv.conf
+MTU=${UNDERLAY_MTU:-1600}
+
+addr="" gw="" reported=""
+if [ -r "$JOIN_CONF" ]; then addr=$(kv IP <"$JOIN_CONF"); gw=$(kv GW <"$JOIN_CONF"); fi
+[ -n "$addr" ] || addr=$(smbios_get lab.ip)
+[ -n "$gw" ] || gw=$HUB_IP
+
+if [ "$addr" = dhcp ]; then mode=dhcp
+elif [ -n "$addr" ]; then mode=static
+elif [ "${IP_MODE:-static}" = dhcp ]; then mode=dhcp
+else mode=none
+fi
+
+if [ "$mode" = static ]; then
+  case $addr in */*) ;; *) addr=$addr/${UNDERLAY_PREFIX:-16} ;; esac
+  ip4=${addr%/*} len=${addr#*/}
+  if ! is_ip4 "$ip4" || ! printf '%s' "$len" | grep -Eq '^[0-9]{1,2}$' || ! is_ip4 "$gw"; then
+    log "bad address '$addr' / gateway '$gw'"
+    con "underlay address not configured: bad address '$addr' (gateway '$gw')"
+    mode=none reported=1
+  fi
+fi
+
+{
+  printf 'auto lo\niface lo inet loopback\n\n# written by lab-net at boot (%s)\nauto %s\n' "$mode" "$IF"
+  case $mode in
+    static) printf 'iface %s inet static\n    address %s\n    gateway %s\n    mtu %s\n' "$IF" "$addr" "$gw" "$MTU" ;;
+    dhcp)   printf 'iface %s inet dhcp\n    mtu %s\n' "$IF" "$MTU" ;;
+    none)   printf 'iface %s\n    mtu %s\n' "$IF" "$MTU" ;;
+  esac
+} >"$IFACES.tmp"
+mv "$IFACES.tmp" "$IFACES"
+trace_file "$IFACES" "underlay $IF: $mode"
+
+case $mode in
+  static)
+    printf 'search lab\nnameserver %s\n' "$HUB_IP" >"$RESOLV"
+    trace_file "$RESOLV" "DNS = hub"
+    log "static $addr on $IF, gateway $gw"
+    con "address $addr on $IF (static, gateway $gw)" ;;
+  dhcp)
+    log "DHCP on $IF"
+    con "address via DHCP on $IF" ;;
+  none)
+    log "no address for $IF"
+    [ -n "$reported" ] || con "underlay address not configured (SMBIOS lab.ip or IP= in $JOIN_CONF)" ;;
+esac

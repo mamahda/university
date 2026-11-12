@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: backend, namespace: cloud-dynamics}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: backend}}
+  template:
+    metadata: {labels: {app: backend}}
+    spec:
+      containers:
+      - name: backend
+        image: cloud-dynamics/microservices:latest
+        imagePullPolicy: IfNotPresent
+        env: [{name: ROLE, value: backend}]
+        ports: [{containerPort: 8080}]
+        resources: {requests: {cpu: 100m, memory: 64Mi}, limits: {cpu: 500m, memory: 256Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: backend, namespace: cloud-dynamics}
+spec:
+  selector: {app: backend}
+  ports: [{port: 8080, targetPort: 8080}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: microservices, namespace: cloud-dynamics}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: microservices}}
+  template:
+    metadata: {labels: {app: microservices}}
+    spec:
+      containers:
+      - name: frontend
+        image: cloud-dynamics/microservices:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - {name: ROLE, value: frontend}
+        - {name: BACKEND_URL, value: "http://backend:8080/"}
+        ports: [{containerPort: 8080}]
+        resources: {requests: {cpu: 100m, memory: 64Mi}, limits: {cpu: 500m, memory: 256Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: microservices, namespace: cloud-dynamics}
+spec:
+  selector: {app: microservices}
+  ports: [{port: 8080, targetPort: 8080}]

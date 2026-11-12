@@ -1,0 +1,14 @@
+# === Node runtime state (root-owned, machine-specific) ===
+node-*/data/
+node-*/etc/
+node-*/logs/
+
+# === Secrets: join tokens and cluster-admin credentials ===
+node-cp/tokens/
+*.kubeconfig
+*.token
+
+# === Host-level bookkeeping written by the scripts ===
+.gpu-claims/
+.host-sysctl.snapshot
+

@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - MYSQL_DATABASE=$WORDPRESS_DB
+      - MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_HOST=%
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes: 
+      - ./dbdata:/var/lib/mysql
+    networks:
+      - app-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "$PHPMYADMIN_PORT:80"
+    links:
+      - db
+    env_file: .env
+    environment:
+      - PMA_HOST=db
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    networks:
+      - app-network
+  wordpress:
+    depends_on: 
+      - db
+    links:
+      - db
+    image: wordpress:5.1.1-fpm-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - WORDPRESS_DB_NAME=$WORDPRESS_DB
+    volumes:
+      - ./wp_vol:/var/www/html
+    networks:
+      - app-network
+  webserver:
+    depends_on:
+      - wordpress
+    image: nginx:1.15.12-alpine
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./wp_vol:/var/www/html
+      - ./certs:/certs
+      - ./nginx-conf:/etc/nginx/conf.d
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

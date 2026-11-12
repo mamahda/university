@@ -1,0 +1,3 @@
+#!/bin/sh
+# POST name= secret=   ->  OK (member removed)
+exec /usr/local/lib/lab/cgi.sh leave

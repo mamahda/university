@@ -1,0 +1,25 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# vdc-cluster spoke agent: join the hub, keep tenant tunnels/bridges in sync
+description="vdc-cluster spoke agent"
+
+command=/usr/local/sbin/lab-agent
+command_args=loop
+command_background=yes
+pidfile=/run/lab-agent.pid
+output_log=/var/log/lab/agent.log
+error_log=/var/log/lab/agent.log
+
+depend() {
+  need net
+  use dns
+  after sshd
+  before libvirtd
+}
+
+start_pre() {
+  mkdir -p /var/log/lab
+  # fast, offline: hostname + tunnels from the cached tenant list, so libvirt
+  # can autostart tenant networks even when the hub is not reachable yet
+  /usr/local/sbin/lab-agent boot >>/var/log/lab/agent.log 2>&1
+}

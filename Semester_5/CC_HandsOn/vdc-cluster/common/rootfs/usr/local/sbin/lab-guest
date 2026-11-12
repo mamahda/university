@@ -1,0 +1,195 @@
+#!/bin/sh
+# lab-guest - tenant guests on THIS node's libvirtd. The hub calls it (hubctl vm add/del)
+# with everything decided centrally: image, address (IPAM), MAC, size.
+#
+#   lab-guest add TENANT NAME --image I --type cloud-init|cirros|none --sha SHA256
+#                 --ip A.B.C.D/LEN --mac MAC [--mem MB] [--cpus N] [--disk SIZE]
+#   lab-guest del NAME
+#   lab-guest list                       NAME TENANT STATE
+#
+# Base images come from the hub's image server once per node and are cached by checksum
+# (base/<image>-<sha12>.qcow2), so a guest's disk never loses its backing file.
+# Each guest gets a qcow2 overlay plus a seed ISO (label "cidata", NoCloud) that hands
+# over hostname, login password and the address the hub allocated:
+#   cloud-init images  user-data (#cloud-config) + network-config v2 (static, matched by MAC)
+#   cirros             user-data shell script that sets the address
+#   none               no seed: the address is reserved but not applied
+set -eu
+. /usr/local/lib/lab/lib.sh
+IMGDIR=/var/lib/libvirt/images
+BASEDIR=$IMGDIR/base
+HUB_IMAGES=/var/lib/lab/www/images        # present on the hub itself
+GLOG=$LAB_LOG/guest.log
+glog() { log "$*" >>"$GLOG" 2>/dev/null || true; }
+
+fetch_base() {   # IMAGE SHA -> path of the cached base
+  base=$BASEDIR/$1-$(printf '%.12s' "$2").qcow2
+  [ -s "$base" ] && { echo "$base"; return 0; }
+  mkdir -p "$BASEDIR"
+  if [ -s "$HUB_IMAGES/$1.qcow2" ]; then
+    cp "$HUB_IMAGES/$1.qcow2" "$base.part"
+  else
+    url=http://$HUB_IP:$API_PORT/images/$1.qcow2
+    echo "fetching image $1 from the hub (once per node) ..." >&2
+    step "base image $1 from the hub, cached by checksum"
+    if ! wget -q -O "$base.part" "$url"; then rm -f "$base.part"; die "cannot fetch $url"; fi
+  fi
+  got=$(sha256sum "$base.part" | cut -d' ' -f1)
+  if [ "$got" != "$2" ]; then rm -f "$base.part"; die "image $1: checksum mismatch (hub has a different file than its catalog says)"; fi
+  mv "$base.part" "$base"
+  echo "$base"
+}
+
+write_seed() {   # NAME TYPE IP/LEN MAC SEED_ISO
+  d=$(mktemp -d)
+  printf 'instance-id: %s-%s\nlocal-hostname: %s\n' "$1" "$(randhex 4)" "$1" >"$d/meta-data"
+  case $2 in
+    cloud-init)
+      cat >"$d/user-data" <<UD
+#cloud-config
+# vdc-cluster: written by lab-guest on $(hostname) for guest $1
+hostname: $1
+manage_etc_hosts: true
+password: ${GUEST_PASSWORD:-vdclab}
+chpasswd:
+  expire: false
+ssh_pwauth: true
+UD
+      cat >"$d/network-config" <<NC
+# address allocated by the hub's IPAM (hubctl ips)
+version: 2
+ethernets:
+  tenant0:
+    match:
+      macaddress: "$4"
+    dhcp4: false
+    addresses:
+      - $3
+NC
+      ;;
+    cirros)
+      cat >"$d/user-data" <<UD
+#!/bin/sh
+# vdc-cluster: address allocated by the hub's IPAM, applied at first boot
+dev=\$(ip -o link | awk -F': ' '/$4/ {print \$2; exit}')
+dev=\${dev:-eth0}
+ip addr flush dev "\$dev"
+ip addr add $3 dev "\$dev"
+ip link set "\$dev" up
+echo "cirros:${GUEST_PASSWORD:-vdclab}" | chpasswd 2>/dev/null || true
+hostname $1
+UD
+      ;;
+  esac
+  for f in meta-data user-data network-config; do
+    if [ -f "$d/$f" ]; then trace_file "$d/$f" "seed of guest $1: $f"; fi
+  done
+  step "seed ISO of $1 (NoCloud, label cidata): hostname, login, address $3"
+  # shellcheck disable=SC2046
+  xorriso -as mkisofs -quiet -o "$5" -V cidata -J -r $(for f in user-data meta-data network-config; do [ -f "$d/$f" ] && echo "$d/$f"; done)
+  rm -rf "$d"
+}
+
+cmd_add() {
+  [ $# -ge 2 ] || die "usage: lab-guest add TENANT NAME --image I --type T --sha SHA --ip A/LEN --mac MAC [--mem MB] [--cpus N] [--disk SIZE]"
+  t=$1 n=$2; shift 2
+  img="" type="" sha="" ip="" mac="" mem=192 cpus=1 disk=""
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --image) img=$2 ;; --type) type=$2 ;; --sha) sha=$2 ;; --ip) ip=$2 ;; --mac) mac=$2 ;;
+      --mem) mem=$2 ;; --cpus) cpus=$2 ;; --disk) disk=$2 ;;
+      *) die "lab-guest add: unknown option $1" ;;
+    esac
+    shift 2
+  done
+  is_tname "$t" && is_tname "$n" && is_tname "$img" || die "names: lowercase, digits, '-', max 16"
+  case $type in cloud-init|cirros|none) ;; *) die "--type: cloud-init, cirros or none" ;; esac
+  printf '%s' "$sha" | grep -Eq '^[0-9a-f]{64}$' || die "--sha: sha256 of the image"
+  is_mac "$mac" || die "--mac"
+  is_ip4 "${ip%/*}" || die "--ip A.B.C.D/LEN"
+  is_num "$mem" && is_num "$cpus" || die "--mem/--cpus"
+  virsh net-info "tenant-$t" >/dev/null 2>&1 || die "network tenant-$t not on $(hostname)"
+  if virsh dominfo "$n" >/dev/null 2>&1; then die "guest $n already exists"; fi
+
+  base=$(fetch_base "$img" "$sha")
+  disk_f=$IMGDIR/$n.qcow2 seed=$IMGDIR/$n-seed.iso
+  step "guest $n: disk = copy-on-write overlay on $img${disk:+, $disk virtual}"
+  # never smaller than the base image
+  bsz=$(qemu-img info "$base" | sed -n 's/^virtual size: .*(\([0-9]*\) bytes).*/\1/p')
+  case $disk in *G) want=$(( ${disk%G} * 1073741824 )) ;; *M) want=$(( ${disk%M} * 1048576 )) ;; *) want=0 ;; esac
+  if [ -n "$bsz" ] && [ "$want" -le "$bsz" ]; then disk=""; fi
+  qemu-img create -q -f qcow2 -F qcow2 -b "$base" "$disk_f" ${disk:+"$disk"}
+
+  cdrom=""
+  if [ "$type" != none ]; then
+    write_seed "$n" "$type" "$ip" "$mac" "$seed"
+    cdrom="<disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <source file='$seed'/>
+      <target dev='hdc' bus='ide'/>
+      <readonly/>
+    </disk>"
+  fi
+  if [ -c /dev/kvm ]; then dt=kvm; cpu="<cpu mode='host-passthrough'/>"; else dt=qemu; cpu=""; fi
+  x=$(mktemp)
+  cat >"$x" <<XML
+<domain type='$dt'>
+  <name>$n</name>
+  <description>tenant=$t image=$img ip=$ip</description>
+  <memory unit='MiB'>$mem</memory>
+  <vcpu>$cpus</vcpu>
+  <os><type arch='x86_64' machine='pc'>hvm</type><boot dev='hd'/></os>
+  $cpu
+  <features><acpi/></features>
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='$disk_f'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+    $cdrom
+    <interface type='network'>
+      <source network='tenant-$t'/>
+      <mac address='$mac'/>
+      <model type='virtio'/>
+    </interface>
+    <serial type='pty'/>
+    <console type='pty'/>
+    <rng model='virtio'><backend model='random'>/dev/urandom</backend></rng>
+    <memballoon model='none'/>
+  </devices>
+</domain>
+XML
+  step "guest $n: domain definition (tenant $t, $img, $ip)"
+  virsh -q define "$x" >/dev/null
+  rm -f "$x"
+  step "guest $n: boot"
+  virsh -q start "$n" >/dev/null
+  glog "add $n tenant=$t image=$img ip=$ip mac=$mac mem=${mem}M cpus=$cpus type=$dt"
+  echo "guest $n (tenant $t, $img, $ip) started on $(hostname) [$dt]"
+}
+
+cmd_del() {
+  [ $# -ge 1 ] || die "usage: lab-guest del NAME"
+  is_tname "$1" || die "bad name"
+  step "guest $1: stop and remove"
+  virsh -q destroy "$1" >/dev/null 2>&1 || true
+  virsh -q undefine "$1" >/dev/null 2>&1 || true
+  rm -f "$IMGDIR/$1.qcow2" "$IMGDIR/$1-seed.iso"
+  glog "del $1"
+  echo "guest $1 removed from $(hostname)"
+}
+
+cmd_list() {
+  for d in $(virsh list --all --name); do
+    t=$(virsh desc "$d" 2>/dev/null | sed -n 's/.*tenant=\([^ ]*\).*/\1/p')
+    printf '%-16s %-16s %s\n' "$d" "${t:--}" "$(virsh domstate "$d" 2>/dev/null | head -n 1)"
+  done
+}
+
+case ${1:-} in
+  add) shift; cmd_add "$@" ;;
+  del) shift; cmd_del "$@" ;;
+  list) cmd_list ;;
+  *) sed -n '2,18s/^# \{0,1\}//p' "$0"; exit 1 ;;
+esac

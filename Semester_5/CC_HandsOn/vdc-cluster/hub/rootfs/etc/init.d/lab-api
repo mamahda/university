@@ -1,0 +1,34 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034,SC1091
+# vdc-cluster hub API (join/state/leave CGI) + image server, on the underlay only
+description="vdc-cluster hub API"
+. /etc/lab/cluster.env
+
+command=/bin/busybox-extras
+command_args="httpd -f -v -p ${HUB_IP}:${API_PORT} -h /var/lib/lab/www -u labweb"
+command_background=yes
+pidfile=/run/lab-api.pid
+output_log=/var/log/lab/api.log
+error_log=/var/log/lab/api.log
+
+depend() {
+  need net lab-hub libvirtd
+  after dnsmasq
+}
+
+start_pre() {
+  # libvirt view of the tenants on the hub itself (hub runs guests too)
+  /usr/local/sbin/hubctl libvirt-sync >>/var/log/lab/hub.log 2>&1 || true
+}
+
+start_post() {
+  i=0
+  while [ $i -lt 20 ] && ! netstat -ltn 2>/dev/null | grep -q ":${API_PORT} "; do
+    sleep 0.25; i=$((i + 1))
+  done
+  if netstat -ltn 2>/dev/null | grep -q ":${API_PORT} "; then
+    echo "LAB: hub API listening on ${HUB_IP}:${API_PORT}" >/dev/console 2>/dev/null || true
+  else
+    echo "LAB: hub API FAILED to listen on ${HUB_IP}:${API_PORT} (see /var/log/lab/api.log)" >/dev/console 2>/dev/null || true
+  fi
+}

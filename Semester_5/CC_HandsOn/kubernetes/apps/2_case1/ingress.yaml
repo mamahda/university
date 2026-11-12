@@ -1,0 +1,53 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: case1-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  -  host: 
+     http:
+      paths:
+      - pathType: ImplementationSpecific
+        path: /foo(/|$)(.*)
+        backend:
+          service:
+            name: foo-service
+            port:
+              number: 8080
+      - pathType: ImplementationSpecific
+        path: /counter(/|$)(.*)
+        backend:
+          service:
+            name: counter-service
+            port:
+              number: 8888
+      - pathType: ImplementationSpecific
+        path: /bar4(/|$)(.*)
+        backend:
+          service:
+            name: bar-service
+            port:
+              number: 8080
+      - pathType: ImplementationSpecific
+        path: /coba(/|$)(.*)
+        backend:
+          service:
+            name: coba-service
+            port:
+              number: 80
+      - pathType: ImplementationSpecific
+        path: /web1(/|$)(.*)
+        backend:
+          service:
+            name: web1-service
+            port:
+              number: 80
+      - pathType: ImplementationSpecific
+        path: /web2(/|$)(.*)
+        backend:
+          service:
+            name: web2-service
+            port:
+              number: 80

@@ -1,0 +1,18 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# vdc-cluster hub: state, token, tenant bridges + Geneve tunnels to every spoke
+description="vdc-cluster hub overlay"
+
+depend() {
+  need net
+  after nftables
+  before dnsmasq libvirtd lab-api
+}
+
+start() {
+  ebegin "Building hub overlay"
+  mkdir -p /var/log/lab
+  export LAB_TRACE_CTX="lab-hub (boot)"
+  { /usr/local/sbin/hubctl init && /usr/local/sbin/hubctl apply; } >>/var/log/lab/hub.log 2>&1
+  eend $?
+}

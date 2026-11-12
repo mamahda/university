@@ -1,0 +1,16 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# vdc-cluster spoke: underlay address (static by default, DHCP opt-in) before networking
+description="vdc-cluster underlay address"
+
+depend() {
+  need localmount
+  before networking
+}
+
+start() {
+  ebegin "Configuring underlay address"
+  mkdir -p /var/log/lab
+  LAB_TRACE_CTX="lab-net (boot)" /usr/local/sbin/lab-net >>/var/log/lab/net.log 2>&1
+  eend $?
+}

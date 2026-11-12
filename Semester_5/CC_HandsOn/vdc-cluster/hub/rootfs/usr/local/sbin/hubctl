@@ -1,0 +1,596 @@
+#!/bin/sh
+# hubctl - control plane of the vdc cluster (runs on the hub VM)
+#
+#   hubctl nodes                         members: IP, MAC, Ready/NotReady, guests, free/total RAM
+#   hubctl node del NAME                 evict a spoke (its tunnels, DNS entry, SSH trust)
+#   hubctl node ip NAME
+#   hubctl token [rotate]                join token for new spokes
+#
+#   hubctl tenant add NAME VNI [SUBNET]  bridge br-t<VNI> here + g<VNI>-<node> per spoke;
+#                                        SUBNET for the IPAM (VNI 1-254: default 192.168.<VNI>.0/24)
+#   hubctl tenant del NAME
+#   hubctl tenants
+#   hubctl ips [TENANT]                  address allocations
+#
+#   hubctl image add NAME URL|--file PATH [--type cloud-init|cirros|none] [--mem MB]
+#                    [--disk SIZE] [--user LOGIN]       register a tenant base image
+#   hubctl image del NAME
+#   hubctl images
+#
+#   hubctl vm add TENANT NAME [NODE] [--image I] [--node N] [--ip A] [--mem MB] [--disk SIZE] [--cpus N]
+#                                        address = next free one of the tenant subnet (or --ip);
+#                                        node = Ready node with most free RAM (or NODE / --node)
+#   hubctl vm del NAME
+#   hubctl vm info NAME                  image, address, MAC, node, login
+#   hubctl vm console NAME               (Ctrl-] to leave)
+#   hubctl vms
+#
+#   hubctl exec NODE CMD...              run a command on a node (hub or spoke)
+#   hubctl apply                         rebuild the hub side of the overlay
+#
+# Internal: init (boot), libvirt-sync, _api join|state|leave REMOTE_IP (CGI, via doas)
+set -eu
+umask 077
+. /usr/local/lib/lab/lib.sh
+S=$LAB_STATE
+NODES=$S/nodes            # NAME IP MAC SECRET
+TENANTS=$S/tenants        # NAME VNI SUBNET
+VMS=$S/vms                # GUEST TENANT NODE IMAGE IP MEM MAC CPUS
+IMAGES=$S/images          # NAME TYPE MEM DISK USER SHA256 SIZE_MB
+IMGDIR=$S/www/images      # served to the nodes as http://hub:API_PORT/images/NAME.qcow2
+CAPS=$S/caps              # <node>: "MEM_MB CPUS" reported by the agent
+KNOWN=$S/known_hosts
+TOKEN_F=$S/token
+LOGF=$LAB_LOG/hub.log
+SSH_OPTS="-o BatchMode=yes -o ConnectTimeout=5 -o LogLevel=ERROR -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$KNOWN"
+
+usage() { sed -n '2,32s/^# \{0,1\}//p' "$0"; }
+logf() { log "$*" >>"$LOGF" 2>/dev/null || true; }
+lock() { exec 9>/run/lab-hub.lock; flock -w 30 9 || die "another hubctl is running"; }
+has() { awk -v k="$2" '$1==k {f=1} END {exit !f}' "$1"; }
+field() { awk -v k="$2" -v c="$3" '$1==k {print $c; exit}' "$1"; }
+del_line() { awk -v k="$2" '$1!=k' "$1" >"$1.tmp"; mv "$1.tmp" "$1"; }
+guests_on() { awk -v n="$1" '$3==n' "$VMS" | wc -l | tr -d ' '; }
+
+node_ip() { if [ "$1" = hub ]; then echo "$HUB_IP"; else field "$NODES" "$1" 2; fi; }
+
+run_on() {   # NODE CMD   (CMD built from validated values only)
+  n=$1; shift
+  if [ "$n" = hub ]; then sh -c "$*"; return; fi
+  ip=$(node_ip "$n")
+  [ -n "$ip" ] || die "unknown node $n"
+  # shellcheck disable=SC2086
+  ssh -n $SSH_OPTS "root@$ip" "$*"
+}
+
+is_ready() {   # NODE
+  [ "$1" = hub ] && return 0
+  [ -e "$S/seen/$1" ] || return 1
+  age=$(( $(date +%s) - $(stat -c %Y "$S/seen/$1") ))
+  [ "$age" -le $((POLL * 3)) ]
+}
+
+# ---------------------------------------------------------------- state / boot
+cmd_init() {
+  [ ! -x "$LAB_TRACE" ] || "$LAB_TRACE" --install "$TRACE_BIN" >/dev/null 2>&1 || true
+  install -d -m 755 "$S" "$S/www" "$IMGDIR" "$S/www/cgi-bin"
+  install -d -m 700 "$S/seen" "$CAPS"
+  for f in nodes tenants vms images known_hosts; do [ -e "$S/$f" ] || : >"$S/$f"; done
+  t=$(smbios_get lab.token)            # lab PC may impose the token
+  if [ -n "$t" ]; then
+    printf '%s\n' "$t" >"$TOKEN_F"
+  elif [ ! -s "$TOKEN_F" ]; then
+    randhex 16 >"$TOKEN_F"; echo >>"$TOKEN_F"
+  fi
+  chmod 600 "$TOKEN_F"
+  if [ ! -f /root/.ssh/id_ed25519 ]; then
+    mkdir -p /root/.ssh
+    step "hub SSH key (handed to every spoke at join)"
+    ssh-keygen -q -t ed25519 -N '' -C lab-hub -f /root/.ssh/id_ed25519
+  fi
+  # the CirrOS image baked into the hub is always in the catalog
+  if [ -s "$IMGDIR/cirros.qcow2" ] && ! has "$IMAGES" cirros; then
+    register_image cirros cirros 192 1G cirros "$IMGDIR/cirros.qcow2"
+  fi
+  regen_dns
+  con "hub state ready: $(wc -l <"$NODES" | tr -d ' ') member(s), $(wc -l <"$TENANTS" | tr -d ' ') tenant(s), $(wc -l <"$IMAGES" | tr -d ' ') image(s)"
+}
+
+regen_dns() {   # dnsmasq resolves NAME.lab (and pins leases in dhcp mode)
+  awk 'NF>=3 {print $3 "," $2 "," $1}' "$NODES" >"$S/dhcp-hosts"
+  { echo "$HUB_IP hub"; awk 'NF>=2 {print $2, $1}' "$NODES"; } >"$S/hosts"
+  chmod 644 "$S/dhcp-hosts" "$S/hosts"
+  killall -HUP dnsmasq 2>/dev/null || true
+}
+
+# hub side of the overlay: br-t<VNI> per tenant, g<VNI>-<node> per (tenant, spoke)
+cmd_apply() {
+  # (POSIX sh has no locals: _-prefixed names so callers' variables survive)
+  _want=" "
+  while read -r _t _v _; do
+    [ -n "$_t" ] || continue
+    ensure_bridge "br-t$_v"
+    _want="$_want br-t$_v "
+    while read -r _n _ip _; do
+      [ -n "$_n" ] || continue
+      ensure_geneve "g$_v-$_n" "$_v" "$_ip" "br-t$_v"
+      _want="$_want g$_v-$_n "
+    done <"$NODES"
+  done <"$TENANTS"
+  for _d in /sys/class/net/*; do
+    _dev=${_d##*/}
+    case $_dev in
+      g[0-9]*-*|br-t[0-9]*)
+        case $_want in *" $_dev "*) ;; *) step "$_dev is no longer wanted"; ip link del "$_dev" 2>/dev/null || true ;; esac ;;
+    esac
+  done
+}
+
+poke() {   # ask every spoke to sync now (async, best effort; the poll catches up anyway)
+  while read -r _n _ip _; do
+    [ -n "$_n" ] || continue
+    # shellcheck disable=SC2086
+    ( exec 9>&-; ssh -n $SSH_OPTS "root@$_ip" lab-agent sync >/dev/null 2>&1 ) &
+  done <"$NODES"
+}
+
+# ---------------------------------------------------------------- API (CGI)
+api() {   # ACTION REMOTE_IP   (request body on stdin)
+  action=${1:-} rip=${2:-}
+  rip=${rip#::ffff:}
+  is_ip4 "$rip" || { echo "ERROR bad-remote"; return 0; }
+  body=$(head -c 4096)
+  case $action in
+    join) api_join ;;
+    state) api_state ;;
+    leave) api_leave ;;
+    *) echo "ERROR bad-action" ;;
+  esac
+}
+
+body_kv() { printf '%s\n' "$body" | kv "$1"; }
+
+next_name() { i=1; while has "$NODES" "hv$i"; do i=$((i + 1)); done; echo "hv$i"; }
+
+api_join() {
+  tok=$(body_kv token)
+  if [ -z "$tok" ] || [ "$tok" != "$(head -n 1 "$TOKEN_F")" ]; then
+    logf "join refused from $rip: bad token"; echo "ERROR bad-token"; return 0
+  fi
+  mac=$(body_kv mac | tr 'A-F' 'a-f')
+  req=$(body_kv name)
+  hk=$(body_kv hostkey | awk '{print $1, $2}')
+  is_mac "$mac" || { echo "ERROR bad-mac"; return 0; }
+  case $hk in "ssh-ed25519 "?*) ;; *) echo "ERROR bad-hostkey"; return 0 ;; esac
+
+  lock
+  # static addressing: an address belongs to one machine; with DHCP a reused lease
+  # means the old member is gone (it is evicted below)
+  other=$(awk -v i="$rip" -v m="$mac" '$2==i && $3!=m {print $1; exit}' "$NODES")
+  if [ -n "$other" ] && [ "${IP_MODE:-static}" != dhcp ]; then
+    logf "join refused from $rip ($mac): address in use by $other"
+    echo "ERROR ip-in-use by $other (hubctl node del $other, if it is gone)"; return 0
+  fi
+  name=$(awk -v m="$mac" '$3==m {print $1; exit}' "$NODES")
+  if [ -n "$name" ]; then                       # known machine re-joining
+    secret=$(field "$NODES" "$name" 4)
+  else                                          # new member
+    if is_name "$req" && [ "$req" != hub ] && ! has "$NODES" "$req"; then name=$req; else name=$(next_name); fi
+    secret=$(randhex 16)
+  fi
+  # one line per member; a lease reused by a new MAC evicts the stale member
+  awk -v n="$name" -v i="$rip" '$1!=n && $2!=i' "$NODES" >"$NODES.tmp"
+  echo "$name $rip $mac $secret" >>"$NODES.tmp"
+  mv "$NODES.tmp" "$NODES"
+  awk -v i="$rip" -v n="$name" '{k=1; c=split($1, a, ","); for (j=1; j<=c; j++) if (a[j]==i || a[j]==n) k=0} k' \
+    "$KNOWN" >"$KNOWN.tmp"
+  echo "$rip,$name $hk" >>"$KNOWN.tmp"
+  mv "$KNOWN.tmp" "$KNOWN"
+  regen_dns
+  touch "$S/seen/$name"
+  cmd_apply
+  logf "join: $name $rip $mac"
+  con "hub: $name joined from $rip"
+  echo OK
+  echo "NODE_NAME=$name"
+  echo "NODE_IP=$rip"
+  echo "NODE_SECRET=$secret"
+  echo "HUB_PUBKEY=$(cat /root/.ssh/id_ed25519.pub)"
+}
+
+auth_node() {   # sets n; member must present its secret from its own IP
+  n=$(body_kv name)
+  sec=$(body_kv secret)
+  is_name "$n" && has "$NODES" "$n" &&
+    [ "$(field "$NODES" "$n" 4)" = "$sec" ] && [ "$(field "$NODES" "$n" 2)" = "$rip" ]
+}
+
+api_state() {
+  auth_node || { echo "ERROR unknown-node"; return 0; }
+  touch "$S/seen/$n"
+  mem=$(body_kv mem) cpus=$(body_kv cpus)
+  if is_num "$mem" && is_num "$cpus"; then echo "$mem $cpus" >"$CAPS/$n"; fi
+  echo OK
+  awk 'NF>=2 {print "TENANT", $1, $2}' "$TENANTS"
+}
+
+api_leave() {
+  auth_node || { echo "ERROR unknown-node"; return 0; }
+  if [ "$(guests_on "$n")" -gt 0 ]; then echo "ERROR node-has-guests"; return 0; fi
+  lock
+  remove_node "$n"
+  logf "leave: $n"
+  con "hub: $n left"
+  echo OK
+}
+
+remove_node() {
+  ip=$(node_ip "$1")
+  del_line "$NODES" "$1"
+  awk -v i="$ip" -v n="$1" '{k=1; c=split($1, a, ","); for (j=1; j<=c; j++) if (a[j]==i || a[j]==n) k=0} k' \
+    "$KNOWN" >"$KNOWN.tmp"
+  mv "$KNOWN.tmp" "$KNOWN"
+  rm -f "$S/seen/$1" "$CAPS/$1"
+  regen_dns
+  cmd_apply
+}
+
+# ---------------------------------------------------------------- capacity
+mem_total() {   # NODE -> MB (hub: own RAM; spoke: reported by its agent; unknown: 2048)
+  if [ "$1" = hub ]; then awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo
+  elif [ -s "$CAPS/$1" ]; then cut -d' ' -f1 "$CAPS/$1"
+  else echo 2048; fi
+}
+mem_used() { awk -v n="$1" '$3==n {s += ($6 ? $6 : 192)} END {print s + 0}' "$VMS"; }
+mem_free() { echo $(( $(mem_total "$1") - ${GUEST_HOST_RESERVE:-512} - $(mem_used "$1") )); }
+
+# ---------------------------------------------------------------- nodes
+cmd_nodes() {
+  printf '%-8s %-14s %-17s %-9s %-6s %s\n' NAME IP MAC STATUS GUESTS "RAM FREE/TOTAL"
+  printf '%-8s %-14s %-17s %-9s %-6s %s\n' hub "$HUB_IP" \
+    "$(cat "/sys/class/net/${HUB_UNDERLAY_IF:-eth1}/address" 2>/dev/null)" "Ready" "$(guests_on hub)" \
+    "$(mem_free hub)/$(mem_total hub) MB"
+  while read -r n ip mac _; do
+    [ -n "$n" ] || continue
+    if is_ready "$n"; then st=Ready; else st=NotReady; fi
+    printf '%-8s %-14s %-17s %-9s %-6s %s\n' "$n" "$ip" "$mac" "$st" "$(guests_on "$n")" \
+      "$(mem_free "$n")/$(mem_total "$n") MB"
+  done <"$NODES"
+}
+
+cmd_node() {
+  case ${1:-} in
+    ip) [ -n "${2:-}" ] || die "usage: hubctl node ip NAME"
+        ip=$(node_ip "$2"); [ -n "$ip" ] || exit 1; echo "$ip" ;;
+    del) [ -n "${2:-}" ] || die "usage: hubctl node del NAME"
+        has "$NODES" "$2" || die "no node $2"
+        [ "$(guests_on "$2")" -eq 0 ] || die "$2 still has guests (hubctl vm del ...)"
+        lock; remove_node "$2"; logf "node del: $2"
+        echo "$2 removed (a running spoke re-joins by itself unless it runs 'lab-agent leave')" ;;
+    *) usage; exit 1 ;;
+  esac
+}
+
+cmd_token() {
+  if [ "${1:-}" = rotate ]; then
+    randhex 16 >"$TOKEN_F"; echo >>"$TOKEN_F"
+    echo "new token (members keep working; SMBIOS lab.token overrides it at hub boot):" >&2
+  fi
+  head -n 1 "$TOKEN_F"
+}
+
+# ---------------------------------------------------------------- tenants + IPAM
+tenant_subnet() { awk -v t="$1" '$1==t {print ($3 != "" ? $3 : "192.168." $2 ".0/24"); exit}' "$TENANTS"; }
+
+# addresses of a subnet the IPAM may hand out: .10 .. last-but-broadcast
+#   (.1 = gateway, reserved for a future tenant router; .2-.9 reserved for services);
+#   subnets of 32 addresses or fewer only keep .1 back
+subnet_range() {   # CIDR -> "FIRST LAST" as integers
+  _net=$(ip2int "${1%/*}") _size=$((1 << (32 - ${1#*/})))
+  if [ "$_size" -le 32 ]; then _off=2; else _off=10; fi
+  echo "$((_net + _off)) $((_net + _size - 2))"
+}
+
+ip_in_use() { awk -v t="$1" -v a="$2" '$2==t && $5==a {f=1} END {exit !f}' "$VMS"; }
+
+ip_alloc() {   # TENANT -> next free address (lowest first)
+  _c=$(tenant_subnet "$1")
+  # shellcheck disable=SC2046   # two numbers -> two parameters
+  set -- "$1" $(subnet_range "$_c")
+  _i=$2
+  while [ "$_i" -le "$3" ]; do
+    _a=$(int2ip "$_i")
+    if ! ip_in_use "$1" "$_a"; then echo "$_a"; return 0; fi
+    _i=$((_i + 1))
+  done
+  return 1
+}
+
+ip_check() {   # TENANT ADDR -> ok if inside the allocatable range and free
+  _c=$(tenant_subnet "$1")
+  is_ip4 "$2" || die "--ip: $2 is not an IPv4 address"
+  # shellcheck disable=SC2046   # two numbers -> two parameters
+  set -- "$1" "$2" $(subnet_range "$_c")
+  _i=$(ip2int "$2")
+  [ "$_i" -ge "$3" ] && [ "$_i" -le "$4" ] || die "--ip: $2 is outside the allocatable range $(int2ip "$3") - $(int2ip "$4") of $_c"
+  if ip_in_use "$1" "$2"; then die "--ip: $2 is already used in tenant $1"; fi
+}
+
+cmd_tenant() {
+  case ${1:-} in
+    add)
+      [ $# -ge 3 ] && [ $# -le 4 ] || die "usage: hubctl tenant add NAME VNI [SUBNET]"
+      is_tname "$2" || die "tenant name: lowercase, digits, '-', max 16"
+      is_vni "$3" || die "VNI must be 1..65535"
+      sn=${4:-}
+      if [ -z "$sn" ]; then
+        [ "$3" -le 254 ] || die "VNI $3 > 254: give the subnet, e.g. hubctl tenant add $2 $3 10.88.0.0/24"
+        sn=192.168.$3.0/24
+      fi
+      is_cidr "$sn" || die "subnet $sn: want a.b.c.0/len with len 16..29, aligned"
+      lock
+      if has "$TENANTS" "$2"; then die "tenant $2 exists"; fi
+      if awk -v v="$3" '$2==v {f=1} END {exit !f}' "$TENANTS"; then die "VNI $3 already used"; fi
+      echo "$2 $3 $sn" >>"$TENANTS"
+      cmd_apply
+      sync_tenant_nets "$TENANTS"
+      poke
+      logf "tenant add: $2 $3 $sn"
+      echo "tenant $2: VNI $3, subnet $sn, hub bridge br-t$3, $(wc -l <"$NODES" | tr -d ' ') spoke tunnel(s)" ;;
+    del)
+      [ $# -eq 2 ] || die "usage: hubctl tenant del NAME"
+      has "$TENANTS" "$2" || die "no tenant $2"
+      [ -z "$(awk -v t="$2" '$2==t' "$VMS")" ] || die "tenant $2 still has guests"
+      lock
+      del_line "$TENANTS" "$2"
+      sync_tenant_nets "$TENANTS"
+      cmd_apply
+      poke
+      logf "tenant del: $2"
+      echo "tenant $2 removed" ;;
+    list|"")
+      printf '%-16s %-6s %-18s %-7s %s\n' TENANT VNI SUBNET GUESTS HUB-TUNNELS
+      while read -r t v _; do
+        [ -n "$t" ] || continue
+        g=$(awk -v t="$t" '$2==t' "$VMS" | wc -l | tr -d ' ')
+        tun=""
+        for d in /sys/class/net/g"$v"-*; do [ -e "$d" ] && tun="$tun${d##*/} "; done
+        printf '%-16s %-6s %-18s %-7s %s\n' "$t" "$v" "$(tenant_subnet "$t")" "$g" "${tun:--}"
+      done <"$TENANTS" ;;
+    *) usage; exit 1 ;;
+  esac
+}
+
+cmd_ips() {   # [TENANT]
+  printf '%-16s %-18s %-16s %-17s %s\n' TENANT SUBNET ADDRESS MAC GUEST
+  while read -r t _ _; do
+    [ -n "$t" ] || continue
+    if [ -n "${1:-}" ] && [ "$1" != "$t" ]; then continue; fi
+    sn=$(tenant_subnet "$t")
+    awk -v t="$t" -v s="$sn" '$2==t {printf "%-16s %-18s %-16s %-17s %s\n", t, s, $5, $7, $1}' "$VMS" |
+      sort -t. -k4,4n
+    nxt=$(ip_alloc "$t" || echo "(subnet full)")
+    printf '%-16s %-18s %-16s %-17s %s\n' "$t" "$sn" "$nxt" "" "<- next free"
+  done <"$TENANTS"
+}
+
+# ---------------------------------------------------------------- images
+register_image() {   # NAME TYPE MEM DISK USER FILE
+  sha=$(sha256sum "$6" | cut -d' ' -f1)
+  size=$(( $(stat -c %s "$6") / 1048576 ))
+  awk -v k="$1" '$1!=k' "$IMAGES" >"$IMAGES.tmp" 2>/dev/null || true
+  echo "$1 $2 $3 $4 $5 $sha $size" >>"$IMAGES.tmp"
+  mv "$IMAGES.tmp" "$IMAGES"
+  chmod 644 "$6"
+}
+
+cmd_image_add() {   # NAME URL|--file PATH [--type T] [--mem MB] [--disk SIZE] [--user LOGIN]
+  name=${1:-}; shift || true
+  is_tname "$name" || die "usage: hubctl image add NAME URL|--file PATH [--type cloud-init|cirros|none] [--mem MB] [--disk SIZE] [--user LOGIN]"
+  src="" file="" type="" mem="" disk="" user=""
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --file) file=${2:?}; shift ;;
+      --type) type=${2:?}; shift ;;
+      --mem) mem=${2:?}; shift ;;
+      --disk) disk=${2:?}; shift ;;
+      --user) user=${2:?}; shift ;;
+      http://*|https://*) src=$1 ;;
+      *) die "image add: unexpected '$1'" ;;
+    esac
+    shift
+  done
+  [ -n "$src$file" ] || die "image add: give a URL or --file PATH"
+  if [ -z "$type" ]; then case $name in cirros*) type=cirros ;; *) type=cloud-init ;; esac; fi
+  case $type in cloud-init|cirros|none) ;; *) die "--type: cloud-init, cirros or none" ;; esac
+  if [ -z "$mem" ]; then if [ "$type" = cirros ]; then mem=192; else mem=1024; fi; fi
+  if [ -z "$disk" ]; then if [ "$type" = cirros ]; then disk=1G; else disk=10G; fi; fi
+  if [ -z "$user" ]; then case $type in cirros) user=cirros ;; *) user=ubuntu ;; esac; fi
+  is_num "$mem" || die "--mem: MB"
+  printf '%s' "$disk" | grep -Eq '^[0-9]+[MG]$' || die "--disk: e.g. 10G"
+  printf '%s' "$user" | grep -Eq '^[a-z_][a-z0-9_-]{0,31}$' || die "--user: login name"
+  install -d -m 755 "$IMGDIR"
+  part=$IMGDIR/.$name.part
+  if [ -n "$src" ]; then
+    echo "downloading $src"
+    step "tenant image $name: download"
+    wget -O "$part" "$src" 2>&1 | tail -n 2 || true
+    [ -s "$part" ] || { rm -f "$part"; die "download failed"; }
+  else
+    [ -f "$file" ] || die "no file $file"
+    mv "$file" "$part"
+  fi
+  fmt=$(qemu-img info "$part" 2>/dev/null | sed -n 's/^file format: //p')
+  [ -n "$fmt" ] || { rm -f "$part"; die "$name: not a disk image (qemu-img info failed)"; }
+  if [ "$fmt" != qcow2 ]; then
+    echo "converting $fmt -> qcow2"
+    step "tenant image $name: $fmt -> qcow2"
+    qemu-img convert -O qcow2 "$part" "$part.qcow2" && mv "$part.qcow2" "$part"
+  fi
+  lock
+  mv "$part" "$IMGDIR/$name.qcow2"
+  register_image "$name" "$type" "$mem" "$disk" "$user" "$IMGDIR/$name.qcow2"
+  logf "image add: $name $type"
+  vs=$(qemu-img info "$IMGDIR/$name.qcow2" | sed -n 's/^virtual size: \([^ ]* [^ ]*\).*/\1/p')
+  echo "image $name: $type, $(field "$IMAGES" "$name" 7) MB file (virtual $vs), default ${mem} MB RAM, ${disk} disk, login $user"
+  echo "nodes fetch it from http://$HUB_IP:$API_PORT/images/$name.qcow2 on first use"
+}
+
+cmd_image() {
+  case ${1:-list} in
+    add) shift; cmd_image_add "$@" ;;
+    del)
+      [ -n "${2:-}" ] || die "usage: hubctl image del NAME"
+      has "$IMAGES" "$2" || die "no image $2"
+      g=$(awk -v i="$2" '$4==i {print $1}' "$VMS" | tr '\n' ' ')
+      [ -z "$g" ] || die "image $2 is used by: $g"
+      lock; del_line "$IMAGES" "$2"; rm -f "$IMGDIR/$2.qcow2"; logf "image del: $2"
+      echo "image $2 removed (nodes keep their cached copy until it is unused)" ;;
+    list)
+      printf '%-14s %-10s %-8s %-6s %-8s %-9s %s\n' IMAGE TYPE RAM DISK LOGIN FILE SHA256
+      while read -r n t m d u sha sz; do
+        [ -n "$n" ] || continue
+        printf '%-14s %-10s %-8s %-6s %-8s %-9s %s\n' "$n" "$t" "${m}MB" "$d" "$u" "${sz}MB" "$(printf '%.12s' "$sha")"
+      done <"$IMAGES" ;;
+    *) usage; exit 1 ;;
+  esac
+}
+
+# ---------------------------------------------------------------- guests
+pick_node() {   # MEM -> the "scheduler": Ready node with the most free RAM that fits MEM
+  best="" bestf=-1
+  cands=$(if [ "${HUB_SCHEDULABLE:-yes}" = yes ]; then echo hub; fi; awk '{print $1}' "$NODES")
+  for n in $cands; do
+    is_ready "$n" || continue
+    f=$(mem_free "$n")
+    if [ "$f" -ge "$1" ] && [ "$f" -gt "$bestf" ]; then best=$n bestf=$f; fi
+  done
+  [ -n "$best" ] || die "no Ready node has $1 MB RAM free (hubctl nodes)"
+  echo "$best"
+}
+
+new_mac() {   # unused 52:54:01:xx:xx:xx
+  while :; do
+    m=52:54:01:$(randhex 3 | sed 's/../&:/g; s/:$//')
+    awk -v m="$m" '$7==m {f=1} END {exit !f}' "$VMS" || { echo "$m"; return; }
+  done
+}
+
+cmd_vm_add() {   # TENANT NAME [NODE] [--image I] [--node N] [--ip A] [--mem MB] [--disk SIZE] [--cpus N]
+  [ $# -ge 2 ] || die "usage: hubctl vm add TENANT NAME [NODE] [--image I] [--ip A] [--mem MB] [--disk SIZE] [--cpus N]"
+  t=$1 g=$2; shift 2
+  node="" img="" ip="" mem="" disk="" cpus=1
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --image) img=${2:?}; shift ;;
+      --node) node=${2:?}; shift ;;
+      --ip) ip=${2:?}; shift ;;
+      --mem) mem=${2:?}; shift ;;
+      --disk) disk=${2:?}; shift ;;
+      --cpus) cpus=${2:?}; shift ;;
+      -*) die "vm add: unknown option $1" ;;
+      *) node=$1 ;;
+    esac
+    shift
+  done
+  has "$TENANTS" "$t" || die "no tenant $t"
+  is_tname "$g" || die "guest name: lowercase, digits, '-', max 16"
+  [ -s "$IMAGES" ] || die "no tenant images yet (hubctl image add ...)"
+  if [ -z "$img" ]; then if has "$IMAGES" cirros; then img=cirros; else img=$(head -n 1 "$IMAGES" | cut -d' ' -f1); fi; fi
+  has "$IMAGES" "$img" || die "no image $img (hubctl images)"
+  itype=$(field "$IMAGES" "$img" 2) isha=$(field "$IMAGES" "$img" 6) iuser=$(field "$IMAGES" "$img" 5)
+  [ -n "$mem" ] || mem=$(field "$IMAGES" "$img" 3)
+  [ -n "$disk" ] || disk=$(field "$IMAGES" "$img" 4)
+  is_num "$mem" && is_num "$cpus" || die "--mem / --cpus: numbers"
+  printf '%s' "$disk" | grep -Eq '^[0-9]+[MG]$' || die "--disk: e.g. 10G"
+  sn=$(tenant_subnet "$t")
+
+  # schedule + allocate under the lock, create outside it, roll back on failure
+  lock
+  if has "$VMS" "$g"; then die "guest $g exists"; fi
+  if [ -n "$node" ]; then
+    [ "$node" = hub ] || has "$NODES" "$node" || die "no node $node"
+  else
+    node=$(pick_node "$mem")
+  fi
+  if [ -n "$ip" ]; then ip_check "$t" "$ip"; else ip=$(ip_alloc "$t") || die "tenant $t: no free address in $sn"; fi
+  mac=$(new_mac)
+  echo "$g $t $node $img $ip $mem $mac $cpus" >>"$VMS"
+  flock -u 9
+  logf "vm add: $g tenant=$t node=$node image=$img ip=$ip mac=$mac mem=$mem"
+  echo "placing $g (tenant $t, image $img) on $node: $ip/${sn#*/}, $mac, ${mem} MB, $disk"
+  args="add $t $g --image $img --type $itype --sha $isha --ip $ip/${sn#*/} --mac $mac --mem $mem --cpus $cpus --disk $disk"
+  if [ "$node" = hub ]; then
+    # shellcheck disable=SC2086
+    lab-guest $args && ok=1 || ok=0
+  else
+    run_on "$node" "lab-agent sync >/dev/null; lab-guest $args" && ok=1 || ok=0
+  fi
+  if [ "$ok" = 0 ]; then lock; del_line "$VMS" "$g"; die "creating $g on $node failed (address $ip released)"; fi
+  case $itype in
+    none) echo "note: image type 'none' gets no seed - $ip is reserved but must be configured inside the guest" ;;
+    *) echo "login on the console: $iuser / ${GUEST_PASSWORD:-vdclab}   (hubctl vm console $g)" ;;
+  esac
+}
+
+cmd_vm() {
+  case ${1:-} in
+    add) shift; cmd_vm_add "$@" ;;
+    del)
+      [ $# -eq 2 ] || die "usage: hubctl vm del NAME"
+      node=$(field "$VMS" "$2" 3)
+      [ -n "$node" ] || die "no guest $2"
+      run_on "$node" "lab-guest del $2" || echo "warning: $node unreachable, removing from registry" >&2
+      lock
+      del_line "$VMS" "$2"
+      logf "vm del: $2 (address released)" ;;
+    info)
+      [ $# -eq 2 ] || die "usage: hubctl vm info NAME"
+      has "$VMS" "$2" || die "no guest $2"
+      awk -v g="$2" '$1==g' "$VMS" | while read -r g t n i a m mac c; do
+        sn=$(tenant_subnet "$t")
+        echo "guest    $g"
+        echo "tenant   $t  (VNI $(field "$TENANTS" "$t" 2), subnet $sn)"
+        echo "node     $n  ($(node_ip "$n"))"
+        echo "image    ${i:-cirros}  ($(field "$IMAGES" "${i:-cirros}" 2))"
+        echo "address  ${a:--}/${sn#*/}   MAC ${mac:--}"
+        echo "size     ${m:-192} MB RAM, ${c:-1} vCPU"
+        echo "login    $(field "$IMAGES" "${i:-cirros}" 5) / ${GUEST_PASSWORD:-vdclab}   (hubctl vm console $g)"
+      done ;;
+    console)
+      [ $# -eq 2 ] || die "usage: hubctl vm console NAME"
+      node=$(field "$VMS" "$2" 3)
+      [ -n "$node" ] || die "no guest $2"
+      if [ "$node" = hub ]; then exec virsh console "$2"; fi
+      # shellcheck disable=SC2086
+      exec ssh -t $SSH_OPTS "root@$(node_ip "$node")" virsh console "$2" ;;
+    list|"")
+      printf '%-14s %-12s %-8s %-10s %-16s %-6s %s\n' GUEST TENANT NODE IMAGE ADDRESS RAM STATE
+      while read -r g t n i a m _; do
+        [ -n "$g" ] || continue
+        st=$(run_on "$n" "virsh domstate $g" 2>/dev/null | head -n 1) || st=unreachable
+        printf '%-14s %-12s %-8s %-10s %-16s %-6s %s\n' "$g" "$t" "$n" "${i:-cirros}" "${a:--}" "${m:-192}" "${st:-unknown}"
+      done <"$VMS" ;;
+    *) usage; exit 1 ;;
+  esac
+}
+
+case ${1:-help} in
+  nodes) cmd_nodes ;;
+  node) shift; cmd_node "$@" ;;
+  token) shift; cmd_token "$@" ;;
+  tenant) shift; cmd_tenant "$@" ;;
+  tenants) cmd_tenant list ;;
+  ips) shift; cmd_ips "$@" ;;
+  image) shift; cmd_image "$@" ;;
+  images) cmd_image list ;;
+  vm) shift; cmd_vm "$@" ;;
+  vms) cmd_vm list ;;
+  exec) shift; [ $# -ge 2 ] || die "usage: hubctl exec NODE CMD..."; n=$1; shift; run_on "$n" "$*" ;;
+  apply) lock; cmd_apply ;;
+  init) cmd_init ;;
+  libvirt-sync) sync_tenant_nets "$TENANTS" ;;
+  _api) shift; api "$@" ;;
+  help|-h|--help) usage ;;
+  *) usage; exit 1 ;;
+esac

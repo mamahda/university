@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-bound
+  namespace: cloud-dynamics
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cpu-bound
+  template:
+    metadata:
+      labels:
+        app: cpu-bound
+    spec:
+      containers:
+      - name: cpu-bound
+        image: cloud-dynamics/cpu-bound:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpu-bound
+  namespace: cloud-dynamics
+spec:
+  selector:
+    app: cpu-bound
+  ports:
+  - port: 8080
+    targetPort: 8080

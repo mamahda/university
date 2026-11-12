@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  mysql1:
+    image: mysql:8.0-debian
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=mydb
+      - MYSQL_PASSWORD=mydb6789tyui
+      - MYSQL_ROOT_PASSWORD=mydb6789tyui
+      - MYSQL_ROOT_HOST=%
+    volumes: 
+      - ./dbdata:/var/lib/mysql
+    networks:
+      - example1-network
+  phpmyadmin:
+    image: phpmyadmin:5.2.1-apache
+    ports:  
+      - "10000:80"
+    links:
+      - mysql1
+    environment:
+      - PMA_HOST=mysql1
+      - MYSQL_ROOT_PASSWORD=mydb6789tyui
+    networks:
+      - example1-network
+
+
+networks:
+  example1-network:
+    driver: bridge

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memory-stateful
+  namespace: cloud-dynamics
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: memory-stateful
+  template:
+    metadata:
+      labels:
+        app: memory-stateful
+    spec:
+      containers:
+      - name: memory-stateful
+        image: cloud-dynamics/memory-stateful:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: memory-stateful
+  namespace: cloud-dynamics
+spec:
+  selector:
+    app: memory-stateful
+  ports:
+  - port: 8080
+    targetPort: 8080
