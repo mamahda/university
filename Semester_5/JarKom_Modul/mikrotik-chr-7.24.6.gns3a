@@ -1,0 +1,48 @@
+{
+    "appliance_id": "a6f04d3b-2c8e-4b71-9d5a-73e1c0f8b2d6",
+    "name": "MikroTik-CHR",
+    "category": "router",
+    "description": "MikroTik Cloud Hosted Router (CHR) RouterOS v7.24.6 untuk praktikum Jaringan Komputer. Template ini menyediakan 5 network adapter (ether1-ether5) sehingga penamaan port identik dengan RouterBOARD RB951Ui-2HnD.",
+    "vendor_name": "MikroTik",
+    "vendor_url": "https://mikrotik.com/",
+    "documentation_url": "https://help.mikrotik.com/docs/spaces/ROS/pages/18350234/Cloud+Hosted+Router+CHR",
+    "product_name": "MikroTik Cloud Hosted Router",
+    "product_url": "https://mikrotik.com/download/chr",
+    "registry_version": 4,
+    "status": "stable",
+    "maintainer": "Praktikum Jaringan Komputer, Departemen Teknik Informatika ITS",
+    "maintainer_email": "royyana@gmail.com",
+    "usage": "Login dengan user admin dan password kosong; RouterOS akan meminta password baru pada login pertama. Gunakan password yang ditetapkan asisten praktikum.\n\nCHR yang baru dipasang hanya membawa DHCP client pada ether1. Kosongkan konfigurasi dengan /system reset-configuration no-defaults=yes skip-backup=yes apabila router telah pernah digunakan.\n\nAdapter GNS3 pertama menjadi ether1, adapter kedua menjadi ether2, dan seterusnya hingga ether5.\n\nLisensi free CHR membatasi kecepatan 1 Mbps per interface. Batasan ini tidak berpengaruh pada pengujian ping, traceroute, mtr, OSPF, dan RIP, namun CHR tidak sesuai untuk pengujian throughput.",
+    "symbol": ":/symbols/classic/router.svg",
+    "port_name_format": "ether{port1}",
+    "qemu": {
+        "adapter_type": "virtio-net-pci",
+        "adapters": 5,
+        "ram": 384,
+        "hda_disk_interface": "virtio",
+        "arch": "x86_64",
+        "console_type": "telnet",
+        "boot_priority": "c",
+        "kvm": "allow",
+        "options": "-nographic"
+    },
+    "images": [
+        {
+            "filename": "chr-7.24.6.img",
+            "version": "7.24.6",
+            "md5sum": "d5f115c8801e855131b443cba9f2be41",
+            "filesize": 134217728,
+            "download_url": "https://mikrotik.com/download/chr",
+            "direct_download_url": "https://download.mikrotik.com/routeros/7.24.6/chr-7.24.6.img.zip",
+            "compression": "zip"
+        }
+    ],
+    "versions": [
+        {
+            "name": "7.24.6",
+            "images": {
+                "hda_disk_image": "chr-7.24.6.img"
+            }
+        }
+    ]
+}
