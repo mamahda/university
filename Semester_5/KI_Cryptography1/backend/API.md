@@ -92,3 +92,20 @@ Pengaturan: `registration_deadline, submission_deadline, min_team_size, max_team
 Benchmark merangkum satu run pada satu source; default source `controlled` dan run terbaru. Tanpa data, `run_id` dan `env` null, `rows` dan `runs` kosong. Durasi memakai ns; throughput memakai MB/s desimal dan menyediakan median/Q1/Q3 tersendiri. Throughput `wrap` null. Pencatatan live otomatis, sedangkan controlled dihasilkan melalui CLI. Kontrak lengkap untuk frontend dan cara menjalankan ada di [BENCHMARK_FRONTEND.md](BENCHMARK_FRONTEND.md).
 
 Pengaturan publik, daftar dokumen, daftar tim admin, dan daftar juri adalah endpoint tambahan untuk frontend. Kontrak TypeScript lengkap ada di `frontend/src/api/types.ts`.
+
+## Berbagi data antarpeserta (Assignment 2)
+
+Kontrak lengkap (format key file, metadata item, fungsi browser) ada di `docs/KONTRAK_SHARING_ASSIGNMENT_2.md`. Semua endpoint di bawah hanya untuk peserta aktif dengan consent berlaku; respons memakai `Cache-Control: no-store`. Request milik orang lain atau yang tidak ada sama-sama dijawab 404.
+
+`SharingRequest = {id, owner_id, requester_id, status: "pending"|"approved"|"rejected", created_at, decided_at}`. UUID sendiri untuk dibagikan ke peminta diambil dari `Me.id`.
+
+| Method | Path | Request / respons |
+| --- | --- | --- |
+| POST | `/api/sharing/requests` | `{owner_id}` → 201 `SharingRequest`. 400 jika diri sendiri/UUID salah; 404 jika owner bukan peserta aktif; 409 `key_required` jika peminta belum punya public key |
+| GET | `/api/sharing/requests/incoming` | `{requests: SharingRequest[]}` sebagai owner, terbaru dulu |
+| GET | `/api/sharing/requests/outgoing` | `{requests: SharingRequest[]}` sebagai peminta, terbaru dulu |
+| GET | `/api/sharing/requests/{id}/available-items` | Owner, request pending → `{items: [{item_id, field, content_type, size_bytes, aes_available}]}`; tanpa plaintext |
+| POST | `/api/sharing/requests/{id}/approve` | Owner, pending; `{item_ids: [...]}` 1–20 item unik (duplikat diabaikan) → `SharingRequest` approved. Atomik: gagal satu item, tidak ada yang tersimpan. 404 item bukan milik owner/tidak aktif; 409 `aes_unavailable`, `key_required`, `sharing_wrap_failed`, `already_decided` |
+| POST | `/api/sharing/requests/{id}/reject` | Owner, pending; `{}` → `SharingRequest` rejected |
+
+Field yang bisa dibagikan: `full_name, nim, study_program, institution, birth_date, domicile, phone, ktp, ktm, twibbon`. Request yang sudah diputuskan tidak bisa diputuskan ulang (404). Endpoint key (`/api/sharing/keys`) dan transfer (`key-file`, `items`, `ciphertext`) milik router anggota 2 dan 3.

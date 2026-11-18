@@ -291,7 +291,7 @@ def test_existing_database_migrates_without_data_loss(tmp_path):
     migrate_db(database_path)
     migrate_db(database_path)
     with closing(connect_db(database_path)) as db:
-        assert db.execute("PRAGMA user_version").fetchone()[0] == 2
+        assert db.execute("PRAGMA user_version").fetchone()[0] == 3
         assert (
             db.execute("SELECT size_bytes FROM items WHERE id = 'old-item'").fetchone()[
                 0

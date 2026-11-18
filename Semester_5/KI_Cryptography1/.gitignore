@@ -1,3 +1,5 @@
+docs/
+
 # Server secrets
 .env
 .env.*

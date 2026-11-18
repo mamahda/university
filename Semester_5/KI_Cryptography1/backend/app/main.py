@@ -23,6 +23,7 @@ from app.routers import (
     judges,
     privacy,
     profile,
+    sharing_requests,
     teams,
 )
 
@@ -133,6 +134,9 @@ for router in (
     items.router,
     judges.router,
     admin.router,
+    # Assignment 2. Setelah branch anggota 2 dan 3 digabung, tambahkan juga
+    # sharing_keys.router dan sharing_transfer.router (import di atas).
+    sharing_requests.router,
 ):
     app.include_router(router, prefix="/api")
 
