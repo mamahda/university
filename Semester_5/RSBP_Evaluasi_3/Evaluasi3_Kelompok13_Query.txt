@@ -1,0 +1,157 @@
+// Evaluasi 3 RSBP - Kelompok 13
+// Silsilah Kasultanan Ngayogyakarta Hadiningrat di Neo4j
+// Sumber data: ontologi_kasultanan_yogyakarta.owl (Evaluasi 2)
+// Node   : Person (47 orang)
+// Relasi : 21 berpasanganDengan dan 51 memilikiAnak
+
+// Kosongkan database terlebih dahulu
+MATCH (n) DETACH DELETE n;
+
+CREATE
+
+  // Generasi 0
+  (amangkurat_iv:Person {nama: "Sunan Amangkurat IV", jenisKelamin: 'laki-laki'}),
+  (mas_ayu_tejawati:Person {nama: "Mas Ayu Tejawati", jenisKelamin: 'perempuan'}),
+
+  // Generasi 1
+  (hb_i:Person {nama: "Sri Sultan Hamengku Buwono I", jenisKelamin: 'laki-laki', tahunLahir: 1717, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (gkr_kadipaten:Person {nama: "GKR Kadipaten", jenisKelamin: 'perempuan'}),
+
+  // Generasi 2
+  (hb_ii:Person {nama: "Sri Sultan Hamengku Buwono II", jenisKelamin: 'laki-laki', tahunLahir: 1750, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (gkr_kedhaton:Person {nama: "GKR Kedhaton", jenisKelamin: 'perempuan'}),
+
+  // Generasi 3
+  (hb_iii:Person {nama: "Sri Sultan Hamengku Buwono III", jenisKelamin: 'laki-laki', tahunLahir: 1769, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (danurejo_ii:Person {nama: "KRA Danurejo II", jenisKelamin: 'laki-laki'}),
+  (gkr_hageng:Person {nama: "GKR Hageng", jenisKelamin: 'perempuan'}),
+  (gkr_hangger:Person {nama: "GKR Hangger", jenisKelamin: 'perempuan'}),
+  (ra_mangkarawati:Person {nama: "R.A. Mangkarawati", jenisKelamin: 'perempuan'}),
+
+  // Generasi 4
+  (hb_iv:Person {nama: "Sri Sultan Hamengku Buwono IV", jenisKelamin: 'laki-laki', tahunLahir: 1804, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (diponegoro:Person {nama: "Bendara Pangeran Ario Diponegoro", jenisKelamin: 'laki-laki', tahunLahir: 1785}),
+  (gkr_kencono_hb_iv:Person {nama: "GKR Kencono (permaisuri HB IV)", jenisKelamin: 'perempuan'}),
+
+  // Generasi 5
+  (hb_v:Person {nama: "Sri Sultan Hamengku Buwono V", jenisKelamin: 'laki-laki', tahunLahir: 1821, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (hb_vi:Person {nama: "Sri Sultan Hamengku Buwono VI", jenisKelamin: 'laki-laki', tahunLahir: 1821, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (gkr_hamengku_buwono:Person {nama: "GKR Hamengku Buwono", jenisKelamin: 'perempuan', tahunPerkawinan: 1848}),
+  (gkr_kencono_hb_v:Person {nama: "GKR Kencono (permaisuri I HB V)", jenisKelamin: 'perempuan'}),
+  (gkr_sekar_kedhaton:Person {nama: "GKR Sekar Kedhaton", jenisKelamin: 'perempuan'}),
+  (gkr_sultan:Person {nama: "GKR Sultan", jenisKelamin: 'perempuan'}),
+
+  // Generasi 6
+  (hb_vii:Person {nama: "Sri Sultan Hamengku Buwono VII", jenisKelamin: 'laki-laki', tahunLahir: 1839, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (gkr_hemas_hb_vii:Person {nama: "GKR Hemas (permaisuri HB VII)", jenisKelamin: 'perempuan'}),
+  (gpaa_mangkubumi:Person {nama: "GPAA Mangkubumi", jenisKelamin: 'laki-laki'}),
+  (kph_suryaning_ngalaga:Person {nama: "KPH Suryaning Ngalaga", jenisKelamin: 'laki-laki'}),
+
+  // Generasi 7
+  (hb_viii:Person {nama: "Sri Sultan Hamengku Buwono VIII", jenisKelamin: 'laki-laki', tahunLahir: 1880, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (ra_siti_katina:Person {nama: "Raden Ayu Siti Katina", jenisKelamin: 'perempuan', tahunPerkawinan: 1907}),
+  (raj_kustilah:Person {nama: "Kanjeng Ratu Alit", jenisKelamin: 'perempuan'}),
+
+  // Generasi 8
+  (hb_ix:Person {nama: "Sri Sultan Hamengku Buwono IX", jenisKelamin: 'laki-laki', tahunLahir: 1912, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (kray_pintakapurnama:Person {nama: "KRAy Pintakapurnama", jenisKelamin: 'perempuan', tahunPerkawinan: 1940}),
+  (kray_windyaningrum:Person {nama: "KRAy Windyaningrum", jenisKelamin: 'perempuan', tahunPerkawinan: 1943}),
+
+  // Generasi 9
+  (hb_x:Person {nama: "Sri Sultan Hamengku Bawono Ka 10", jenisKelamin: 'laki-laki', tahunLahir: 1946, penguasa: 'Kasultanan Ngayogyakarta Hadiningrat'}),
+  (gkr_hemas:Person {nama: "GKR Hemas", jenisKelamin: 'perempuan', tahunLahir: 1952}),
+
+  // Generasi 10
+  (gkr_bendara:Person {nama: "GKR Bendara", jenisKelamin: 'perempuan', tahunLahir: 1986}),
+  (gkr_condrokirono:Person {nama: "GKR Condrokirono", jenisKelamin: 'perempuan', tahunLahir: 1975}),
+  (gkr_hayu:Person {nama: "GKR Hayu", jenisKelamin: 'perempuan', tahunLahir: 1982, tahunPerkawinan: 2013}),
+  (gkr_maduretno:Person {nama: "GKR Maduretno", jenisKelamin: 'perempuan', tahunLahir: 1978}),
+  (gkr_mangkubumi:Person {nama: "GKR Mangkubumi", jenisKelamin: 'perempuan', tahunLahir: 1972}),
+  (kph_notonegoro:Person {nama: "KPH Notonegoro", jenisKelamin: 'laki-laki'}),
+  (kph_purbodiningrat:Person {nama: "KPH Purbodiningrat", jenisKelamin: 'laki-laki'}),
+  (kph_wironegoro:Person {nama: "KPH Wironegoro", jenisKelamin: 'laki-laki'}),
+  (kph_yudanegara:Person {nama: "KPH Yudanegara", jenisKelamin: 'laki-laki'}),
+
+  // Generasi 11
+  (raj_artie_ayya_fatimasari:Person {nama: "RAj Artie Ayya Fatimasari", jenisKelamin: 'perempuan'}),
+  (raj_nisaka_irdina_yudanegara:Person {nama: "RAj Nisaka Irdina Yudanegara", jenisKelamin: 'perempuan'}),
+  (rm_drasthya_wironegoro:Person {nama: "RM Drasthya Wironegoro", jenisKelamin: 'laki-laki'}),
+  (rm_gusthilantika_marrel_suryokusumo:Person {nama: "RM Gusthilantika Marrel Suryokusumo", jenisKelamin: 'laki-laki'}),
+  (rm_manteyyo_kuncoro_suryonegoro:Person {nama: "RM Manteyyo Kuncoro Suryonegoro", jenisKelamin: 'laki-laki', tahunLahir: 2019}),
+  (rm_radityo_mandhala_yudanegara:Person {nama: "RM Radityo Mandhala Yudanegara", jenisKelamin: 'laki-laki'}),
+
+  // Relasi berpasanganDengan (suami -> istri)
+  (amangkurat_iv)-[:berpasanganDengan]->(mas_ayu_tejawati),
+  (hb_i)-[:berpasanganDengan]->(gkr_kadipaten),
+  (hb_ii)-[:berpasanganDengan]->(gkr_kedhaton),
+  (danurejo_ii)-[:berpasanganDengan]->(gkr_hangger),
+  (hb_iii)-[:berpasanganDengan]->(gkr_hageng),
+  (hb_iii)-[:berpasanganDengan]->(ra_mangkarawati),
+  (hb_iv)-[:berpasanganDengan]->(gkr_kencono_hb_iv),
+  (hb_v)-[:berpasanganDengan]->(gkr_kencono_hb_v),
+  (hb_v)-[:berpasanganDengan]->(gkr_sekar_kedhaton),
+  (hb_vi)-[:berpasanganDengan]->(gkr_hamengku_buwono),
+  (hb_vi)-[:berpasanganDengan]->(gkr_sultan),
+  (hb_vii)-[:berpasanganDengan]->(gkr_hemas_hb_vii),
+  (hb_viii)-[:berpasanganDengan]->(ra_siti_katina),
+  (hb_viii)-[:berpasanganDengan]->(raj_kustilah),
+  (hb_ix)-[:berpasanganDengan]->(kray_pintakapurnama),
+  (hb_ix)-[:berpasanganDengan]->(kray_windyaningrum),
+  (hb_x)-[:berpasanganDengan]->(gkr_hemas),
+  (kph_notonegoro)-[:berpasanganDengan]->(gkr_hayu),
+  (kph_purbodiningrat)-[:berpasanganDengan]->(gkr_maduretno),
+  (kph_wironegoro)-[:berpasanganDengan]->(gkr_mangkubumi),
+  (kph_yudanegara)-[:berpasanganDengan]->(gkr_bendara),
+
+  // Relasi memilikiAnak (orang tua -> anak)
+  (amangkurat_iv)-[:memilikiAnak]->(hb_i),
+  (mas_ayu_tejawati)-[:memilikiAnak]->(hb_i),
+  (hb_i)-[:memilikiAnak]->(hb_ii),
+  (gkr_kadipaten)-[:memilikiAnak]->(hb_ii),
+  (hb_ii)-[:memilikiAnak]->(gkr_hangger),
+  (gkr_kedhaton)-[:memilikiAnak]->(gkr_hangger),
+  (hb_ii)-[:memilikiAnak]->(hb_iii),
+  (gkr_kedhaton)-[:memilikiAnak]->(hb_iii),
+  (hb_iii)-[:memilikiAnak]->(diponegoro),
+  (ra_mangkarawati)-[:memilikiAnak]->(diponegoro),
+  (hb_iii)-[:memilikiAnak]->(hb_iv),
+  (gkr_hageng)-[:memilikiAnak]->(hb_iv),
+  (hb_iv)-[:memilikiAnak]->(hb_v),
+  (gkr_kencono_hb_iv)-[:memilikiAnak]->(hb_v),
+  (hb_iv)-[:memilikiAnak]->(hb_vi),
+  (gkr_kencono_hb_iv)-[:memilikiAnak]->(hb_vi),
+  (hb_vi)-[:memilikiAnak]->(gpaa_mangkubumi),
+  (gkr_sultan)-[:memilikiAnak]->(gpaa_mangkubumi),
+  (hb_vi)-[:memilikiAnak]->(hb_vii),
+  (gkr_sultan)-[:memilikiAnak]->(hb_vii),
+  (hb_v)-[:memilikiAnak]->(kph_suryaning_ngalaga),
+  (gkr_sekar_kedhaton)-[:memilikiAnak]->(kph_suryaning_ngalaga),
+  (hb_vii)-[:memilikiAnak]->(hb_viii),
+  (gkr_hemas_hb_vii)-[:memilikiAnak]->(hb_viii),
+  (gpaa_mangkubumi)-[:memilikiAnak]->(ra_siti_katina),
+  (gpaa_mangkubumi)-[:memilikiAnak]->(raj_kustilah),
+  (hb_viii)-[:memilikiAnak]->(hb_ix),
+  (raj_kustilah)-[:memilikiAnak]->(hb_ix),
+  (hb_ix)-[:memilikiAnak]->(hb_x),
+  (kray_windyaningrum)-[:memilikiAnak]->(hb_x),
+  (hb_x)-[:memilikiAnak]->(gkr_bendara),
+  (gkr_hemas)-[:memilikiAnak]->(gkr_bendara),
+  (hb_x)-[:memilikiAnak]->(gkr_condrokirono),
+  (gkr_hemas)-[:memilikiAnak]->(gkr_condrokirono),
+  (hb_x)-[:memilikiAnak]->(gkr_hayu),
+  (gkr_hemas)-[:memilikiAnak]->(gkr_hayu),
+  (hb_x)-[:memilikiAnak]->(gkr_maduretno),
+  (gkr_hemas)-[:memilikiAnak]->(gkr_maduretno),
+  (hb_x)-[:memilikiAnak]->(gkr_mangkubumi),
+  (gkr_hemas)-[:memilikiAnak]->(gkr_mangkubumi),
+  (kph_wironegoro)-[:memilikiAnak]->(raj_artie_ayya_fatimasari),
+  (gkr_mangkubumi)-[:memilikiAnak]->(raj_artie_ayya_fatimasari),
+  (kph_yudanegara)-[:memilikiAnak]->(raj_nisaka_irdina_yudanegara),
+  (gkr_bendara)-[:memilikiAnak]->(raj_nisaka_irdina_yudanegara),
+  (kph_wironegoro)-[:memilikiAnak]->(rm_drasthya_wironegoro),
+  (gkr_mangkubumi)-[:memilikiAnak]->(rm_drasthya_wironegoro),
+  (gkr_condrokirono)-[:memilikiAnak]->(rm_gusthilantika_marrel_suryokusumo),
+  (kph_notonegoro)-[:memilikiAnak]->(rm_manteyyo_kuncoro_suryonegoro),
+  (gkr_hayu)-[:memilikiAnak]->(rm_manteyyo_kuncoro_suryonegoro),
+  (kph_yudanegara)-[:memilikiAnak]->(rm_radityo_mandhala_yudanegara),
+  (gkr_bendara)-[:memilikiAnak]->(rm_radityo_mandhala_yudanegara);
